@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop-Floor Agent Index</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#EEF0EA;
+    --surface:#FBFCF9;
+    --surface-2:#F2F4EE;
+    --ink:#1A1D17;
+    --ink-soft:#5B5F53;
+    --ink-faint:#8A8E7F;
+    --line:#D6D9CD;
+    --line-strong:#B9BDAC;
+    --backdrop:rgba(20,22,15,.38);
+
+    --m:#C6501E;
+    --m-bg:#FBEDE4;
+    --p:#B8860A;
+    --p-bg:#FBF1DC;
+    --w:#2E7D4F;
+    --w-bg:#E7F2EB;
+    --r:#2C5C9E;
+    --r-bg:#E7EDF6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#15170F;
+      --surface:#1D2016;
+      --surface-2:#20241A;
+      --ink:#EEEFE6;
+      --ink-soft:#AEB2A0;
+      --ink-faint:#767A6A;
+      --line:#33372A;
+      --line-strong:#454A38;
+      --backdrop:rgba(0,0,0,.55);
+
+      --m:#E77A45;
+      --m-bg:#2B1D14;
+      --p:#DDAE35;
+      --p-bg:#2B2413;
+      --w:#5AB884;
+      --w-bg:#16261C;
+      --r:#6E9BD6;
+      --r-bg:#16202E;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Barlow',system-ui,sans-serif;
+    line-height:1.45;
+  }
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:48px 28px 80px;
+  }
+  h1,h2,h3{
+    font-family:'Barlow Condensed',system-ui,sans-serif;
+    text-wrap:balance;
+    margin:0;
+  }
+
+  .titleblock{
+    border:1.5px solid var(--line-strong);
+    background:var(--surface);
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:0;
+    margin-bottom:14px;
+  }
+  .tb-main{ padding:26px 28px 24px; border-right:1.5px solid var(--line-strong); }
+  .tb-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:10px;
+  }
+  .tb-title{
+    font-size:clamp(34px,5vw,52px);
+    font-weight:700;
+    letter-spacing:.01em;
+    text-transform:uppercase;
+    line-height:1.02;
+  }
+  .tb-sub{ margin-top:10px; max-width:56ch; color:var(--ink-soft); font-size:15.5px; }
+  .tb-hint{
+    margin-top:12px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.03em;
+    color:var(--ink-faint);
+  }
+  .tb-hint .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--m);
+    box-shadow:0 0 0 3px var(--m-bg);
+  }
+  .tb-hint.offline .dot{ background:var(--ink-faint); box-shadow:0 0 0 3px var(--surface-2); }
+  .tb-fields{
+    display:grid;
+    grid-template-rows:repeat(4,1fr);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    min-width:200px;
+  }
+  .tb-field{
+    padding:8px 18px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    align-items:center;
+  }
+  .tb-field:last-child{ border-bottom:none; }
+  .tb-field span:first-child{ color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase; }
+  .tb-field span:last-child{ color:var(--ink); font-weight:500; }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    border:1.5px solid var(--line-strong);
+    border-top:none;
+    margin-bottom:56px;
+  }
+  .legend-item{
+    flex:1 1 220px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 16px;
+    border-right:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .legend-item:last-child{ border-right:none; }
+  .swatch{ width:11px;height:11px; flex:none; }
+
+  .zone{ margin-bottom:44px; }
+  .zone-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    padding-bottom:10px;
+    border-bottom:2.5px solid var(--zc);
+    margin-bottom:18px;
+  }
+  .zone-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:500;
+    letter-spacing:.08em;
+    color:var(--zc);
+    background:var(--zc-bg);
+    padding:3px 8px;
+  }
+  .zone-name{ font-size:26px; font-weight:600; letter-spacing:.01em; text-transform:uppercase; }
+  .zone-note{ margin-left:auto; font-size:13px; color:var(--ink-faint); font-style:italic; text-align:right; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .card{
+    background:var(--surface);
+    padding:18px 18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    border-top:3px solid var(--zc);
+  }
+  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .card-id{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--zc);
+    font-weight:500;
+    letter-spacing:.04em;
+  }
+  .card-name{ font-family:'Barlow Condensed',system-ui,sans-serif; font-size:19px; font-weight:600; line-height:1.15; }
+  .card-desc{ font-size:13.5px; color:var(--ink-soft); flex:1; }
+  .card-meta{
+    margin-top:2px;
+    padding-top:10px;
+    border-top:1px dashed var(--line);
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--ink-faint);
+  }
+  .card-meta b{ color:var(--ink-soft); font-weight:500; }
+  .ask-btn{
+    margin-top:4px;
+    align-self:flex-start;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--zc-bg);
+    color:var(--zc);
+    border:1px solid var(--zc);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:7px 12px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .ask-btn:hover{ background:var(--zc); color:var(--surface); }
+  .ask-btn:focus-visible{ outline:2px solid var(--zc); outline-offset:2px; }
+
+  .m{ --zc:var(--m); --zc-bg:var(--m-bg); }
+  .p{ --zc:var(--p); --zc-bg:var(--p-bg); }
+  .w{ --zc:var(--w); --zc-bg:var(--w-bg); }
+  .r{ --zc:var(--r); --zc-bg:var(--r-bg); }
+
+  footer{
+    margin-top:56px;
+    padding-top:16px;
+    border-top:1.5px solid var(--line-strong);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-faint);
+  }
+
+  .console-backdrop{
+    position:fixed; inset:0;
+    background:var(--backdrop);
+    opacity:0; pointer-events:none;
+    transition:opacity .18s ease;
+    z-index:40;
+  }
+  .console-backdrop.open{ opacity:1; pointer-events:auto; }
+
+  .console{
+    --cc:var(--m);
+    position:fixed;
+    left:0; right:0; bottom:0;
+    z-index:41;
+    max-width:1120px;
+    margin:0 auto;
+    background:var(--surface);
+    border-top:3px solid var(--cc);
+    border-left:1px solid var(--line-strong);
+    border-right:1px solid var(--line-strong);
+    box-shadow:0 -12px 32px rgba(0,0,0,.18);
+    transform:translateY(100%);
+    transition:transform .22s ease;
+    display:flex;
+    flex-direction:column;
+    max-height:min(66vh,560px);
+  }
+  .console.open{ transform:translateY(0); }
+  .console-bar{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+    background:var(--surface-2);
+    flex:none;
+  }
+  .console-id{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:.05em;
+    padding:3px 8px;
+  }
+  .console-title{
+    font-family:'Barlow Condensed',system-ui,sans-serif;
+    font-size:19px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+  }
+  .console-live{
+    margin-left:2px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--ink-faint);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .console-close{
+    margin-left:auto;
+    background:none;
+    border:1px solid var(--line-strong);
+    color:var(--ink-soft);
+    width:28px; height:28px;
+    cursor:pointer;
+    font-size:14px;
+    line-height:1;
+  }
+  .console-close:hover{ color:var(--ink); border-color:var(--ink-soft); }
+  .console-log{
+    flex:1;
+    overflow-y:auto;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    font-size:13.5px;
+  }
+  .log-row{ display:flex; gap:10px; align-items:flex-start; }
+  .log-tag{
+    flex:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    font-weight:500;
+    letter-spacing:.04em;
+    color:var(--ink-faint);
+    padding-top:2px;
+    min-width:38px;
+  }
+  .log-row.log-agent .log-tag{ color:var(--cc); }
+  .log-text{ color:var(--ink); white-space:pre-wrap; }
+  .log-row.log-user .log-text{ color:var(--ink-soft); }
+  .log-row.log-error .log-text{ color:var(--m); }
+
+  .console-form{
+    flex:none;
+    display:flex;
+    gap:10px;
+    padding:12px 16px;
+    border-top:1px solid var(--line);
+    background:var(--surface-2);
+  }
+  .console-form textarea{
+    flex:1;
+    resize:none;
+    font-family:'Barlow',system-ui,sans-serif;
+    font-size:13.5px;
+    color:var(--ink);
+    background:var(--surface);
+    border:1px solid var(--line-strong);
+    padding:9px 11px;
+    line-height:1.4;
+  }
+  .console-form textarea:focus-visible{ outline:2px solid var(--cc); outline-offset:1px; }
+  .console-form button{
+    flex:none;
+    align-self:flex-end;
+    background:var(--cc);
+    color:var(--surface);
+    border:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:0 16px;
+    height:38px;
+    cursor:pointer;
+  }
+  .console-form button:disabled{ opacity:.5; cursor:default; }
+
+  @media (max-width:640px){
+    .titleblock{ grid-template-columns:1fr; }
+    .tb-main{ border-right:none; border-bottom:1.5px solid var(--line-strong); }
+    .legend-item{ flex:1 1 45%; }
+    .zone-head{ flex-wrap:wrap; }
+    .zone-note{ margin-left:0; text-align:left; }
+    .console{ max-height:80vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-eyebrow">Agent taxonomy — floor-level deployment</div>
+      <h1 class="tb-title">Shop-Floor Agent Index</h1>
+      <p class="tb-sub">Sixteen agentic AI roles sized for blue-collar work on a manufacturing floor — dispatched through handhelds, line-side displays and voice, not a desktop inbox.</p>
+      <div class="tb-hint" id="statusHint"><span class="dot"></span><span id="statusText">Checking agent connection…</span></div>
+    </div>
+    <div class="tb-fields">
+      <div class="tb-field"><span>Scope</span><span>Discrete &amp; process mfg.</span></div>
+      <div class="tb-field"><span>Users</span><span>Operators, techs, crew leads</span></div>
+      <div class="tb-field"><span>Agent count</span><span>16</span></div>
+      <div class="tb-field"><span>Rev.</span><span>C — 2026</span></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch" style="background:var(--m)"></span>M — Maintenance &amp; Safety</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--p)"></span>P — Productivity &amp; Operations</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--w)"></span>W — Workforce &amp; HR</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--r)"></span>R — Reporting &amp; Knowledge</div>
+  </div>
+
+  <section class="zone m">
+    <div class="zone-head">
+      <span class="zone-tag">ZONE M</span>
+      <h2 class="zone-name">Maintenance &amp; Safety Agents</h2>
+      <span class="zone-note">keep equipment and people running</span>
+    </div>
+    <div class="grid">
+      <article class="card" data-id="M-01">
+        <div class="card-top"><span class="card-id">M-01</span></div>
+        <h3 class="card-name">Predictive Maintenance Agent</h3>
+        <p class="card-desc">Reads vibration, temperature and runtime data to flag failing equipment before it stops the line.</p>
+        <div class="card-meta"><span><b>Interface</b> handheld · CMMS alert</span><span><b>Trigger</b> sensor drift / runtime threshold</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="M-02">
+        <div class="card-top"><span class="card-id">M-02</span></div>
+        <h3 class="card-name">Equipment Troubleshooting Agent</h3>
+        <p class="card-desc">Walks a technician through fault codes and repair steps using the machine's own service history.</p>
+        <div class="card-meta"><span><b>Interface</b> tablet / AR headset</span><span><b>Trigger</b> fault code logged</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="M-03">
+        <div class="card-top"><span class="card-id">M-03</span></div>
+        <h3 class="card-name">Safety Compliance Agent</h3>
+        <p class="card-desc">Confirms PPE, lockout-tagout and permit steps are complete before a job is allowed to start.</p>
+        <div class="card-meta"><span><b>Interface</b> badge scan / kiosk</span><span><b>Trigger</b> job requiring LOTO</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="M-04">
+        <div class="card-top"><span class="card-id">M-04</span></div>
+        <h3 class="card-name">Incident &amp; Near-Miss Agent</h3>
+        <p class="card-desc">Captures an incident on the spot by voice and routes it to EHS with the right severity code.</p>
+        <div class="card-meta"><span><b>Interface</b> voice / handheld</span><span><b>Trigger</b> reported by worker</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="zone p">
+    <div class="zone-head">
+      <span class="zone-tag">ZONE P</span>
+      <h2 class="zone-name">Productivity &amp; Operations Agents</h2>
+      <span class="zone-note">keep work sequenced and moving</span>
+    </div>
+    <div class="grid">
+      <article class="card" data-id="P-01">
+        <div class="card-top"><span class="card-id">P-01</span></div>
+        <h3 class="card-name">Task Control Agent</h3>
+        <p class="card-desc">Sequences work orders against takt time and reassigns them the moment a station falls behind.</p>
+        <div class="card-meta"><span><b>Interface</b> line-side display</span><span><b>Trigger</b> shift start / station delay</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="P-02">
+        <div class="card-top"><span class="card-id">P-02</span></div>
+        <h3 class="card-name">Inventory &amp; Materials Agent</h3>
+        <p class="card-desc">Tracks parts and consumables at point of use and triggers reorder before a bin runs dry.</p>
+        <div class="card-meta"><span><b>Interface</b> scanner / kiosk</span><span><b>Trigger</b> bin count threshold</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="P-03">
+        <div class="card-top"><span class="card-id">P-03</span></div>
+        <h3 class="card-name">Quality Control Agent</h3>
+        <p class="card-desc">Checks output against spec and logs a non-conformance report the moment a defect appears.</p>
+        <div class="card-meta"><span><b>Interface</b> camera / gauge feed</span><span><b>Trigger</b> inspection point</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="P-04">
+        <div class="card-top"><span class="card-id">P-04</span></div>
+        <h3 class="card-name">Changeover &amp; Setup Agent</h3>
+        <p class="card-desc">Walks the crew through changeover steps in sequence, cutting setup time between production runs.</p>
+        <div class="card-meta"><span><b>Interface</b> line-side display</span><span><b>Trigger</b> run change scheduled</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="zone w">
+    <div class="zone-head">
+      <span class="zone-tag">ZONE W</span>
+      <h2 class="zone-name">Workforce &amp; HR Agents</h2>
+      <span class="zone-note">keep people paid, trained and scheduled</span>
+    </div>
+    <div class="grid">
+      <article class="card" data-id="W-01">
+        <div class="card-top"><span class="card-id">W-01</span></div>
+        <h3 class="card-name">HR Onboarding Agent</h3>
+        <p class="card-desc">Walks a new hire through paperwork, badge issue and orientation on their first day.</p>
+        <div class="card-meta"><span><b>Interface</b> kiosk / tablet</span><span><b>Trigger</b> start date</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="W-02">
+        <div class="card-top"><span class="card-id">W-02</span></div>
+        <h3 class="card-name">Training &amp; Certification Agent</h3>
+        <p class="card-desc">Schedules required certifications like forklift and LOTO, and delivers refreshers before they lapse.</p>
+        <div class="card-meta"><span><b>Interface</b> tablet / handheld</span><span><b>Trigger</b> certification expiry window</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="W-03">
+        <div class="card-top"><span class="card-id">W-03</span></div>
+        <h3 class="card-name">Shift Scheduling &amp; Attendance Agent</h3>
+        <p class="card-desc">Handles shift swaps, time-off requests and clock-in exceptions without a supervisor approval queue.</p>
+        <div class="card-meta"><span><b>Interface</b> phone / kiosk</span><span><b>Trigger</b> swap request / missed punch</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="W-04">
+        <div class="card-top"><span class="card-id">W-04</span></div>
+        <h3 class="card-name">Payroll &amp; Benefits Agent</h3>
+        <p class="card-desc">Answers pay stub, PTO balance and benefits questions in plain language, in the worker's own language.</p>
+        <div class="card-meta"><span><b>Interface</b> phone / kiosk</span><span><b>Trigger</b> worker inquiry</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="zone r">
+    <div class="zone-head">
+      <span class="zone-tag">ZONE R</span>
+      <h2 class="zone-name">Reporting &amp; Knowledge Agents</h2>
+      <span class="zone-note">keep information moving between shifts</span>
+    </div>
+    <div class="grid">
+      <article class="card" data-id="R-01">
+        <div class="card-top"><span class="card-id">R-01</span></div>
+        <h3 class="card-name">Shift Handover Agent</h3>
+        <p class="card-desc">Summarizes the outgoing shift's events into a handover brief the next crew can read in two minutes.</p>
+        <div class="card-meta"><span><b>Interface</b> line-side display</span><span><b>Trigger</b> shift end</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="R-02">
+        <div class="card-top"><span class="card-id">R-02</span></div>
+        <h3 class="card-name">Production Reporting Agent</h3>
+        <p class="card-desc">Compiles OEE, downtime and output into a shift report without anyone filling out a spreadsheet.</p>
+        <div class="card-meta"><span><b>Interface</b> dashboard</span><span><b>Trigger</b> shift end / on demand</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="R-03">
+        <div class="card-top"><span class="card-id">R-03</span></div>
+        <h3 class="card-name">Knowledge Base &amp; SOP Agent</h3>
+        <p class="card-desc">Answers "how do I" questions straight from the manuals and SOPs, in whatever language the worker speaks.</p>
+        <div class="card-meta"><span><b>Interface</b> voice / handheld</span><span><b>Trigger</b> worker question</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+      <article class="card" data-id="R-04">
+        <div class="card-top"><span class="card-id">R-04</span></div>
+        <h3 class="card-name">Performance Analytics Agent</h3>
+        <p class="card-desc">Surfaces trends against target for supervisors, so a slipping line shows up before the month-end review.</p>
+        <div class="card-meta"><span><b>Interface</b> dashboard</span><span><b>Trigger</b> recurring / threshold breach</span></div>
+        <button class="ask-btn" type="button">Ask agent →</button>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <span>16 agents · 4 zones · shop-floor deployment</span>
+    <span>Color key follows standard ANSI floor-marking convention</span>
+  </footer>
+
+</div>
+
+<div class="console-backdrop" id="consoleBackdrop"></div>
+<div class="console" id="console" aria-hidden="true">
+  <div class="console-bar">
+    <span class="console-id" id="consoleIdTag">—</span>
+    <h3 class="console-title" id="consoleTitle">Select an agent</h3>
+    <span class="console-live" id="consoleLive"></span>
+    <button class="console-close" id="consoleClose" type="button" aria-label="Close console">✕</button>
+  </div>
+  <div class="console-log" id="consoleLog"></div>
+  <form class="console-form" id="consoleForm">
+    <textarea id="consoleInput" rows="2" placeholder="Describe a situation on the floor…" autocomplete="off"></textarea>
+    <button type="submit" id="consoleSend">Send</button>
+  </form>
+</div>
+
+<script>
+(function(){
+  var consoleEl = document.getElementById('console');
+  var backdrop = document.getElementById('consoleBackdrop');
+  var idTag = document.getElementById('consoleIdTag');
+  var titleEl = document.getElementById('consoleTitle');
+  var liveEl = document.getElementById('consoleLive');
+  var logEl = document.getElementById('consoleLog');
+  var form = document.getElementById('consoleForm');
+  var input = document.getElementById('consoleInput');
+  var sendBtn = document.getElementById('consoleSend');
+  var closeBtn = document.getElementById('consoleClose');
+  var statusHint = document.getElementById('statusHint');
+  var statusText = document.getElementById('statusText');
+
+  var currentId = null;
+  var currentZone = null;
+  var busy = false;
+
+  // The server tells us at load time whether ANTHROPIC_API_KEY is configured —
+  // the frontend never sees the key itself, only this yes/no.
+  fetch('/api/status').then(function(r){ return r.json(); }).then(function(s){
+    if (s.connected) {
+      statusText.textContent = 'Agents are live — every card calls the real API.';
+    } else {
+      statusHint.classList.add('offline');
+      statusText.textContent = 'Server has no ANTHROPIC_API_KEY yet — see .env.example.';
+    }
+  }).catch(function(){
+    statusHint.classList.add('offline');
+    statusText.textContent = "Can't reach the server.";
+  });
+
+  function appendLog(who, text){
+    var row = document.createElement('div');
+    row.className = 'log-row log-' + who;
+    var tag = document.createElement('span');
+    tag.className = 'log-tag';
+    tag.textContent = who === 'user' ? 'YOU' : (who === 'error' ? '!' : currentId);
+    var body = document.createElement('span');
+    body.className = 'log-text';
+    body.textContent = text;
+    row.appendChild(tag);
+    row.appendChild(body);
+    logEl.appendChild(row);
+    logEl.scrollTop = logEl.scrollHeight;
+    return body;
+  }
+
+  function openConsole(id, zone, name){
+    currentId = id;
+    currentZone = zone;
+    idTag.textContent = id;
+    idTag.style.color = 'var(--' + zone + ')';
+    idTag.style.background = 'var(--' + zone + '-bg)';
+    titleEl.textContent = name;
+    consoleEl.style.setProperty('--cc', 'var(--' + zone + ')');
+    consoleEl.classList.add('open');
+    consoleEl.setAttribute('aria-hidden', 'false');
+    backdrop.classList.add('open');
+    logEl.innerHTML = '';
+    appendLog('agent', 'Ready. Describe a real situation and I will respond as the ' + name + '.');
+    input.value = '';
+    setTimeout(function(){ input.focus(); }, 50);
+  }
+
+  function closeConsole(){
+    consoleEl.classList.remove('open');
+    consoleEl.setAttribute('aria-hidden', 'true');
+    backdrop.classList.remove('open');
+  }
+
+  document.querySelectorAll('.ask-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.card');
+      if (!card) return;
+      var zone = card.className.match(/\b(m|p|w|r)\b/)[1];
+      var name = card.querySelector('.card-name').textContent;
+      openConsole(card.getAttribute('data-id'), zone, name);
+    });
+  });
+  closeBtn.addEventListener('click', closeConsole);
+  backdrop.addEventListener('click', closeConsole);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeConsole();
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (busy || !currentId) return;
+    var text = input.value.trim();
+    if (!text) return;
+    appendLog('user', text);
+    input.value = '';
+
+    busy = true;
+    sendBtn.disabled = true;
+    var body = appendLog('agent', 'Thinking…');
+
+    fetch('/api/agent/' + currentId + '/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text }),
+    })
+      .then(function(res){ return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
+      .then(function(result){
+        if (!result.ok) {
+          body.parentElement.className = 'log-row log-error';
+          body.textContent = result.data.error || 'The agent could not respond right now.';
+          return;
+        }
+        body.textContent = result.data.text;
+      })
+      .catch(function(){
+        body.parentElement.className = 'log-row log-error';
+        body.textContent = "Couldn't reach the server. Is it running?";
+      })
+      .finally(function(){
+        busy = false;
+        sendBtn.disabled = false;
+        logEl.scrollTop = logEl.scrollHeight;
+      });
+  });
+})();
+</script>
+</body>
+</html>
