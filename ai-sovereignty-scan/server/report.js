@@ -1,12 +1,13 @@
 // Builds the branded report (HTML) and email bodies from the server-side
 // assessment. Every user- or data-derived string goes through esc().
 
-import { readFileSync } from "node:fs";
 import { bandFor } from "../public/assets/scoring.js";
 import { t, lookup, fmtDate, formatReason, formatAction, formatFinding, tierTypeLabel } from "../public/assets/i18n.js";
 
-const TEMPLATE = readFileSync(new URL("./report-template.html", import.meta.url), "utf8");
-const LOGO = `data:image/svg+xml;base64,${readFileSync(new URL("../public/assets/logo.svg", import.meta.url)).toString("base64")}`;
+import { TEMPLATE, LOGO_SVG } from "./report-template.js";
+import { isoDay, ucTiersOf, timelineRows, toolReasons, checklistRows, sourceLists, companyRows } from "./report-model.js";
+
+const LOGO = `data:image/svg+xml;base64,${Buffer.from(LOGO_SVG).toString("base64")}`;
 
 export function esc(v) {
   return String(v ?? "")
@@ -19,7 +20,6 @@ export function esc(v) {
 const safeUrl = (u) => (/^https:\/\//.test(u) ? esc(u) : "#");
 const BAND_ICON = { low: "●", medium: "▲", high: "◆", critical: "✖" };
 const badge = (d, band) => `<span class="badge b-${esc(band)}"><span class="ico">${BAND_ICON[band] || ""}</span> ${esc(lookup(d, `bands.${band}`))}</span>`;
-const isoDay = (date) => date.toISOString().slice(0, 10);
 
 function fill(template, slots) {
   return template.replace(/\{\{(\w+)\}\}/g, (m, k) => (k in slots ? slots[k] : m));
@@ -52,17 +52,14 @@ ${r.prohibitedFlag ? `<p class="flag">${esc(lookup(d, "results.prohibited_flag")
 }
 
 function regulatoryContext(d, v, reg, lang, today) {
-  const uc = new Set(v.useCases);
-  const tl = reg.ai_act.timeline
-    .map((item) => {
-      const now = item.date <= today;
-      const relevant = item.applies_to.some((a) => uc.has(a));
-      return `<tr>
-  <td class="num">${esc(fmtDate(item.date, lang))}</td>
-  <td><strong>${esc(item.title[lang])}</strong>${relevant ? ` <span class="rel">· ${esc(lookup(d, "report.relevant_to_you"))}</span>` : ""}<br><span class="small">${esc(item.summary[lang])}</span></td>
-  <td class="${now ? "tl-now" : "tl-later"}">${esc(lookup(d, now ? "report.applies_now" : "report.applies_later"))}</td>
-</tr>`;
-    })
+  const tl = timelineRows(reg, v, lang, today)
+    .map(
+      (row) => `<tr>
+  <td class="num">${esc(row.date)}</td>
+  <td><strong>${esc(row.title)}</strong>${row.relevant ? ` <span class="rel">· ${esc(lookup(d, "report.relevant_to_you"))}</span>` : ""}<br><span class="small">${esc(row.summary)}</span></td>
+  <td class="${row.now ? "tl-now" : "tl-later"}">${esc(lookup(d, row.now ? "report.applies_now" : "report.applies_later"))}</td>
+</tr>`,
+    )
     .join("");
   const omnibus = reg.ai_act.omnibus_changes.items.map((i) => `<li>${esc(i[lang])}</li>`).join("");
   const nl = reg.netherlands;
@@ -92,11 +89,8 @@ function perTool(d, r) {
   const rows = [...r.tools]
     .sort((a, b) => b.total - a.total)
     .map((x) => {
-      const reasons = x.reasons
-        .filter((y) => y.points > 0 && !y.code.startsWith("usecase_"))
-        .sort((a, b) => b.points - a.points)
-        .slice(0, 5)
-        .map((y) => `<li>${esc(formatReason(d, y))}</li>`)
+      const reasons = toolReasons(d, x)
+        .map((y) => `<li>${esc(y)}</li>`)
         .join("");
       return `<tr>
   <td><strong>${esc(x.name)}</strong><br><span class="muted small">${esc(x.vendorName)}</span></td>
@@ -126,24 +120,10 @@ function alternatives(d, r) {
 }
 
 function gdprChecklist(d, v, r) {
-  const gov = v.governance;
-  const status = (a) => (a === "yes" ? "ok" : a === "partial" ? "partial" : "gap");
-  const names = (pred) => [...new Set(r.tools.filter(pred).map((x) => x.name))].join(", ");
-  const has = (x, codes) => x.reasons.some((y) => codes.includes(y.code));
-  const noDpa = names((x) => has(x, ["no_dpa", "dpa_unverified"]));
-  const transfer = names((x) => has(x, ["transfer_none", "transfer_unverified"]));
-  const retention = names((x) => has(x, ["no_retention_control"]));
-  const row = (label, st, detail) =>
-    `<tr><th>${esc(lookup(d, `report.checklist.${label}`))}</th><td class="st-${st}">${esc(lookup(d, `report.checklist.${st}`))}</td><td class="small">${esc(detail)}</td></tr>`;
-  const toolDetail = (list, key) => (list ? t(d, `report.checklist.${key}`, { tools: list }) : lookup(d, "report.checklist.all_tools_ok"));
-  return `<h2>${esc(lookup(d, "report.gdpr_checklist"))}</h2><table class="kv"><tbody>
-${row("dpas", noDpa ? "gap" : status(gov.vendor_dpas), toolDetail(noDpa, "tools_without_dpa"))}
-${row("dpia", status(gov.dpia), lookup(d, "governance.questions.dpia"))}
-${row("transfers", transfer ? "gap" : "ok", toolDetail(transfer, "tools_transfer_gap"))}
-${row("retention", retention ? "partial" : "ok", toolDetail(retention, "tools_no_retention"))}
-${row("ropa", status(gov.ai_register), lookup(d, "governance.questions.ai_register"))}
-${row("dpo", status(gov.dpo), lookup(d, "governance.questions.dpo"))}
-</tbody></table>`;
+  const rows = checklistRows(d, v, r)
+    .map((row) => `<tr><th>${esc(row.label)}</th><td class="st-${esc(row.status)}">${esc(row.statusLabel)}</td><td class="small">${esc(row.detail)}</td></tr>`)
+    .join("");
+  return `<h2>${esc(lookup(d, "report.gdpr_checklist"))}</h2><table class="kv"><tbody>${rows}</tbody></table>`;
 }
 
 function actionPlan(d, r) {
@@ -163,55 +143,19 @@ function actionPlan(d, r) {
 }
 
 function methodologyAndSources(d, r, reg, kbIndex, lang) {
-  const tierSources = [];
-  const unverified = [];
-  const seen = new Set();
-  for (const x of r.tools) {
-    if (seen.has(x.tierId)) continue;
-    seen.add(x.tierId);
-    const tier = kbIndex.get(x.tierId);
-    for (const u of tier.source_urls) tierSources.push({ label: tier.name, url: u, date: tier.last_verified });
-    if (tier.unverified.size) unverified.push(`${x.isCustom ? x.name : tier.name}: ${[...tier.unverified].join(", ")}`);
-  }
-  const regSources = [];
-  for (const item of reg.ai_act.timeline) for (const u of item.source_urls) regSources.push({ label: item.title[lang], url: u, date: item.last_verified });
-  for (const [label, node] of [
-    [lookup(d, "report.omnibus_changes"), reg.ai_act.omnibus_changes],
-    [lookup(d, "report.src_gpai"), reg.ai_act.gpai_code_of_practice],
-    [lookup(d, "report.penalties"), reg.ai_act.penalties_art99],
-    [lookup(d, "report.netherlands"), reg.netherlands.supervision],
-    [lookup(d, "report.netherlands"), reg.netherlands.implementing_law_status],
-    [lookup(d, "report.src_dpf"), reg.gdpr_transfers.dpf],
-    [lookup(d, "report.src_sccs"), reg.gdpr_transfers.sccs],
-    [lookup(d, "report.src_cloud_act"), reg.gdpr_transfers.cloud_act],
-    [lookup(d, "report.src_omnibus_gdpr"), reg.gdpr_transfers.digital_omnibus_gdpr],
-  ])
-    for (const u of node.source_urls) regSources.push({ label, url: u, date: node.last_verified });
-
-  const dedupe = (list) => [...new Map(list.map((s) => [`${s.label}|${s.url}`, s])).values()];
+  const { regSources, tierSources, unverified } = sourceLists(d, r, reg, kbIndex, lang);
   const li = (s) => `<li>${esc(s.label)} — <a href="${safeUrl(s.url)}">${esc(s.url)}</a> <span class="muted">(${esc(lookup(d, "report.last_verified"))} ${esc(s.date)})</span></li>`;
   return `<h2>${esc(lookup(d, "report.methodology"))}</h2><p>${esc(lookup(d, "report.methodology_text"))}</p>
 <h2>${esc(lookup(d, "report.sources"))}</h2><p class="muted">${esc(t(d, "report.sources_intro", { date: fmtDate(reg.meta.as_of, lang) }))}</p>
-<ul class="sources">${dedupe(regSources).map(li).join("")}</ul>
-<ul class="sources">${dedupe(tierSources).map(li).join("")}</ul>
+<ul class="sources">${regSources.map(li).join("")}</ul>
+<ul class="sources">${tierSources.map(li).join("")}</ul>
 ${unverified.length ? `<p class="small"><strong>${esc(lookup(d, "report.unverified_intro"))}</strong></p><ul class="sources">${unverified.map((u) => `<li>${esc(u)}</li>`).join("")}</ul>` : ""}
 <h2>${esc(lookup(d, "report.disclaimer_title"))}</h2><p><strong>${esc(lookup(d, "results.disclaimer"))}</strong> ${esc(lookup(d, "report.disclaimer"))}</p>`;
 }
 
 function appendix(d, v, ucTiers) {
-  const c = v.company;
-  const rows = [
-    ["company.name", c.name],
-    ["company.email", c.email],
-    ["company.contact", c.contact],
-    ["company.job_title", c.jobTitle],
-    ["company.phone", c.phone],
-    ["company.country", c.country ? lookup(d, `company.countries.${c.country}`) : ""],
-    ["company.website", c.website],
-    ["company.sector", c.sector ? lookup(d, `company.sectors.${c.sector}`) : ""],
-    ["company.employees", c.employees ? lookup(d, `company.sizes.${c.employees}`) : ""],
-  ]
-    .map(([k, val]) => `<tr><th>${esc(lookup(d, k))}</th><td>${esc(val || "—")}</td></tr>`)
+  const rows = companyRows(d, v.company)
+    .map(([k, val]) => `<tr><th>${esc(k)}</th><td>${esc(val)}</td></tr>`)
     .join("");
   const uc = v.useCases.length ? v.useCases.map((u) => `<li>${esc(lookup(d, `usecases.items.${u}.label`))} — ${esc(lookup(d, `usecases.tiers.${ucTiers[u] || "minimal"}`))}</li>`).join("") : `<li>${esc(lookup(d, "report.none"))}</li>`;
   const gov = Object.entries(v.governance)
@@ -236,7 +180,7 @@ function appendix(d, v, ucTiers) {
 export function buildReportHtml({ value, result, i18n, regulation, kbIndex, now = new Date(), intro = "" }) {
   const lang = value.lang;
   const today = isoDay(now);
-  const ucTiers = Object.fromEntries(Object.entries(regulation.ai_act.use_case_mapping.items).map(([k, m]) => [k, m.risk_tier]));
+  const ucTiers = ucTiersOf(regulation);
   const content = [
     intro,
     cover(i18n, value, result, lang, today),

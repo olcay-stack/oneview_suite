@@ -8,24 +8,25 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { assess, indexKnowledgeBase } from "../public/assets/scoring.js";
-import { lookup } from "../public/assets/i18n.js";
-import { validateSubmission } from "./validate.js";
-import { buildReportHtml, buildSubject, englishSummary, internalIntro, clientIntro, clientText, pdfFilename } from "./report.js";
-import { renderPdf, closePdf } from "./pdf.js";
-import { mailConfig, createTransport, sendReport } from "./mailer.js";
+import { loadKnowledgeBase } from "./kb.js";
+import { handleSubmission } from "./submit.js";
+import { mailConfig } from "./mailer.js";
+
+export { loadKnowledgeBase };
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const readJson = (p) => JSON.parse(readFileSync(path.join(ROOT, p), "utf8"));
 
-export function loadKnowledgeBase() {
-  const tools = readJson("data/tools.json");
-  const regulation = readJson("data/regulation.json");
-  return { tools, regulation, index: indexKnowledgeBase(tools), i18n: { en: readJson("public/i18n/en.json"), nl: readJson("public/i18n/nl.json") } };
+/**
+ * PDF engine: "chromium" (default; Playwright renders the HTML report) or
+ * "pdfmake" (pure JS, no browser — used on Netlify). Loaded lazily so the
+ * unused engine's dependencies are never imported.
+ */
+export async function pdfEngine(name = process.env.PDF_ENGINE || "chromium") {
+  if (name === "pdfmake") return (await import("./pdf-doc.js")).renderPdfDoc;
+  return (await import("./pdf.js")).renderPdf;
 }
 
 /**
@@ -34,8 +35,8 @@ export function loadKnowledgeBase() {
 export function createApp(deps = {}) {
   const kb = deps.kb || loadKnowledgeBase();
   const cfg = deps.mail?.cfg || mailConfig();
-  let transport = deps.mail?.transport || null;
-  const toPdf = deps.pdf || renderPdf;
+  const transport = deps.mail?.transport || null;
+  let toPdf = deps.pdf || null;
   const now = deps.now || (() => new Date());
 
   const app = express();
@@ -95,39 +96,15 @@ export function createApp(deps = {}) {
   });
 
   app.post("/api/submit", limiter, express.json({ limit: "64kb", strict: true }), async (req, res) => {
-    const checked = validateSubmission(req.body, { kbIndex: kb.index, regulation: kb.regulation });
-    if (!checked.ok) return res.status(400).json({ error: "validation", fields: checked.errors });
-    if (checked.spam) return res.json({ ok: true });
-
-    const value = checked.value;
-    const d = kb.i18n[value.lang];
-    const en = kb.i18n.en;
-    const date = now();
-    try {
-      // Authoritative score: recomputed here, never taken from the browser.
-      const result = assess({ tools: value.tools, useCases: value.useCases, governance: value.governance }, kb);
-      const base = { value, result, i18n: d, regulation: kb.regulation, kbIndex: kb.index, now: date };
-      const reportHtml = buildReportHtml(base);
-      const pdf = await toPdf(reportHtml, { footer: lookup(d, "footer.address"), pageLabel: lookup(d, "report.page"), ofLabel: lookup(d, "report.of") });
-
-      transport = transport || createTransport(cfg);
-      await sendReport(transport, cfg, {
-        subject: buildSubject(d, value, result),
-        internalHtml: buildReportHtml({ ...base, intro: internalIntro(d, en, value, result) }),
-        clientHtml: buildReportHtml({ ...base, intro: clientIntro(d, value) }),
-        clientText: clientText(d, value),
-        textSummary: englishSummary(en, value, result),
-        pdf,
-        filename: pdfFilename(d, value, date),
-        clientEmail: value.company.email,
-        sendCopy: value.sendCopy,
-      });
-      return res.json({ ok: true, copySent: Boolean(value.sendCopy && cfg.copyToClient) });
-    } catch (err) {
-      // Log the error class only — SMTP errors can echo addresses or content.
-      if (process.env.NODE_ENV !== "test") console.error(`submit failed: ${err?.code || err?.name || "Error"}`);
-      return res.status(502).json({ error: "delivery_failed" });
-    }
+    const { status, body } = await handleSubmission(req.body, {
+      kb,
+      cfg,
+      transport,
+      toPdf: toPdf || (toPdf = await pdfEngine()),
+      now: now(),
+      onError: (cls) => process.env.NODE_ENV !== "test" && console.error(`submit failed: ${cls}`),
+    });
+    res.status(status).json(body);
   });
 
   // JSON parse errors / payload too large → generic 400/413 without echoing input.
@@ -147,7 +124,7 @@ if (isMain) {
   const server = createApp().listen(port, () => console.log(`AI Sovereignty Scan listening on http://localhost:${port}`));
   const shutdown = async () => {
     server.close();
-    await closePdf();
+    await (await import("./pdf.js")).closePdf();
     process.exit(0);
   };
   process.on("SIGINT", shutdown);

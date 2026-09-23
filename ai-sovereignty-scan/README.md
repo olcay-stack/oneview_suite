@@ -8,9 +8,11 @@ public/          static frontend (vanilla JS, no build step)
   assets/        app.js (UI), scoring.js (pure scoring engine, shared with server), i18n.js, styles.css
   i18n/          en.json, nl.json — every visible string
 data/            tools.json (57 tool tiers), regulation.json (AI Act / GDPR / NL) — with sources + dates
-server/          index.js (Express), validate.js, report.js + report-template.html, pdf.js, mailer.js
+server/          index.js (Express), submit.js (shared handler), validate.js, report.js + report-model.js,
+                 report-template.js, pdf.js (Chromium PDF), pdf-doc.js (pdfmake PDF), mailer.js, kb.js
+netlify/         functions/submit.mjs, functions/config.mjs (Netlify Functions)
 scripts/         check-data.js (knowledge-base linter), verify-sources.md (refresh checklist)
-tests/           scoring, i18n, server/API (real PDF + SMTP), browser end-to-end (Playwright)
+tests/           scoring, i18n, server/API (real PDF + SMTP), Netlify functions, browser end-to-end (Playwright)
 ```
 
 How it works: the browser computes a live preview. On submit, the server **re-validates every field**, **re-computes the score** with the same `scoring.js` (client-supplied scores are ignored), renders the report, converts it to PDF with headless Chromium and sends it over SMTP. Nothing is stored in the browser (no cookies or web storage) or on the server. Logs contain only method, path, status and duration.
@@ -54,6 +56,7 @@ All mail settings live in `.env` on the server and are never sent to the browser
 | `RATE_LIMIT_MAX` | Submissions per IP per 15 minutes (default 5). |
 | `TRUST_PROXY` | Set to `1` behind one reverse proxy so rate limiting sees the real client IP. |
 | `CHROMIUM_PATH` | Optional path to a Chrome/Chromium binary. |
+| `PDF_ENGINE` | `chromium` (default: renders the HTML report) or `pdfmake` (pure JS, no browser needed). |
 
 Good EU options: your Microsoft 365 or Google Workspace SMTP relay, or an EU-hosted transactional provider such as Brevo (FR), Mailjet (FR) or Scaleway TEM (FR). Set up SPF, DKIM and DMARC for the `MAIL_FROM` domain so the report doesn't land in spam.
 
@@ -66,7 +69,23 @@ docker run -d -p 8025:8025 -p 1025:1025 axllent/mailpit
 
 Ethereal (`https://ethereal.email`) also works: create an account and copy its host, port, user and password into `.env`.
 
-## Deploy (EU hosting)
+## Deploy on Netlify (no server to manage)
+
+The repo is ready for Netlify: `netlify.toml` (at the repository root) builds the static UI into `ai-sovereignty-scan/dist` and deploys `/api/submit` and `/api/config` as **Netlify Functions**. On Netlify the PDF is rendered with **pdfmake** (pure JavaScript, no browser), because Chromium is too large and slow for serverless functions. The content and sections are the same as the Chromium PDF.
+
+1. In Netlify: **Add new site → Import an existing project → GitHub → `oneview_suite`**. Build settings are read from `netlify.toml`; leave them empty in the UI.
+2. **Site configuration → Environment variables:** add `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO=info@oneviewlogic.com`, `SEND_COPY_TO_CLIENT=true`. Mark `SMTP_PASS` as secret. Redeploy after adding them.
+3. Open `https://<your-site>.netlify.app/` (it redirects to `/nl/` or `/en/`), run a test scan and check that the report arrives at info@.
+4. Optional: **Domain management → Add a domain**, e.g. `scan.oneviewlogic.com`. Netlify issues the TLS certificate automatically.
+
+Good to know:
+- Function limits: each submission runs well within Netlify's 10-second limit (pdfmake + SMTP take about 1–3 s). Use an SMTP provider that answers quickly.
+- Rate limiting uses Netlify's built-in function rate limit (3 submissions per minute per IP; see `netlify/functions/submit.mjs`), plus the honeypot and minimum fill time.
+- The security headers (CSP etc.) and the language redirect on `/` are set in `netlify.toml`.
+- Netlify runs on US-headquartered infrastructure (AWS). Its EU edge serves the pages, but functions run in the region configured for the site (**Site configuration → Functions → Region**, if your plan offers it; choose Frankfurt `eu-central-1`). For a fully EU-sovereign setup use the Docker/VPS option below.
+- To build locally the way Netlify does: `npx netlify-cli build --offline` (from the repository root).
+
+## Deploy (EU hosting, Docker/VPS)
 
 The app is a single Node process that needs Chromium, so a container or a small VPS is the easiest route. Choose an EU-headquartered provider and region to stay consistent with the product's message, for example Hetzner (DE/FI), Scaleway (FR), OVHcloud (FR) or a Dutch provider such as TransIP or Leaseweb.
 

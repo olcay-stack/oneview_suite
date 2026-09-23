@@ -30,11 +30,12 @@ async function getBrowser() {
 const escFooter = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 /**
- * @param {string} html   complete report HTML
- * @param {object} opts   { footer: string, pageLabel: string, ofLabel: string }
+ * Same interface as renderPdfDoc (server/pdf-doc.js); only `html` and the
+ * footer labels are used here.
+ * @param {{ html: string, footer?: string, pageLabel?: string, ofLabel?: string }} ctx
  * @returns {Promise<Buffer>}
  */
-export async function renderPdf(html, { footer = "", pageLabel = "Page", ofLabel = "of" } = {}) {
+export async function renderPdf({ html, footer = "", pageLabel = "Page", ofLabel = "of" }) {
   const browser = await getBrowser();
   const context = await browser.newContext({ javaScriptEnabled: false });
   try {

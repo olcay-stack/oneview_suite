@@ -1,4 +1,15 @@
-<!doctype html>
+// Report HTML template and logo as JS modules, so serverless bundlers
+// (Netlify Functions / esbuild) include them without file-system reads.
+// The logo must stay identical to public/assets/logo.svg (checked by tests).
+
+export const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Oneview Logic">
+  <rect width="64" height="64" rx="14" fill="#0B1F3A"/>
+  <circle cx="32" cy="32" r="17" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+  <circle cx="32" cy="32" r="6" fill="#2EC4B6"/>
+  <path d="M32 9v8M32 47v8M9 32h8M47 32h8" stroke="#2EC4B6" stroke-width="3" stroke-linecap="round"/>
+</svg>`;
+
+export const TEMPLATE = `<!doctype html>
 <html lang="{{lang}}">
 <head>
 <meta charset="utf-8">
@@ -62,3 +73,4 @@
 </div>
 </body>
 </html>
+`;
