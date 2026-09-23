@@ -94,6 +94,7 @@ A 502 means the report was built but could not be delivered. The error message i
 | `config · SMTP_HOST_MISSING` / `SMTP_PASS_MISSING` | The function doesn't see the variable. In **Environment variables**, make sure the scope includes **Functions** (not only Builds), then **redeploy**. |
 | `smtp · EAUTH:535` | Wrong username/password. Microsoft 365: SMTP AUTH must be enabled for the mailbox. Gmail/Workspace: use an **app password**. |
 | `smtp · ETIMEDOUT` / `ESOCKET` / `ECONNECTION` | Host or port wrong or blocked. Use port **587** (STARTTLS) or **465** (TLS). Port 25 is blocked on Netlify. |
+| `config · SMTP_USER_MISSING` or `smtp · EENVELOPE:530` | No login was attempted because the function can't see `SMTP_USER`. Check the variable name and its **Functions** scope, then redeploy. |
 | `smtp · EENVELOPE:550/553/554` | The sender isn't allowed: `MAIL_FROM` must be the SMTP account or a verified sender/domain. |
 | `pdf · …` | PDF rendering failed. Send the log line to the developer. |
 

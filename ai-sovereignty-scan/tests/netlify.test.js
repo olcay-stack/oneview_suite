@@ -122,6 +122,19 @@ describe("Netlify functions", () => {
     assert.deepEqual(await res.json(), { error: "delivery_failed", stage: "config", code: "SMTP_HOST_MISSING" });
   });
 
+  test("Gmail without SMTP_USER → clear config error; values are trimmed", async () => {
+    const { mailConfig, createTransport } = await import("../server/mailer.js");
+    assert.throws(() => createTransport(mailConfig({ SMTP_HOST: "smtp.gmail.com", SMTP_PORT: "465", SMTP_PASS: "x" })), { code: "SMTP_USER_MISSING" });
+    assert.throws(() => createTransport(mailConfig({ SMTP_HOST: "smtp.gmail.com", SMTP_PORT: "465" })), { code: "SMTP_USER_MISSING" });
+    const cfg = mailConfig({ SMTP_HOST: " smtp.gmail.com ", SMTP_PORT: " 465 ", SMTP_USER: ' "me@gmail.com" ', SMTP_PASS: "abcdefghijklmnop " });
+    assert.deepEqual([cfg.host, cfg.port, cfg.user, cfg.pass], ["smtp.gmail.com", 465, "me@gmail.com", "abcdefghijklmnop"]);
+    const user = process.env.SMTP_USER;
+    delete process.env.SMTP_USER;
+    const res = await submit(request(payload()));
+    process.env.SMTP_USER = user;
+    assert.deepEqual(await res.json(), { error: "delivery_failed", stage: "config", code: "SMTP_USER_MISSING" });
+  });
+
   test("GET /api/health reports settings as booleans and verifies SMTP with the token", async () => {
     const plain = await (await health(new Request("https://scan.example/api/health"))).json();
     assert.equal(plain.smtp.hostSet, true);

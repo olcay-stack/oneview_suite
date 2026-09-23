@@ -15,17 +15,18 @@ export async function healthReport(env, verifyToken) {
   const report = {
     ok: true,
     smtp: {
-      hostSet: Boolean(env.SMTP_HOST),
+      hostSet: Boolean(cfg.host),
       port: cfg.port,
-      userSet: Boolean(env.SMTP_USER),
-      passSet: Boolean(env.SMTP_PASS),
+      userSet: Boolean(cfg.user),
+      passSet: Boolean(cfg.pass),
+      loginWillBeAttempted: Boolean(cfg.user && cfg.pass),
       fromSet: Boolean(env.MAIL_FROM),
       toIsDefault: !env.MAIL_TO || env.MAIL_TO === "info@oneviewlogic.com",
       copyToClient: cfg.copyToClient,
     },
     pdfEngine: env.NETLIFY || env.AWS_LAMBDA_FUNCTION_NAME ? "pdfmake" : env.PDF_ENGINE || "chromium",
   };
-  if (!report.smtp.hostSet) report.ok = false;
+  if (!report.smtp.hostSet || (report.smtp.passSet && !report.smtp.userSet)) report.ok = false;
   if (verifyToken !== undefined && verifyToken !== null) {
     if (!env.DIAG_TOKEN || !same(verifyToken, env.DIAG_TOKEN)) return { status: 403, body: { error: "forbidden" } };
     try {
