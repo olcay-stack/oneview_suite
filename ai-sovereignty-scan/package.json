@@ -1,0 +1,10 @@
+{
+  "name": "ai-sovereignty-scan",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Oneview Logic AI Sovereignty Scan — EU AI Act, GDPR and data-sovereignty self-assessment.",
+  "scripts": {
+    "check-data": "node scripts/check-data.js --list"
+  }
+}

@@ -1,0 +1,311 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "as_of": "2026-09-23",
+    "verification_method": "Web search (results citing the listed source pages). Direct fetch of most primary sources (eur-lex.europa.eu, europarl, consilium, autoriteitpersoonsgegevens.nl) was blocked by the build environment's egress policy, so each fact was cross-checked against at least one search result that quotes or summarises the primary source. Re-check primary sources using scripts/verify-sources.md before relying on this in production.",
+    "status_values": {
+      "verified": "Confirmed by at least one source summarising the primary text.",
+      "conflicting": "Sources disagree; the more conservative reading is stored and scoring treats it as higher risk.",
+      "unverified": "Could not be confirmed; scoring treats it as the riskier option."
+    }
+  },
+
+  "ai_act": {
+    "regulation": {
+      "value": "Regulation (EU) 2024/1689 (Artificial Intelligence Act)",
+      "entry_into_force": "2024-08-01",
+      "status": "verified",
+      "source_urls": ["https://artificialintelligenceact.eu/implementation-timeline/", "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus/"],
+      "last_verified": "2026-09-23"
+    },
+
+    "timeline": [
+      {
+        "id": "entry_into_force",
+        "date": "2024-08-01",
+        "title": { "en": "AI Act enters into force", "nl": "AI-verordening treedt in werking" },
+        "summary": {
+          "en": "Regulation (EU) 2024/1689 entered into force; obligations apply in stages.",
+          "nl": "Verordening (EU) 2024/1689 is in werking getreden; de verplichtingen gaan gefaseerd gelden."
+        },
+        "applies_to": ["all"],
+        "status": "verified",
+        "source_urls": ["https://artificialintelligenceact.eu/implementation-timeline/"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "prohibitions_literacy",
+        "date": "2025-02-02",
+        "title": { "en": "Prohibited practices (Art. 5) and AI literacy (Art. 4)", "nl": "Verboden praktijken (art. 5) en AI-geletterdheid (art. 4)" },
+        "summary": {
+          "en": "Prohibited AI practices apply, e.g. social scoring, manipulative techniques, emotion recognition in the workplace and in education, and untargeted scraping of facial images. The AI literacy duty also applies. It was softened by the Omnibus from 27 July 2026 (see below).",
+          "nl": "De verboden AI-praktijken gelden, zoals social scoring, manipulatieve technieken, emotieherkenning op de werkvloer en in het onderwijs, en het ongericht verzamelen van gezichtsbeelden. Ook de plicht tot AI-geletterdheid geldt. Die is per 27 juli 2026 door de Omnibus afgezwakt (zie hieronder)."
+        },
+        "applies_to": ["all", "biometric_emotion", "employee_monitoring", "education_assessment"],
+        "status": "verified",
+        "source_urls": ["https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5", "https://artificialintelligenceact.eu/article/5/", "https://artificialintelligenceact.eu/implementation-timeline/"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "gpai_governance",
+        "date": "2025-08-02",
+        "title": { "en": "General-purpose AI model obligations, governance and penalties", "nl": "Verplichtingen voor AI-modellen voor algemene doeleinden, governance en sancties" },
+        "summary": {
+          "en": "Obligations for providers of general-purpose AI (GPAI) models apply, together with the governance structure and penalty regime. The voluntary GPAI Code of Practice was published on 10 July 2025. The Commission's GPAI enforcement powers, including fines, apply from 2 August 2026.",
+          "nl": "De verplichtingen voor aanbieders van AI-modellen voor algemene doeleinden (GPAI) gelden, samen met de governancestructuur en het sanctieregime. De vrijwillige GPAI-praktijkcode is op 10 juli 2025 gepubliceerd. De handhavingsbevoegdheden van de Commissie voor GPAI, inclusief boetes, gelden vanaf 2 augustus 2026."
+        },
+        "applies_to": ["all"],
+        "status": "verified",
+        "source_urls": ["https://en.wikipedia.org/wiki/General-Purpose_AI_Code_of_Practice", "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai", "https://artificialintelligenceact.eu/introduction-to-code-of-practice/"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "omnibus_in_force",
+        "date": "2026-07-27",
+        "title": { "en": "Digital Omnibus on AI (Regulation (EU) 2026/1744) in force", "nl": "Digitale Omnibus AI (Verordening (EU) 2026/1744) in werking" },
+        "summary": {
+          "en": "Published in the OJ on 24 July 2026 and in force since 27 July 2026. It delays the high-risk obligations, turns the AI literacy duty into an obligation of effort, gives the AI Office exclusive supervision of certain systems, extends SME relief to small mid-caps (SMCs), and adds prohibitions on nudifier/NCII and CSAM generation.",
+          "nl": "Gepubliceerd in het Publicatieblad op 24 juli 2026 en in werking sinds 27 juli 2026. De Omnibus stelt de hoog-risicoverplichtingen uit, maakt van AI-geletterdheid een inspanningsverplichting, geeft het AI Office exclusief toezicht op bepaalde systemen, breidt de mkb-verlichting uit naar small mid-caps (SMC's) en voegt verboden toe op nudify-/NCII-toepassingen en het genereren van CSAM."
+        },
+        "applies_to": ["all"],
+        "status": "verified",
+        "source_urls": ["https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng", "https://www.klgates.com/EU-Digital-Omnibus-on-AI-Enters-Into-Force-7-31-2026", "https://lawandtechnology.eu/en/digital-omnibus-on-ai-official-journal-regulation-2026-1744/"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "art50_transparency",
+        "date": "2026-08-02",
+        "title": { "en": "Transparency obligations (Art. 50)", "nl": "Transparantieverplichtingen (art. 50)" },
+        "summary": {
+          "en": "People must be told when they are interacting with an AI system, e.g. a chatbot. Deployers must disclose deepfakes and AI-generated text published to inform the public, unless a human has reviewed it and holds editorial responsibility. Deployers of emotion recognition and biometric categorisation must inform the people exposed to it. The GPAI enforcement powers also start on this date. Art. 50(2) marking has a grace period for legacy systems (see 2 Dec 2026).",
+          "nl": "Mensen moeten weten dat ze met een AI-systeem communiceren, bijvoorbeeld een chatbot. Gebruiksverantwoordelijken moeten deepfakes en AI-gegenereerde tekst die het publiek informeert als zodanig markeren, tenzij een mens die tekst heeft beoordeeld en redactionele verantwoordelijkheid draagt. Wie emotieherkenning of biometrische categorisering inzet, moet de betrokkenen informeren. Ook de GPAI-handhavingsbevoegdheden gaan op deze datum in. Voor bestaande systemen geldt een overgangstermijn voor de markering onder art. 50(2) (zie 2 dec. 2026)."
+        },
+        "applies_to": ["customer_chatbot", "external_content", "biometric_emotion"],
+        "status": "verified",
+        "source_urls": ["https://artificialintelligenceact.eu/transparency-rules-article-50/", "https://www.gtlaw.com/en/insights/2026/6/deepfakes-chatbots-ai-generated-text-european-commission-details-transparency-obligations-under-the-ai-act", "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus/"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "art50_2_legacy_new_prohibitions",
+        "date": "2026-12-02",
+        "title": { "en": "Art. 50(2) marking for legacy systems + new prohibitions (nudifiers / CSAM)", "nl": "Markering art. 50(2) voor bestaande systemen + nieuwe verboden (nudify-apps / CSAM)" },
+        "summary": {
+          "en": "Generative AI systems placed on the market before 2 August 2026 must embed machine-readable markers in their output by this date. From the same date it is prohibited to use AI systems that generate non-consensual intimate imagery of identifiable people ('nudifiers') or child sexual abuse material.",
+          "nl": "Generatieve AI-systemen die vóór 2 augustus 2026 op de markt zijn gebracht, moeten uiterlijk op deze datum machineleesbare markeringen in hun output aanbrengen. Vanaf dezelfde datum is het verboden AI-systemen te gebruiken die niet-consensuele intieme beelden van herkenbare personen maken ('nudifiers') of kindermisbruikmateriaal genereren."
+        },
+        "applies_to": ["external_content"],
+        "status": "verified",
+        "source_urls": ["https://www.williamfry.com/knowledge/eu-ai-act-omnibus-deal-reached-postponed-deadlines-watermarking-compromise-and-the-nudificiation-prohibition/", "https://www.europarl.europa.eu/news/en/press-room/20260427IPR42011/ai-act-deal-on-simplification-measures-ban-on-nudifier-apps", "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus/"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "high_risk_annex_iii",
+        "date": "2027-12-02",
+        "title": { "en": "High-risk obligations for stand-alone Annex III systems", "nl": "Hoog-risicoverplichtingen voor zelfstandige systemen uit bijlage III" },
+        "summary": {
+          "en": "Applies to AI used in employment and HR (recruitment, performance evaluation), education, access to essential services (creditworthiness, life and health insurance pricing), critical infrastructure, biometrics, law enforcement and migration. Deployers must use the system according to its instructions, ensure human oversight, monitor it, keep logs and inform workers. The original date of 2 Aug 2026 was moved by the Omnibus.",
+          "nl": "Geldt voor AI in werk en HR (werving, beoordeling van prestaties), onderwijs, toegang tot essentiële diensten (kredietwaardigheid, premies voor levens- en zorgverzekeringen), kritieke infrastructuur, biometrie, rechtshandhaving en migratie. Gebruiksverantwoordelijken moeten het systeem volgens de gebruiksinstructies inzetten, menselijk toezicht borgen, het monitoren, logs bewaren en werknemers informeren. De oorspronkelijke datum van 2 aug. 2026 is door de Omnibus verschoven."
+        },
+        "applies_to": ["recruitment_hr", "employee_monitoring", "credit_insurance", "education_assessment", "biometric_emotion", "critical_infrastructure"],
+        "status": "verified",
+        "source_urls": ["https://labs.cloudsecurityalliance.org/research/csa-research-note-eu-ai-act-high-risk-deadline-omnibus-20260/", "https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/", "https://knowledge.dlapiper.com/dlapiperknowledge/globalemploymentlatestdevelopments/2026/deployer-obligations-under-the-ai-act-implications-for-employers-from-2-august-2026"],
+        "last_verified": "2026-09-23"
+      },
+      {
+        "id": "high_risk_annex_i",
+        "date": "2028-08-02",
+        "title": { "en": "High-risk obligations for Annex I (product-embedded) systems", "nl": "Hoog-risicoverplichtingen voor systemen uit bijlage I (ingebouwd in producten)" },
+        "summary": {
+          "en": "Applies to AI that is a safety component of products covered by EU product legislation (e.g. machinery, medical devices).",
+          "nl": "Geldt voor AI die een veiligheidscomponent is van producten onder EU-productwetgeving (bijv. machines, medische hulpmiddelen)."
+        },
+        "applies_to": ["critical_infrastructure"],
+        "status": "verified",
+        "source_urls": ["https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/", "https://verifywise.ai/blog/eu-ai-act-omnibus-what-changed"],
+        "last_verified": "2026-09-23"
+      }
+    ],
+
+    "omnibus_changes": {
+      "status": "verified",
+      "last_verified": "2026-09-23",
+      "source_urls": [
+        "https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng",
+        "https://lawandtechnology.eu/en/ai-literacy-digital-omnibus-article-4-ai-act/",
+        "https://cypheron.cz/en/resources/ai-act/omnibus-2026",
+        "https://dig.watch/updates/digital-omnibus-eu-ai-act-new-ai-office-powers",
+        "https://www.matheson.com/insights/eu-legislators-reach-agreement-on-ai-digital-omnibus-regulation/",
+        "https://paytechlaw.com/en/the-revised-ai-act-of-the-eu/",
+        "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus/"
+      ],
+      "items": [
+        {
+          "id": "ai_literacy_softened",
+          "en": "Art. 4 AI literacy was rewritten, not repealed. Providers and deployers must now 'take measures to support the development of AI literacy' instead of ensuring 'a sufficient level'. This is an obligation of effort, not of result. The Commission and Member States must support these efforts, particularly for SMEs.",
+          "nl": "Art. 4 (AI-geletterdheid) is herschreven, niet geschrapt. Aanbieders en gebruiksverantwoordelijken moeten nu 'maatregelen nemen om de ontwikkeling van AI-geletterdheid te ondersteunen' in plaats van 'een toereikend niveau' te waarborgen. Het is een inspanningsverplichting geworden in plaats van een resultaatsverplichting. Commissie en lidstaten moeten die inspanningen ondersteunen, vooral bij het mkb."
+        },
+        {
+          "id": "ai_office_scope",
+          "en": "The AI Office is now the exclusive supervisor for (a) AI systems built on a GPAI model where the model and the system come from the same provider, and (b) AI systems integrated into very large online platforms and search engines under the DSA. National authorities keep competence for, among others, law enforcement, border management, judicial authorities and financial institutions.",
+          "nl": "Het AI Office is nu exclusief toezichthouder op (a) AI-systemen die op een GPAI-model zijn gebouwd, waarbij model en systeem van dezelfde aanbieder komen, en (b) AI-systemen in zeer grote onlineplatforms en zoekmachines onder de DSA. Nationale autoriteiten blijven onder meer bevoegd voor rechtshandhaving, grensbeheer, justitie en financiële instellingen."
+        },
+        {
+          "id": "sme_smc_relief",
+          "en": "SME relief (simplified technical documentation, proportionate quality management, lower fines, priority sandbox access) is extended to small mid-caps. An SMC is not an SME, has fewer than 750 employees, and has turnover of at most €150m or a balance sheet total of at most €129m (Commission Recommendation (EU) 2025/1099). SMCs get only a partial alignment of fines, which does not cover the most severe tier.",
+          "nl": "De mkb-verlichting (vereenvoudigde technische documentatie, proportioneel kwaliteitsbeheer, lagere boetes, voorrang in sandboxes) geldt nu ook voor small mid-caps. Een SMC is geen mkb-bedrijf, heeft minder dan 750 werknemers en een omzet van maximaal € 150 mln of een balanstotaal van maximaal € 129 mln (Aanbeveling (EU) 2025/1099 van de Commissie). Voor SMC's zijn de boetes maar deels verlaagd; de zwaarste categorie valt daarbuiten."
+        },
+        {
+          "id": "high_risk_delay",
+          "en": "High-risk dates moved: Annex III to 2 Dec 2027 and Annex I to 2 Aug 2028. The original date was 2 Aug 2026.",
+          "nl": "De hoog-risicodata zijn verschoven: bijlage III naar 2 dec. 2027 en bijlage I naar 2 aug. 2028. De oorspronkelijke datum was 2 aug. 2026."
+        },
+        {
+          "id": "art50_2_grace",
+          "en": "Systems placed on the market before 2 Aug 2026 have until 2 Dec 2026 to comply with the Art. 50(2) marking obligation.",
+          "nl": "Systemen die vóór 2 aug. 2026 op de markt zijn gebracht, hebben tot 2 dec. 2026 om aan de markeringsplicht van art. 50(2) te voldoen."
+        },
+        {
+          "id": "new_prohibitions",
+          "en": "New Art. 5 prohibitions on AI generating non-consensual intimate imagery and CSAM apply from 2 Dec 2026.",
+          "nl": "Nieuwe verboden in art. 5 op AI die niet-consensuele intieme beelden of CSAM genereert, gelden vanaf 2 dec. 2026."
+        }
+      ],
+      "open_points": [
+        "The SMC headcount threshold is reported as '<750 employees' by most sources; one source says 'up to 500'. The 750 figure matches Recommendation (EU) 2025/1099 and is stored here. Status: conflicting-resolved (750)."
+      ]
+    },
+
+    "gpai_code_of_practice": {
+      "published": "2025-07-10",
+      "signatories_full": ["Amazon", "Anthropic", "Google", "IBM", "Microsoft", "OpenAI", "Mistral AI", "Aleph Alpha", "Cohere"],
+      "signatories_note": "26 organisations signed the full Code (per the AI Act Newsletter / Wikipedia). Only the providers relevant to this scan are listed here.",
+      "partial": [{ "provider": "xAI", "scope": "Safety & Security chapter only; must show transparency and copyright compliance by other adequate means" }],
+      "not_signed": ["Meta", "DeepSeek", "Alibaba (Qwen)", "Baidu"],
+      "status": "verified",
+      "status_note": "The Commission planned to publish an updated signatory list in July 2026. No 2026 changes (e.g. Meta signing) were found as of 2026-09-23.",
+      "source_urls": [
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai",
+        "https://en.wikipedia.org/wiki/General-Purpose_AI_Code_of_Practice",
+        "https://www.euronews.com/next/2025/07/18/meta-rebuffs-eus-ai-code-of-practice",
+        "https://digital-strategy.ec.europa.eu/en/policies/signatory-taskforce-gpai-code-practice"
+      ],
+      "last_verified": "2026-09-23"
+    },
+
+    "penalties_art99": {
+      "tiers": [
+        { "id": "prohibited", "max_eur": 35000000, "max_pct_turnover": 7, "en": "Prohibited practices (Art. 5)", "nl": "Verboden praktijken (art. 5)" },
+        { "id": "obligations", "max_eur": 15000000, "max_pct_turnover": 3, "en": "Operator obligations incl. deployers and Art. 50 transparency", "nl": "Verplichtingen van marktdeelnemers, incl. gebruiksverantwoordelijken en transparantie (art. 50)" },
+        { "id": "information", "max_eur": 7500000, "max_pct_turnover": 1, "en": "Incorrect, incomplete or misleading information to authorities", "nl": "Onjuiste, onvolledige of misleidende informatie aan autoriteiten" }
+      ],
+      "rule": {
+        "en": "Large undertakings pay whichever is higher; SMEs and start-ups pay whichever is lower. SMCs get partial alignment under the Omnibus.",
+        "nl": "Grote ondernemingen betalen het hoogste van beide bedragen; mkb en start-ups het laagste. Voor SMC's geldt onder de Omnibus een gedeeltelijke verlaging."
+      },
+      "status": "verified",
+      "source_urls": ["https://artificialintelligenceact.eu/article/99/", "https://www.deepinspect.ai/blog/eu-ai-act-fines"],
+      "last_verified": "2026-09-23"
+    },
+
+    "use_case_mapping": {
+      "status": "verified",
+      "note": "Mapping of the questionnaire's use cases to AI Act risk categories. 'biometric_emotion' is mapped conservatively: emotion recognition in the workplace or education is prohibited (Art. 5(1)(f)), and other biometric identification is high-risk (Annex III).",
+      "source_urls": ["https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5", "https://artificialintelligenceact.eu/article/5/", "https://artificialintelligenceact.eu/transparency-rules-article-50/", "https://labs.cloudsecurityalliance.org/research/csa-research-note-eu-ai-act-high-risk-deadline-omnibus-20260/"],
+      "last_verified": "2026-09-23",
+      "items": {
+        "recruitment_hr":         { "risk_tier": "high_risk", "legal_basis": "Annex III(4)(a)", "applies_from": "2027-12-02" },
+        "employee_monitoring":    { "risk_tier": "high_risk", "legal_basis": "Annex III(4)(b); emotion recognition at work is prohibited (Art. 5(1)(f))", "applies_from": "2027-12-02" },
+        "credit_insurance":       { "risk_tier": "high_risk", "legal_basis": "Annex III(5)(b)-(c)", "applies_from": "2027-12-02" },
+        "education_assessment":   { "risk_tier": "high_risk", "legal_basis": "Annex III(3)", "applies_from": "2027-12-02" },
+        "biometric_emotion":      { "risk_tier": "prohibited", "legal_basis": "Art. 5(1)(f) emotion recognition in workplace/education; otherwise Annex III(1)", "applies_from": "2025-02-02" },
+        "critical_infrastructure":{ "risk_tier": "high_risk", "legal_basis": "Annex III(2)", "applies_from": "2027-12-02" },
+        "customer_chatbot":       { "risk_tier": "transparency", "legal_basis": "Art. 50(1)", "applies_from": "2026-08-02" },
+        "external_content":       { "risk_tier": "transparency", "legal_basis": "Art. 50(2) and 50(4)", "applies_from": "2026-08-02" },
+        "internal_productivity":  { "risk_tier": "minimal", "legal_basis": "Art. 4 AI literacy only", "applies_from": "2025-02-02" },
+        "coding":                 { "risk_tier": "minimal", "legal_basis": "Art. 4 AI literacy only", "applies_from": "2025-02-02" },
+        "data_analysis":          { "risk_tier": "minimal", "legal_basis": "Art. 4; may become high-risk if it produces decisions about people (Annex III)", "applies_from": "2025-02-02" },
+        "translation":            { "risk_tier": "minimal", "legal_basis": "Art. 4 AI literacy only", "applies_from": "2025-02-02" }
+      }
+    }
+  },
+
+  "netherlands": {
+    "supervision": {
+      "value": {
+        "en": "Under the draft Dutch implementing act (Uitvoeringswet AI-verordening), the Autoriteit Persoonsgegevens (AP) and the Rijksinspectie Digitale Infrastructuur (RDI) coordinate supervision. The AP, with a dedicated AI department, is the fallback market surveillance authority where no sector supervisor exists. Ten market surveillance authorities are designated in total: AP, RDI, ILT, IGJ, NVWA, NLA, AFM, DNB, the Procurator General at the Supreme Court and the President of the Administrative Jurisdiction Division of the Council of State.",
+        "nl": "Volgens het concept van de Uitvoeringswet AI-verordening coördineren de Autoriteit Persoonsgegevens (AP) en de Rijksinspectie Digitale Infrastructuur (RDI) het toezicht. De AP, met een eigen AI-afdeling, is de restmarkttoezichthouder als er geen sectortoezichthouder is. In totaal worden tien markttoezichthouders aangewezen: AP, RDI, ILT, IGJ, NVWA, NLA, AFM, DNB, de procureur-generaal bij de Hoge Raad en de voorzitter van de Afdeling bestuursrechtspraak van de Raad van State."
+      },
+      "status": "verified",
+      "source_urls": ["https://www.autoriteitpersoonsgegevens.nl/actueel/toezicht-op-ai-wordt-concreet-sleutelrol-voor-de-ap-en-de-rdi", "https://www.internetconsultatie.nl/uaiv/b1", "https://www.rdi.nl/actueel/nieuws/2026/04/20/toezicht-ai-balans-veiligheid-en-innovatie"],
+      "last_verified": "2026-09-23"
+    },
+    "implementing_law_status": {
+      "value": {
+        "en": "Bill, not yet adopted. The draft was published for public consultation on 20 April 2026 (open until 1 June 2026). On 31 August 2026 the AP sent its implementation assessment to the House of Representatives' standing committee on Digital Affairs. No adoption date is known.",
+        "nl": "Wetsvoorstel, nog niet aangenomen. Het concept is op 20 april 2026 in internetconsultatie gegaan (tot 1 juni 2026). Op 31 augustus 2026 heeft de AP haar uitvoeringstoets naar de vaste Kamercommissie voor Digitale Zaken gestuurd. Een datum van inwerkingtreding is niet bekend."
+      },
+      "status": "verified",
+      "source_urls": ["https://www.autoriteitpersoonsgegevens.nl/documenten/brief-uitvoeringstoets-uitvoeringswet-ai-verordening", "https://www.internetconsultatie.nl/uaiv/b1", "https://declercq.com/blogs/wetsvoorstel-toezicht-ai"],
+      "last_verified": "2026-09-23"
+    },
+    "ap_guidance": [
+      {
+        "date": "2025-12",
+        "en": "The AP warns that data breaches from employees pasting personal data into AI chatbots (ChatGPT, Claude, Gemini) are rising, especially with free versions. It advises clear workplace agreements on chatbot use. The warning followed the Eindhoven municipality breach.",
+        "nl": "De AP waarschuwt dat datalekken toenemen doordat medewerkers persoonsgegevens in AI-chatbots plakken (ChatGPT, Claude, Gemini), vooral bij gratis versies. Ze adviseert duidelijke afspraken op de werkvloer over chatbotgebruik. De waarschuwing volgde op het datalek bij de gemeente Eindhoven.",
+        "status": "verified",
+        "source_urls": ["https://www.autoriteitpersoonsgegevens.nl/en/current/caution-use-of-ai-chatbot-may-lead-to-data-breaches", "https://www.accountant.nl/nieuws/2025/12/ap-slaat-alarm-over-datalekken-door-ai/"],
+        "last_verified": "2026-09-23"
+      }
+    ]
+  },
+
+  "gdpr_transfers": {
+    "dpf": {
+      "value": {
+        "en": "The EU-US Data Privacy Framework (adequacy decision of July 2023) remains valid. The General Court dismissed the Latombe challenge on 3 Sep 2025 (T-553/23). An appeal to the Court of Justice (C-703/25 P, filed 31 Oct 2025) is pending, with no hearing date announced. Risk factor: the US PCLOB lost its quorum after three members were removed in January 2025.",
+        "nl": "Het EU-VS Data Privacy Framework (adequaatheidsbesluit van juli 2023) is nog geldig. Het Gerecht heeft het beroep van Latombe op 3 sep. 2025 verworpen (T-553/23). Het hoger beroep bij het Hof van Justitie (C-703/25 P, ingediend op 31 okt. 2025) loopt nog; er is geen zittingsdatum bekend. Risicofactor: de Amerikaanse PCLOB heeft geen quorum meer sinds drie leden in januari 2025 zijn ontslagen."
+      },
+      "risk_note": "The DPF could be invalidated (as happened with Safe Harbor and Privacy Shield). Scoring treats DPF-only transfers as moderate risk.",
+      "status": "verified",
+      "source_urls": ["https://iapp.org/news/a/european-general-court-dismisses-latombe-challenge-upholds-eu-us-data-privacy-framework", "https://europeanmartech.eu/blog/eu-us-data-privacy-framework-2026-status", "https://btlj.org/2026/02/third-times-the-charm-the-fate-of-the-eu-u-s-data-privacy-framework/"],
+      "last_verified": "2026-09-23"
+    },
+    "sccs": {
+      "value": {
+        "en": "The 2021 SCCs (Implementing Decision (EU) 2021/914) remain the main fallback. They cannot be used for importers that are themselves subject to the GDPR under Art. 3(2). A separate set of SCCs for that case was still not adopted as of May 2026. A transfer impact assessment is needed for transfers based on SCCs.",
+        "nl": "De SCC's van 2021 (Uitvoeringsbesluit (EU) 2021/914) blijven de belangrijkste terugvaloptie. Ze zijn niet bruikbaar voor ontvangers die zelf onder art. 3(2) AVG vallen. Een aparte set SCC's daarvoor was in mei 2026 nog niet vastgesteld. Voor doorgiften op basis van SCC's is een transfer impact assessment (TIA) nodig."
+      },
+      "status": "verified",
+      "source_urls": ["https://commission.europa.eu/law/law-topic/data-protection/international-dimension-data-protection/standard-contractual-clauses-scc_en", "https://www.activemind.legal/guides/scc-gdpr-data-importers/"],
+      "last_verified": "2026-09-23"
+    },
+    "cloud_act": {
+      "value": {
+        "en": "Under the US CLOUD Act, US-headquartered providers can be compelled to disclose data in their possession, custody or control, even if it is stored in the EU. In June 2025, Microsoft France stated under oath before the French Senate that it could not guarantee French data would never be handed to US authorities. EU data residency from a US provider therefore does not equal data sovereignty.",
+        "nl": "Onder de Amerikaanse CLOUD Act kunnen aanbieders met hoofdkantoor in de VS verplicht worden gegevens te verstrekken die zij in bezit, bewaring of beheer hebben, ook als die in de EU staan. Microsoft Frankrijk verklaarde in juni 2025 onder ede in de Franse Senaat niet te kunnen garanderen dat Franse gegevens nooit aan Amerikaanse autoriteiten worden overgedragen. EU-dataresidentie bij een Amerikaanse aanbieder is dus nog geen datasoevereiniteit."
+      },
+      "status": "verified",
+      "source_urls": ["https://www.theregister.com/off-prem/2025/07/25/microsoft-exec-admits-it-cannot-guarantee-data-sovereignty/458553", "https://cms.law/en/deu/legal-updates/white-paper-demystifying-the-debate-on-the-us-cloud-act-vs-european-uk-data-sovereignty-in-the-context-of-cloud-services"],
+      "last_verified": "2026-09-23"
+    },
+    "china": {
+      "value": {
+        "en": "China has no adequacy decision. Providers based in the PRC are subject to the 2017 National Intelligence Law, which obliges companies to assist state intelligence work.",
+        "nl": "Voor China bestaat geen adequaatheidsbesluit. Aanbieders in de VRC vallen onder de Nationale Inlichtingenwet van 2017, die bedrijven verplicht mee te werken aan inlichtingenwerk van de staat."
+      },
+      "status": "verified",
+      "source_urls": ["https://securityaffairs.com/179511/laws-and-regulations/gdpr-violations-prompt-germany-to-push-google-and-apple-to-ban-deepseek-ai.html", "https://www.securitymagazine.com/articles/101374-dangers-of-deepseeks-privacy-policy-data-risks-in-the-age-of-ai"],
+      "last_verified": "2026-09-23"
+    },
+    "digital_omnibus_gdpr": {
+      "value": {
+        "en": "PROPOSAL, not adopted. The broader Digital Omnibus (GDPR/ePrivacy/Data Act changes, including a provision that processing personal data to develop and operate AI 'may be regarded as' a legitimate interest) is still under negotiation. The European Parliament tabled about 1,840 amendments in August 2026. On 3 Sep 2026 the Council (Irish Presidency) circulated a compromise text that drops some of the Commission's AI-specific safeguards. No adoption date is known.",
+        "nl": "VOORSTEL, niet aangenomen. De bredere Digitale Omnibus (wijzigingen in AVG, ePrivacy en Data Act, waaronder een bepaling dat verwerking van persoonsgegevens voor het ontwikkelen en gebruiken van AI 'kan worden beschouwd als' gerechtvaardigd belang) is nog in onderhandeling. Het Europees Parlement diende in augustus 2026 ongeveer 1.840 amendementen in. Op 3 sep. 2026 verspreidde de Raad (Iers voorzitterschap) een compromistekst die een deel van de AI-specifieke waarborgen van de Commissie laat vallen. Een datum voor vaststelling is niet bekend."
+      },
+      "status": "verified",
+      "source_urls": ["https://www.europarl.europa.eu/legislative-train/theme-a-new-plan-for-europe-s-sustainable-prosperity-and-competitiveness/file-digital-package", "https://ppc.land/eu-council-draft-drops-unconditional-opt-out-from-gdpr-ai-clause/", "https://iapp.org/news/a/eu-digital-omnibus-amendments-to-gdpr-to-facilitate-ai-training-miss-the-mark"],
+      "last_verified": "2026-09-23"
+    }
+  }
+}
