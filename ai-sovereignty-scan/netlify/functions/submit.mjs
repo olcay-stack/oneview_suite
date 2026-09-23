@@ -6,6 +6,7 @@ import { handleSubmission } from "../../server/submit.js";
 import { loadKnowledgeBase } from "../../server/kb.js";
 import { mailConfig } from "../../server/mailer.js";
 import { renderPdfDoc } from "../../server/pdf-doc.js";
+import { runtimeEnv } from "../../server/runtime-env.js";
 
 const MAX_BODY = 64 * 1024;
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -25,7 +26,7 @@ export default async (req) => {
 
   const { status, body: out } = await handleSubmission(body, {
     kb: loadKnowledgeBase(),
-    cfg: mailConfig(process.env),
+    cfg: mailConfig(runtimeEnv()),
     toPdf: renderPdfDoc,
     now: new Date(),
     onError: (info) => console.error(`submit failed: ${info}`), // stage + error code only, no personal data

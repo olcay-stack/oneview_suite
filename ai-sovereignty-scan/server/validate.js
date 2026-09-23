@@ -36,21 +36,14 @@ export function cleanText(v, max = LIMITS.text) {
 
 const pick = (v, allowed, fallback = "") => (allowed.includes(v) ? v : fallback);
 
-/**
- * @returns {{ ok: true, value } | { ok: false, errors: string[] } | { ok: true, spam: true }}
- */
-export function validateSubmission(body, { kbIndex, regulation }) {
-  if (!body || typeof body !== "object" || Array.isArray(body)) return { ok: false, errors: ["body"] };
+const isSpam = (body) =>
+  (typeof body.fax === "string" && body.fax.trim() !== "") || (typeof body.elapsedMs === "number" && body.elapsedMs < MIN_FILL_MS);
 
-  // Spam traps: honeypot filled or implausibly fast. Reported as success, never sent.
-  if ((typeof body.fax === "string" && body.fax.trim() !== "") || (typeof body.elapsedMs === "number" && body.elapsedMs < MIN_FILL_MS)) {
-    return { ok: true, spam: true };
-  }
-
+/** Language + company/contact fields + consent (shared by the lead and the full submission). */
+function companyFields(body) {
   const errors = [];
   const lang = pick(body.lang, ["en", "nl"], "en");
   const c = body.company && typeof body.company === "object" ? body.company : {};
-
   const company = {
     name: cleanText(c.name),
     email: cleanText(c.email, LIMITS.email).toLowerCase(),
@@ -67,7 +60,31 @@ export function validateSubmission(body, { kbIndex, regulation }) {
   if (company.phone && !PHONE_RE.test(company.phone)) errors.push("company.phone");
   if (company.website && !WEBSITE_RE.test(company.website)) errors.push("company.website");
   if (body.consent !== true) errors.push("consent");
+  return { lang, company, errors };
+}
 
+/**
+ * Step-1 lead: company and contact details only.
+ * @returns {{ ok: true, value } | { ok: false, errors: string[] } | { ok: true, spam: true }}
+ */
+export function validateLead(body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return { ok: false, errors: ["body"] };
+  if (isSpam(body)) return { ok: true, spam: true };
+  const { lang, company, errors } = companyFields(body);
+  if (errors.length) return { ok: false, errors };
+  return { ok: true, value: { lang, company, consent: true } };
+}
+
+/**
+ * @returns {{ ok: true, value } | { ok: false, errors: string[] } | { ok: true, spam: true }}
+ */
+export function validateSubmission(body, { kbIndex, regulation }) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return { ok: false, errors: ["body"] };
+
+  // Spam traps: honeypot filled or implausibly fast. Reported as success, never sent.
+  if (isSpam(body)) return { ok: true, spam: true };
+
+  const { lang, company, errors } = companyFields(body);
   const rawTools = Array.isArray(body.tools) ? body.tools : [];
   if (rawTools.length > LIMITS.tools) errors.push("tools.length");
   const tools = [];

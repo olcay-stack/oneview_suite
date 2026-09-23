@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import submit, { config as submitConfig } from "../netlify/functions/submit.mjs";
 import configFn, { config as configConfig } from "../netlify/functions/config.mjs";
 import health from "../netlify/functions/health.mjs";
+import leadFn, { config as leadConfig } from "../netlify/functions/lead.mjs";
 import { buildDocDefinition, renderPdfDoc } from "../server/pdf-doc.js";
 import { LOGO_SVG } from "../server/report-template.js";
 import { loadKnowledgeBase } from "../server/kb.js";
@@ -84,6 +85,28 @@ describe("Netlify functions", () => {
     assert.ok(internal.html.includes("EN summary:") && internal.html.includes("Pieter Jansen"));
   });
 
+  test("POST /api/lead emails the step-1 company details to info@ only", async () => {
+    smtp.messages.length = 0;
+    assert.equal(leadConfig.path, "/api/lead");
+    const lead = { lang: "en", company: payload().company, consent: true, fax: "", elapsedMs: 8000 };
+    const res = await leadFn(new Request("https://scan.example/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(lead) }));
+    assert.equal(res.status, 200, await res.clone().text());
+    assert.equal(smtp.messages.length, 1);
+    const m = smtp.messages[0].mail;
+    assert.equal(m.to.text, "info@oneviewlogic.com");
+    assert.equal(m.replyTo.text, "klant@example.nl");
+    assert.equal(m.subject, "AI Sovereignty Scan – new lead – Netlify Test B.V.");
+    for (const v of ["Netlify Test B.V.", "Pieter Jansen", "klant@example.nl", "Retail / E-commerce", "10–49"]) assert.ok(m.html.includes(v), v);
+    assert.equal(m.attachments.length, 0);
+    // consent is required; honeypot is silently dropped
+    const noConsent = await leadFn(new Request("https://scan.example/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...lead, consent: false }) }));
+    assert.equal(noConsent.status, 400);
+    smtp.messages.length = 0;
+    const bot = await leadFn(new Request("https://scan.example/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...lead, fax: "x" }) }));
+    assert.equal(bot.status, 200);
+    assert.equal(smtp.messages.length, 0);
+  });
+
   test("rejects wrong method, content type, bad JSON, oversized and invalid bodies", async () => {
     assert.equal((await submit(request(null, { method: "GET" }))).status, 405);
     assert.equal((await submit(request("x", { type: "text/plain" }))).status, 415);
@@ -120,6 +143,48 @@ describe("Netlify functions", () => {
     process.env.SMTP_HOST = host;
     assert.equal(res.status, 502);
     assert.deepEqual(await res.json(), { error: "delivery_failed", stage: "config", code: "SMTP_HOST_MISSING" });
+  });
+
+  test("Gmail without SMTP_USER → clear config error; values are trimmed", async () => {
+    const { mailConfig, createTransport } = await import("../server/mailer.js");
+    assert.throws(() => createTransport(mailConfig({ SMTP_HOST: "smtp.gmail.com", SMTP_PORT: "465", SMTP_PASS: "x" })), { code: "SMTP_USER_MISSING" });
+    assert.throws(() => createTransport(mailConfig({ SMTP_HOST: "smtp.gmail.com", SMTP_PORT: "465" })), { code: "SMTP_USER_MISSING" });
+    const cfg = mailConfig({ SMTP_HOST: " smtp.gmail.com ", SMTP_PORT: " 465 ", SMTP_USER: ' "me@gmail.com" ', SMTP_PASS: "abcdefghijklmnop " });
+    assert.deepEqual([cfg.host, cfg.port, cfg.user, cfg.pass], ["smtp.gmail.com", 465, "me@gmail.com", "abcdefghijklmnop"]);
+    const user = process.env.SMTP_USER;
+    delete process.env.SMTP_USER;
+    const res = await submit(request(payload()));
+    process.env.SMTP_USER = user;
+    assert.deepEqual(await res.json(), { error: "delivery_failed", stage: "config", code: "SMTP_USER_MISSING" });
+  });
+
+  test("variables only exposed via Netlify.env are found; health lists names, context and typos", async () => {
+    const host = process.env.SMTP_HOST;
+    delete process.env.SMTP_HOST;
+    process.env.SMTP_USERNAME = "typo@example.com"; // a common typo
+    globalThis.Netlify = { env: { toObject: () => ({ SMTP_HOST: host }) } };
+    try {
+      const res = await health(new Request("https://scan.example/api/health"), { deploy: { context: "branch-deploy" }, site: { name: "oneview-scan", url: "https://oneview-scan.netlify.app" } });
+      const body = await res.json();
+      assert.equal(body.smtp.hostSet, true, "SMTP_HOST read from Netlify.env");
+      assert.deepEqual(body.deploy, { context: "branch-deploy", site: "oneview-scan", url: "https://oneview-scan.netlify.app" });
+      assert.ok(body.mailVariablesSeen.includes("SMTP_USERNAME"));
+      assert.ok(!JSON.stringify(body).includes("typo@example.com"), "names only, never values");
+      const sent = await submit(request(payload()));
+      assert.equal(sent.status, 200, "submit also reads Netlify.env");
+    } finally {
+      delete globalThis.Netlify;
+      delete process.env.SMTP_USERNAME;
+      process.env.SMTP_HOST = host;
+    }
+  });
+
+  test("health lists missing variables", async () => {
+    const pass = process.env.SMTP_PASS;
+    delete process.env.SMTP_PASS;
+    const body = await (await health(new Request("https://scan.example/api/health"))).json();
+    process.env.SMTP_PASS = pass;
+    assert.deepEqual(body.missing, ["SMTP_PASS"]);
   });
 
   test("GET /api/health reports settings as booleans and verifies SMTP with the token", async () => {

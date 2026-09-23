@@ -16,6 +16,14 @@ const shot = async (page, name) => SHOTS && page.screenshot({ path: path.join(SH
 
 let smtp, server, base, browser;
 
+async function waitFor(pred, what, ms = 15_000) {
+  const end = Date.now() + ms;
+  while (!pred()) {
+    if (Date.now() > end) throw new Error(`timed out waiting for ${what}`);
+    await new Promise((r) => setTimeout(r, 100));
+  }
+}
+
 before(async () => {
   smtp = await startSmtpCapture();
   const app = createApp({ kb: loadKnowledgeBase(), mail: { cfg: smtp.cfg } });
@@ -62,7 +70,15 @@ test("Dutch scan: validation, tool inventory, results, send report", { timeout: 
   await page.selectOption("#f-employees", "50-249");
   await page.focus("#f-consent");
   await page.keyboard.press("Space");
+  await page.waitForTimeout(3100); // a human needs > 3 s (anti-bot timing check)
   await page.click("#btn-next");
+  // Step-1 lead: company details are emailed to Oneview Logic straight away.
+  await waitFor(() => smtp.messages.some((m) => m.mail.subject.includes("nieuwe lead")), "lead email");
+  const lead = smtp.messages.find((m) => m.mail.subject.includes("nieuwe lead")).mail;
+  assert.equal(lead.to.text, "info@oneviewlogic.com");
+  assert.equal(lead.subject, "AI Sovereignty Scan – nieuwe lead – Testbedrijf Utrecht B.V.");
+  assert.ok(lead.html.includes("Sanne de Vries") && lead.html.includes("tester@example.nl") && lead.html.includes("Logistiek"));
+  assert.equal(lead.replyTo.text, "tester@example.nl");
   await page.waitForFunction(() => document.querySelector("#step-title")?.textContent === "Overzicht van AI-tools");
   assert.equal(await page.evaluate(() => document.activeElement.id), "step-title", "focus moves to the step heading");
 
@@ -127,24 +143,31 @@ test("Dutch scan: validation, tool inventory, results, send report", { timeout: 
   const storage = await page.evaluate(() => ({ ls: localStorage.length, ss: sessionStorage.length, cookie: document.cookie }));
   assert.deepEqual(storage, { ls: 0, ss: 0, cookie: "" });
 
-  // Honeypot/timing: a human takes more than 3 s — make sure we're past it.
-  await page.waitForTimeout(3100);
-  await page.check("#f-copy");
-  await page.click("#btn-send");
-  await page.waitForFunction(() => document.querySelector("#step-title")?.textContent === "Rapport verstuurd", null, { timeout: 60_000 });
+  // Results are emailed to Oneview Logic automatically; the visitor gets a contact link, not a copy.
+  await page.waitForSelector(".status-box.ok", { timeout: 60_000 });
   const success = await page.textContent(".status-box.ok");
-  assert.ok(success.includes("tester@example.nl"));
+  assert.ok(success.includes("info@oneviewlogic.com"), success);
+  assert.match(await page.getAttribute("#btn-contact", "href"), /^mailto:info@oneviewlogic\.com\?subject=/);
+  assert.equal(await page.isVisible("#f-copy"), false);
   await shot(page, "04-sent-nl");
 
-  // After submit, answers are wiped: "restart" shows an empty form.
+  // Sorting / re-rendering must not send the results again.
+  await page.click("#sort-total");
+  await page.waitForTimeout(300);
+
+  const results = smtp.messages.filter((m) => /^AI Sovereignty Scan – Testbedrijf/.test(m.mail.subject));
+  assert.equal(results.length, 1, "exactly one results email");
+  assert.equal(smtp.messages.length, 2, "lead + results, no copy to the visitor");
+  assert.ok(!smtp.messages.some((m) => m.mail.to.text === "tester@example.nl"));
+  const internal = results[0].mail;
+  assert.equal(internal.to.text, "info@oneviewlogic.com");
+  assert.match(internal.subject, /^AI Sovereignty Scan – Testbedrijf Utrecht B\.V\. – (Laag|Gemiddeld|Hoog|Kritiek) \(\d+\)$/);
+  assert.equal(internal.attachments[0].content.subarray(0, 5).toString(), "%PDF-");
+
+  // "Start a new scan" clears every answer from memory.
   await page.click("#btn-restart");
   assert.equal(await page.inputValue("#f-name"), "");
 
-  assert.equal(smtp.messages.length, 2, "internal + copy");
-  const internal = smtp.messages.find((m) => m.mail.to.text === "info@oneviewlogic.com").mail;
-  const copy = smtp.messages.find((m) => m.mail.to.text === "tester@example.nl").mail;
-  assert.match(internal.subject, /^AI Sovereignty Scan – Testbedrijf Utrecht B\.V\. – (Laag|Gemiddeld|Hoog|Kritiek) \(\d+\)$/);
-  for (const m of [internal, copy]) assert.equal(m.attachments[0].content.subarray(0, 5).toString(), "%PDF-");
   assert.ok(internal.html.includes("InterneBot"));
   assert.ok(internal.html.includes("Sanne de Vries"));
   assert.ok(internal.text.startsWith("Testbedrijf Utrecht B.V. (Logistics, 50-249 employees, NL) scored"));

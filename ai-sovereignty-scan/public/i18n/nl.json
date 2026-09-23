@@ -19,7 +19,7 @@
     "points": [
       "Omvat {tools} AI-producten en accounttypes",
       "Actueel met de Digitale Omnibus AI (Verordening (EU) 2026/1744)",
-      "Uw antwoorden blijven in dit browsertabblad totdat u het rapport verstuurt"
+      "Uw organisatiegegevens en resultaten gaan naar Oneview Logic; er wordt niets in uw browser opgeslagen"
     ],
     "as_of": "Kennisbank bijgewerkt tot {date}"
   },
@@ -48,10 +48,10 @@
   },
   "company": {
     "title": "Gegevens van uw organisatie",
-    "intro": "Met deze gegevens stellen we uw rapport op en sturen we het naar Oneview Logic. Velden met een * zijn verplicht.",
+    "intro": "Als u verdergaat, worden uw organisatie- en contactgegevens naar Oneview Logic (info@oneviewlogic.com) gestuurd. Velden met een * zijn verplicht.",
     "name": "Bedrijfsnaam",
     "email": "E-mailadres",
-    "email_hint": "Het rapport gaat naar Oneview Logic; u kunt zelf ook een kopie ontvangen.",
+    "email_hint": "Oneview Logic gebruikt dit adres om contact met u op te nemen over uw resultaten.",
     "contact": "Contactpersoon",
     "job_title": "Functie",
     "phone": "Telefoonnummer",
@@ -62,7 +62,7 @@
     "sector_placeholder": "Kies een sector",
     "employees": "Aantal medewerkers",
     "employees_placeholder": "Kies een categorie",
-    "consent": "Ik ga ermee akkoord dat Oneview Logic de ingevulde gegevens verwerkt om dit rapport op te stellen en naar mij en naar Oneview Logic te e-mailen.",
+    "consent": "Ik ga ermee akkoord dat Oneview Logic de organisatie- en contactgegevens die ik hier invul en de resultaten van deze scan ontvangt (via info@oneviewlogic.com) en daarover contact met mij mag opnemen.",
     "privacy_link": "Lees de privacyverklaring",
     "honeypot": "Laat dit veld leeg",
     "errors": {
@@ -284,15 +284,15 @@
     "alternatives": "Alternatieven met minder risico",
     "alternative_line": "{from} ({fromScore}) → {to}: geschat {toScore}",
     "send": {
-      "title": "Ontvang het volledige rapport",
-      "intro": "Het rapport (HTML + pdf) gaat naar Oneview Logic (info@oneviewlogic.com). Het bevat de juridische context, een vergelijking van accounttypes, een AVG-checklist, het volledige actieplan en de bronnen.",
-      "copy": "Stuur ook een kopie naar {email}",
-      "button": "Rapport versturen",
-      "sending": "Bezig met versturen…",
-      "success_title": "Rapport verstuurd",
-      "success": "Dank u wel. Uw rapport is verstuurd naar Oneview Logic{copy}. We nemen contact met u op om de resultaten te bespreken. Uw antwoorden zijn van deze pagina gewist.",
-      "success_copy": " en naar {email}",
-      "error_title": "Het rapport kon niet worden verstuurd",
+      "title": "Resultaten gedeeld met Oneview Logic",
+      "intro": "Uw resultaten en organisatiegegevens worden automatisch naar Oneview Logic (info@oneviewlogic.com) gestuurd, inclusief het volledige rapport met juridische context, vergelijking van accounttypes, AVG-checklist, actieplan en bronnen.",
+      "sending": "Uw resultaten worden naar Oneview Logic gestuurd…",
+      "success_title": "Resultaten verstuurd",
+      "success": "Uw resultaten zijn naar Oneview Logic gestuurd. Wilt u meer detail, het volledige rapport of advies over de volgende stappen? Mail ons via info@oneviewlogic.com.",
+      "contact_cta": "Mail info@oneviewlogic.com",
+      "contact_subject": "AI Sovereignty Scan – vraag over de resultaten van {company}",
+      "retry": "Opnieuw proberen",
+      "error_title": "Uw resultaten konden niet worden verstuurd",
       "error": "Er ging iets mis ({detail}). Probeer het over een paar minuten opnieuw of mail naar info@oneviewlogic.com.",
       "error_rate": "Te veel verzoeken. Wacht een paar minuten en probeer het dan opnieuw.",
       "error_validation": "Sommige antwoorden zijn ongeldig. Controleer stap 1."
@@ -544,7 +544,10 @@
     "value": "Waarde",
     "copy_requested": "Kopie naar invuller verstuurd",
     "language": "Taal",
-    "attachment_name": "AI-Sovereignty-Scan"
+    "attachment_name": "AI-Sovereignty-Scan",
+    "lead_subject": "AI Sovereignty Scan – nieuwe lead – {company}",
+    "lead_intro": "Een bezoeker heeft stap 1 van de AI Sovereignty Scan ingevuld. Dit zijn de ingevulde organisatie- en contactgegevens:",
+    "lead_note": "Als de bezoeker de scan afrondt, volgen de resultaten en het volledige rapport in een aparte e-mail."
   },
   "privacy": {
     "title": "Privacyverklaring — AI Sovereignty Scan",
@@ -556,15 +559,15 @@
       },
       {
         "h": "Wat we verwerken en waarom",
-        "p": "Uw organisatiegegevens, contactgegevens en antwoorden in de scan. We gebruiken ze om uw rapport op te stellen, het (als u dat wilt) naar u en naar Oneview Logic te e-mailen, en om contact met u op te nemen over de resultaten. Grondslag: uw toestemming (art. 6 lid 1 onder a AVG), die u altijd kunt intrekken."
+        "p": "Zodra u na stap 1 verdergaat, worden uw organisatie- en contactgegevens naar Oneview Logic (info@oneviewlogic.com) gemaild. Wanneer u de resultaten bereikt, worden ook uw antwoorden, de resultaten van de scan en een pdf-rapport naar info@oneviewlogic.com gemaild. We gebruiken dit om met u contact op te nemen over de resultaten. Grondslag: uw toestemming (art. 6 lid 1 onder a AVG), die u altijd kunt intrekken."
       },
       {
         "h": "Wat we niet doen",
-        "p": "De scan gebruikt geen cookies, analytics of opslag in de browser. Uw antwoorden blijven in het geopende tabblad tot u ze verstuurt, en worden daarna gewist. De server bewaart het rapport niet en logt de inhoud niet."
+        "p": "De scan gebruikt geen cookies, analytics of opslag in de browser. De server bewaart uw antwoorden en het rapport niet en logt de inhoud niet. U ontvangt zelf geen kopie per e-mail; voor meer detail of het volledige rapport kunt u contact opnemen via info@oneviewlogic.com."
       },
       {
         "h": "Ontvangers en bewaartermijn",
-        "p": "Het rapport gaat via onze e-mailprovider naar info@oneviewlogic.com en, als u dat kiest, naar u. We bewaren de e-mail zolang nodig is om contact met u op te nemen, en maximaal 24 maanden, tenzij er een klantrelatie uit voortkomt."
+        "p": "De e-mails gaan via onze e-mailprovider naar info@oneviewlogic.com. We bewaren ze zolang nodig is om contact met u op te nemen, en maximaal 24 maanden, tenzij er een klantrelatie uit voortkomt."
       },
       {
         "h": "Uw rechten",

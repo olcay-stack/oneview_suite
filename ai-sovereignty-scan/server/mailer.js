@@ -3,15 +3,21 @@
 
 import nodemailer from "nodemailer";
 
+// Values pasted into hosting dashboards often carry stray spaces or quotes.
+const clean = (v) => (typeof v === "string" ? v.trim().replace(/^(["'])(.*)\1$/, "$2").trim() : v) || undefined;
+
+// Public providers that always require SMTP authentication.
+const AUTH_REQUIRED_HOSTS = /(^|\.)(gmail\.com|googlemail\.com|office365\.com|outlook\.com|brevo\.com|mailjet\.com)$/i;
+
 export function mailConfig(env = process.env) {
   return {
-    host: env.SMTP_HOST,
-    port: Number(env.SMTP_PORT || 587),
-    user: env.SMTP_USER,
-    pass: env.SMTP_PASS,
-    from: env.MAIL_FROM || "AI Sovereignty Scan <no-reply@oneviewlogic.com>",
-    to: env.MAIL_TO || "info@oneviewlogic.com",
-    copyToClient: String(env.SEND_COPY_TO_CLIENT).toLowerCase() === "true",
+    host: clean(env.SMTP_HOST),
+    port: Number(clean(env.SMTP_PORT) || 587),
+    user: clean(env.SMTP_USER),
+    pass: clean(env.SMTP_PASS),
+    from: clean(env.MAIL_FROM) || "AI Sovereignty Scan <no-reply@oneviewlogic.com>",
+    to: clean(env.MAIL_TO) || "info@oneviewlogic.com",
+    copyToClient: String(clean(env.SEND_COPY_TO_CLIENT)).toLowerCase() === "true",
   };
 }
 
@@ -27,6 +33,8 @@ export class ConfigError extends Error {
 export function createTransport(cfg = mailConfig()) {
   if (!cfg.host) throw new ConfigError("SMTP_HOST_MISSING");
   if (cfg.user && !cfg.pass) throw new ConfigError("SMTP_PASS_MISSING");
+  // Without a user no login is attempted; Gmail & co. then reject the sender with 530.
+  if (!cfg.user && (cfg.pass || AUTH_REQUIRED_HOSTS.test(cfg.host))) throw new ConfigError("SMTP_USER_MISSING");
   return nodemailer.createTransport({
     host: cfg.host,
     port: cfg.port,

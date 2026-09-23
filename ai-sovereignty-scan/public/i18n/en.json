@@ -19,7 +19,7 @@
     "points": [
       "Covers {tools} AI products and account tiers",
       "Reflects the Digital Omnibus on AI (Regulation (EU) 2026/1744)",
-      "Your answers stay in this browser tab until you send the report"
+      "Your company details and results go to Oneview Logic; nothing is stored in your browser"
     ],
     "as_of": "Knowledge base as of {date}"
   },
@@ -48,10 +48,10 @@
   },
   "company": {
     "title": "Company information",
-    "intro": "We use these details to personalise your report and to send it to Oneview Logic. Fields marked * are required.",
+    "intro": "Your company and contact details are sent to Oneview Logic (info@oneviewlogic.com) when you continue. Fields marked * are required.",
     "name": "Company name",
     "email": "Email address",
-    "email_hint": "The report is sent to Oneview Logic; you can also receive a copy.",
+    "email_hint": "Oneview Logic uses this address to contact you about your results.",
     "contact": "Contact person",
     "job_title": "Job title",
     "phone": "Phone",
@@ -62,7 +62,7 @@
     "sector_placeholder": "Select a sector",
     "employees": "Number of employees",
     "employees_placeholder": "Select a range",
-    "consent": "I agree that Oneview Logic processes the data I submit to generate this report and email it to me and to Oneview Logic.",
+    "consent": "I agree that Oneview Logic receives the company and contact details I enter here and the results of this scan (sent to info@oneviewlogic.com), and may contact me about them.",
     "privacy_link": "Read the privacy notice",
     "honeypot": "Leave this field empty",
     "errors": {
@@ -284,15 +284,15 @@
     "alternatives": "Lower-risk alternatives",
     "alternative_line": "{from} ({fromScore}) → {to}: estimated {toScore}",
     "send": {
-      "title": "Get the full report",
-      "intro": "The report (HTML + PDF) is sent to Oneview Logic (info@oneviewlogic.com). It includes the regulatory context, a tier comparison, a GDPR checklist, the full action plan and sources.",
-      "copy": "Also send a copy to {email}",
-      "button": "Send report",
-      "sending": "Sending…",
-      "success_title": "Report sent",
-      "success": "Thank you. Your report has been sent to Oneview Logic{copy}. We will contact you to discuss the results. Your answers have been cleared from this page.",
-      "success_copy": " and to {email}",
-      "error_title": "The report could not be sent",
+      "title": "Results shared with Oneview Logic",
+      "intro": "Your results and company details are sent automatically to Oneview Logic (info@oneviewlogic.com), including the full report with regulatory context, tier comparison, GDPR checklist, action plan and sources.",
+      "sending": "Sending your results to Oneview Logic…",
+      "success_title": "Results sent",
+      "success": "Your results have been sent to Oneview Logic. Would you like more detail, the full report or advice on next steps? Email us at info@oneviewlogic.com.",
+      "contact_cta": "Email info@oneviewlogic.com",
+      "contact_subject": "AI Sovereignty Scan – question about the results of {company}",
+      "retry": "Try again",
+      "error_title": "Your results could not be sent",
       "error": "Something went wrong ({detail}). Please try again in a few minutes, or email info@oneviewlogic.com.",
       "error_rate": "Too many requests. Please wait a few minutes and try again.",
       "error_validation": "Some answers are invalid. Please check step 1."
@@ -544,7 +544,10 @@
     "value": "Value",
     "copy_requested": "Copy sent to submitter",
     "language": "Language",
-    "attachment_name": "AI-Sovereignty-Scan"
+    "attachment_name": "AI-Sovereignty-Scan",
+    "lead_subject": "AI Sovereignty Scan – new lead – {company}",
+    "lead_intro": "A visitor has completed step 1 of the AI Sovereignty Scan. These are the company and contact details they entered:",
+    "lead_note": "If the visitor completes the scan, the results and the full report follow in a separate email."
   },
   "privacy": {
     "title": "Privacy notice — AI Sovereignty Scan",
@@ -556,15 +559,15 @@
       },
       {
         "h": "What we process and why",
-        "p": "Your company details, contact details and scan answers. We use them to generate your report, email it to you (if you ask) and to Oneview Logic, and to contact you about the results. Legal basis: your consent (GDPR Art. 6(1)(a)), which you can withdraw at any time."
+        "p": "Your company and contact details are emailed to Oneview Logic (info@oneviewlogic.com) as soon as you continue after step 1. When you reach the results, your answers, the scan results and a PDF report are also emailed to info@oneviewlogic.com. We use this to follow up with you about the results. Legal basis: your consent (GDPR Art. 6(1)(a)), which you can withdraw at any time."
       },
       {
         "h": "What we do not do",
-        "p": "The scan does not use cookies, analytics or browser storage. Your answers stay in the open browser tab until you send them and are cleared afterwards. The server does not store the report and does not log its contents."
+        "p": "The scan does not use cookies, analytics or browser storage. The server does not store your answers or the report, and does not log their contents. No copy is emailed to you; for more detail or the full report, contact info@oneviewlogic.com."
       },
       {
         "h": "Recipients and retention",
-        "p": "The report is sent by email through our email provider to info@oneviewlogic.com and, if you choose, to you. We keep the email for as long as needed to follow up with you, and at most 24 months, unless a customer relationship follows."
+        "p": "The emails are delivered through our email provider to info@oneviewlogic.com. We keep them for as long as needed to follow up with you, and at most 24 months, unless a customer relationship follows."
       },
       {
         "h": "Your rights",

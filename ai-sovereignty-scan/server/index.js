@@ -13,6 +13,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { loadKnowledgeBase } from "./kb.js";
 import { handleSubmission } from "./submit.js";
+import { handleLead } from "./lead.js";
 import { mailConfig } from "./mailer.js";
 import { healthReport } from "./health.js";
 
@@ -92,12 +93,27 @@ export function createApp(deps = {}) {
   app.use("/data", express.static(path.join(ROOT, "data"), { maxAge: "1h" }));
   app.use(express.static(path.join(ROOT, "public"), { maxAge: process.env.NODE_ENV === "production" ? "1h" : 0, extensions: ["html"] }));
 
-  const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: deps.rateLimitMax ?? Number(process.env.RATE_LIMIT_MAX || 5),
-    standardHeaders: "draft-7",
-    legacyHeaders: false,
-    message: { error: "rate_limited" },
+  // Separate budgets for the step-1 lead and the final submission (one scan uses one of each).
+  const makeLimiter = () =>
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: deps.rateLimitMax ?? Number(process.env.RATE_LIMIT_MAX || 5),
+      standardHeaders: "draft-7",
+      legacyHeaders: false,
+      message: { error: "rate_limited" },
+    });
+  const limiter = makeLimiter();
+  const leadLimiter = makeLimiter();
+
+  app.post("/api/lead", leadLimiter, express.json({ limit: "8kb", strict: true }), async (req, res) => {
+    const { status, body } = await handleLead(req.body, {
+      kb,
+      cfg,
+      transport,
+      now: now(),
+      onError: (info) => process.env.NODE_ENV !== "test" && console.error(`lead failed: ${info}`),
+    });
+    res.status(status).json(body);
   });
 
   app.post("/api/submit", limiter, express.json({ limit: "64kb", strict: true }), async (req, res) => {
