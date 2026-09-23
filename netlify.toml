@@ -1,0 +1,49 @@
+# Netlify config for the AI Sovereignty Scan (lives in ai-sovereignty-scan/).
+# Static UI from dist/, API as Netlify Functions (/api/submit, /api/config).
+
+[build]
+  base = "ai-sovereignty-scan"
+  command = "node scripts/check-data.js && npm run build:static"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Netlify never needs a browser: PDFs are rendered with pdfmake.
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  # Keep pdfmake (fonts, dynamic requires) and nodemailer as regular node_modules.
+  external_node_modules = ["pdfmake", "nodemailer"]
+
+# Language redirect on the root: Dutch browsers → /nl/, everyone else → /en/.
+[[redirects]]
+  from = "/"
+  to = "/nl/"
+  status = 302
+  force = true
+  conditions = { Language = ["nl"] }
+
+[[redirects]]
+  from = "/"
+  to = "/en/"
+  status = 302
+  force = true
+
+# Security headers (same policy as the Express/helmet server).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "no-referrer"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

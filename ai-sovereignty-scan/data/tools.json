@@ -1,0 +1,3121 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "as_of": "2026-09-23",
+    "verification_method": "Web search results citing vendor documentation and reputable secondary sources. Most vendor domains could not be fetched directly from the build environment (egress policy); anthropic.com / claude.com were fetched directly. Re-verify with scripts/verify-sources.md.",
+    "inheritance": "Vendor-level fields (hq_country, parent_jurisdiction, gpai_code_of_practice, known_regulatory_actions) apply to every tier of that vendor. A tier may override any of them.",
+    "null_rule": "A null value means 'could not be verified'. Every null field is listed in the tier's unverified_fields array, and the scoring engine treats it as the riskiest option.",
+    "enums": {
+      "tier_type": [
+        "free",
+        "personal_paid",
+        "business",
+        "enterprise",
+        "api",
+        "self_hosted"
+      ],
+      "parent_jurisdiction": [
+        "US",
+        "EU",
+        "CN",
+        "other",
+        "self"
+      ],
+      "eu_data_residency": {
+        "none": "No EU option",
+        "optional": "EU option exists but must be enabled/contracted",
+        "default": "EU by default"
+      },
+      "trains_on_customer_data": {
+        "yes_default": "Trains by default, no practical opt-out",
+        "opt_out": "Trains by default, user can opt out",
+        "no_default": "Does not train unless customer opts in",
+        "never": "Contractually never trains"
+      },
+      "gpai_code_of_practice": [
+        "signatory",
+        "partial",
+        "not_signed",
+        "not_applicable"
+      ],
+      "transfer_mechanism": [
+        "DPF",
+        "SCCs",
+        "none",
+        "not_needed"
+      ]
+    }
+  },
+  "vendors": [
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "eu_establishment": "OpenAI Ireland Limited is controller for EEA/Swiss users since 15 Feb 2024 (GDPR one-stop-shop, lead authority: Irish DPC).",
+      "gpai_code_of_practice": "signatory",
+      "known_regulatory_actions": [
+        {
+          "authority": "Garante (IT)",
+          "date": "2024-12-20",
+          "action": "€15m GDPR fine for ChatGPT",
+          "status": "Annulled by the Tribunale di Roma on 18 Mar 2026 on jurisdiction grounds (one-stop-shop via the Irish establishment); the substance was not ruled on.",
+          "source_url": "https://ppc.land/italian-court-kills-openais-eur15m-fine-and-it-wasnt-even-close/"
+        }
+      ],
+      "vendor_source_urls": [
+        "https://techcrunch.com/2024/01/02/openai-dublin-data-controller/",
+        "https://www.wsgr.com/en/insights/openai-prevails-in-landmark-italian-ai-and-gdpr-enforcement-case.html",
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai"
+      ],
+      "products": [
+        {
+          "id": "chatgpt",
+          "name": "ChatGPT",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "openai.chatgpt.free",
+              "name": "ChatGPT Free",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "Chats kept until deleted; deleted chats and Temporary Chats removed within 30 days. The NYT preservation order ended on 26 Sep 2025.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "openai.chatgpt.enterprise",
+                "microsoft.m365_copilot.business",
+                "mistral.lechat.enterprise"
+              ],
+              "note": "Training is on by default ('Improve the model for everyone'); users can turn it off in Data controls. Consumer terms only, no Art. 28 DPA. Since Aug 2026 free text chats are uncapped.",
+              "source_urls": [
+                "https://help.openai.com/en/articles/7730893-data-controls-faq",
+                "https://openai.com/index/response-to-nyt-data-demands/",
+                "https://openai.com/policies/sub-processor-list/",
+                "https://openai.com/security-and-privacy/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism"
+              ]
+            },
+            {
+              "id": "openai.chatgpt.plus_pro",
+              "name": "ChatGPT Plus / Pro",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "Same as Free: kept until deleted, then removed within 30 days.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "openai.chatgpt.enterprise",
+                "openai.chatgpt.business"
+              ],
+              "note": "Paying does not change the privacy defaults: training is on by default for Plus/Pro.",
+              "source_urls": [
+                "https://help.openai.com/en/articles/7730893-data-controls-faq",
+                "https://intuitionlabs.ai/articles/chatgpt-plans-comparison"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism"
+              ]
+            },
+            {
+              "id": "openai.chatgpt.business",
+              "name": "ChatGPT Business (formerly Team)",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Workspace-controlled; deleted content removed within 30 days.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": false,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II",
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "openai.chatgpt.enterprise",
+                "mistral.lechat.enterprise"
+              ],
+              "note": "No training by default (contractual). SAML/OIDC SSO is included. Data residency and audit logs are Enterprise-only. The SOC 2 report covers ChatGPT Team. OpenAI's ISO 27001 scope names Enterprise, Edu and API but not Business.",
+              "source_urls": [
+                "https://openai.com/business-data/",
+                "https://help.openai.com/en/articles/11489188-sso-for-chatgpt-business-faq",
+                "https://www.eesel.ai/blog/chatgpt-work-pricing",
+                "https://trust.openai.com/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            },
+            {
+              "id": "openai.chatgpt.enterprise",
+              "name": "ChatGPT Enterprise / Edu",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Admin-configurable retention.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II",
+                "ISO 27001",
+                "ISO 27701",
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise",
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "Customer content can be stored at rest in Europe, included at no extra cost for new workspaces. In-region GPU inference is available for eligible customers. Still a US parent, so CLOUD Act exposure remains.",
+              "source_urls": [
+                "https://openai.com/index/introducing-data-residency-in-europe/",
+                "https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt",
+                "https://openai.com/index/expanding-data-residency-access-to-business-customers-worldwide/",
+                "https://openai.com/security-and-privacy/",
+                "https://intuitionlabs.ai/articles/chatgpt-enterprise-admin-controls-security"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        },
+        {
+          "id": "openai_api",
+          "name": "OpenAI API Platform",
+          "category": "api",
+          "tiers": [
+            {
+              "id": "openai.api.standard",
+              "name": "OpenAI API (incl. EU data residency projects)",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Abuse-monitoring logs kept up to 30 days. European Projects are processed in-region with zero data retention on eligible endpoints.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II",
+                "ISO 27001",
+                "ISO 27701",
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.la_plateforme.api",
+                "microsoft.azure_openai.foundry",
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "ZDR or Modified Abuse Monitoring requires OpenAI's approval. EU residency must be set up per project.",
+              "source_urls": [
+                "https://help.openai.com/en/articles/10503543-data-residency-for-the-openai-api",
+                "https://developers.openai.com/api/docs/guides/your-data",
+                "https://openai.com/index/introducing-data-residency-in-europe/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "signatory",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai",
+        "https://trust.anthropic.com/"
+      ],
+      "products": [
+        {
+          "id": "claude",
+          "name": "Claude",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "anthropic.claude.free",
+              "name": "Claude Free",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "30 days if the user opts out of training; 5 years if training is allowed.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "anthropic.claude.team",
+                "anthropic.bedrock.eu",
+                "mistral.lechat.enterprise"
+              ],
+              "note": "The consumer terms change of 28 Aug 2025 made training the default unless the user opts out. The privacy policy effective 7 Jul 2026 allows chats flagged for safety review to be used for training regardless of the user's setting.",
+              "source_urls": [
+                "https://www.anthropic.com/news/updates-to-our-consumer-terms",
+                "https://techcoffeehouse.com/2026/06/09/claude-training-data-opt-out-carve-out/",
+                "https://support.claude.com/en/articles/10015870-what-certifications-has-anthropic-obtained"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "anthropic.claude.pro_max",
+              "name": "Claude Pro / Max",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "30 days if the user opts out of training; 5 years if training is allowed.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "anthropic.claude.team",
+                "anthropic.claude.enterprise"
+              ],
+              "note": "Covers Claude Code used from Pro/Max accounts.",
+              "source_urls": [
+                "https://www.anthropic.com/news/updates-to-our-consumer-terms"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "anthropic.claude.team",
+              "name": "Claude Team",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Commercial terms; custom retention is Enterprise-only.",
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": false,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "anthropic.bedrock.eu",
+                "anthropic.vertex.eu",
+                "mistral.lechat.enterprise"
+              ],
+              "note": "Excluded from consumer training. SSO and domain capture are included. First-party Claude has no EU data residency; inference runs on US infrastructure.",
+              "source_urls": [
+                "https://claude.com/pricing",
+                "https://www.anthropic.com/news/updates-to-our-consumer-terms",
+                "https://sonomos.ai/blog/claude-eu-data-residency-2026/",
+                "https://compound.law/en-DE/tools/claude-dpa/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "anthropic.claude.enterprise",
+              "name": "Claude Enterprise",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Custom retention controls; ZDR addendum available.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "anthropic.bedrock.eu",
+                "anthropic.vertex.eu"
+              ],
+              "note": "Adds SCIM, audit logs, a Compliance API, IP allowlisting and RBAC. There is no first-party EU residency; the EU route is via Bedrock or Vertex.",
+              "source_urls": [
+                "https://claude.com/pricing",
+                "https://sonomos.ai/blog/claude-eu-data-residency-2026/",
+                "https://support.claude.com/en/articles/10015870-what-certifications-has-anthropic-obtained"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "subprocessor_list_public"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "claude_api",
+          "name": "Claude API / cloud",
+          "category": "api",
+          "tiers": [
+            {
+              "id": "anthropic.api.direct",
+              "name": "Claude API (direct)",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "API logs kept 7 days since Sep 2025 (was 30 days).",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "anthropic.bedrock.eu",
+                "anthropic.vertex.eu"
+              ],
+              "note": "inference_geo supports only 'us' or 'global'; there is no EU option.",
+              "source_urls": [
+                "https://sonomos.ai/blog/claude-eu-data-residency-2026/",
+                "https://sonomos.ai/blog/claude-dpa-explained-2026/",
+                "https://www.datastudios.org/post/claude-data-retention-policies-storage-rules-and-compliance-overview"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "subprocessor_list_public",
+                "admin_controls.audit_logs"
+              ]
+            },
+            {
+              "id": "anthropic.bedrock.eu",
+              "name": "Claude via AWS Bedrock (EU regions)",
+              "tier_type": "api",
+              "parent_jurisdiction": "US",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Customer-controlled in your AWS account; prompts are not shared with the model provider.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu",
+                "mistral.la_plateforme.api"
+              ],
+              "note": "Available in eu-central-1, eu-west-1, eu-west-3 and eu-north-1. Use the 'eu.' inference profile or a single EU region to keep inference in the EU. AWS is a US company, so CLOUD Act exposure remains. C5 is confirmed only for AgentCore.",
+              "source_urls": [
+                "https://aws.amazon.com/bedrock/faqs/",
+                "https://www.requesty.ai/blog/claude-eu-data-residency-bedrock-quota-fallback-regions",
+                "https://xorabyte.com/blog/aws-bedrock-gdpr-soc2-compliance/",
+                "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/compliance-validation.html"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            },
+            {
+              "id": "anthropic.vertex.eu",
+              "name": "Claude via Google Vertex AI (EU)",
+              "tier_type": "api",
+              "parent_jurisdiction": "US",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Google Cloud 'Training Restriction' terms apply; prompts are not stored beyond processing.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "The 'eu' multi-region endpoint (public preview) or a single EU region such as europe-west1 keeps processing in the EU. Google is a US company, so CLOUD Act exposure remains.",
+              "source_urls": [
+                "https://cloud.google.com/blog/products/ai-machine-learning/multi-region-endpoints-for-claude-available-on-vertex-ai",
+                "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai",
+                "https://docs.cloud.google.com/gemini/docs/discover/data-governance"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "signatory",
+      "known_regulatory_actions": [
+        {
+          "authority": "Data Protection Commission (IE)",
+          "date": "2024-09-12",
+          "action": "Cross-border inquiry into whether a DPIA was carried out before PaLM 2 training",
+          "status": "No outcome found as of 2026-09-23",
+          "source_url": "https://www.dataprotection.ie/en/news-media/press-releases/data-protection-commission-launches-inquiry-google-ai-model"
+        }
+      ],
+      "vendor_source_urls": [
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai"
+      ],
+      "products": [
+        {
+          "id": "gemini_consumer",
+          "name": "Gemini (consumer)",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "google.gemini.free",
+              "name": "Gemini (free, personal Google account)",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "'Keep Activity' is on by default. Chats reviewed by humans are kept separately for up to 3 years, even after the user deletes them.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "google.workspace.gemini",
+                "google.vertex.gemini"
+              ],
+              "note": "A subset of chats is reviewed by humans and used for training by default. Turning off Keep Activity stops training but disables some features.",
+              "source_urls": [
+                "https://support.google.com/gemini/answer/13594961?hl=en",
+                "https://www.techradar.com/ai-platforms-assistants/gemini/gemini-warned-me-humans-might-review-my-chats-but-turning-it-off-comes-with-a-surprising-downside"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "google.gemini.ai_pro",
+              "name": "Google AI Pro / Ultra (personal)",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "Same consumer Gemini Apps rules: human-reviewed chats kept up to 3 years.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "google.workspace.gemini"
+              ],
+              "note": "Paid consumer plans follow the consumer Gemini Apps privacy defaults.",
+              "source_urls": [
+                "https://support.google.com/gemini/answer/13594961?hl=en",
+                "https://onyri-sanitize.com/blog/google-gemini-and-your-data"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "workspace",
+          "name": "Gemini in Google Workspace",
+          "category": "productivity_suite",
+          "tiers": [
+            {
+              "id": "google.workspace.gemini",
+              "name": "Gemini in Google Workspace",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Follows Workspace retention (Vault).",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 27017",
+                "ISO 27018",
+                "ISO 27701",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "Gemini is a Workspace core service under the Cloud Data Processing Addendum, with a contractual 'Training Restriction'. Workspace data regions can restrict Gemini processing to the EU per org unit; data regions require eligible editions.",
+              "source_urls": [
+                "https://support.google.com/a/answer/15706919?hl=en",
+                "https://workspaceupdates.googleblog.com/2025/06/data-regions-support-for-gemini-features-in-google-workspace.html",
+                "https://workspaceupdates.googleblog.com/2026/06/gemini-app-data-regions-support.html",
+                "https://workspaceupdates.googleblog.com/2024/12/hippa-and-more-iso-certifications-for-the-gemini-app-on-web-and-mobile.html"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        },
+        {
+          "id": "google_api",
+          "name": "Gemini API / Vertex AI",
+          "category": "api",
+          "tiers": [
+            {
+              "id": "google.gemini_api.ai_studio",
+              "name": "Gemini API / Google AI Studio",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Paid-service terms; retention for abuse monitoring.",
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "google.vertex.gemini"
+              ],
+              "note": "In the EEA, CH and UK the paid-service data terms (no training) apply to all use, including free quota. Services offered to EEA users must use the paid tier.",
+              "source_urls": [
+                "https://ai.google.dev/gemini-api/terms",
+                "https://discuss.ai.google.dev/t/clarification-on-only-paid-services-for-eea-ch-uk/107860"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "admin_controls.audit_logs",
+                "admin_controls.data_export_deletion"
+              ]
+            },
+            {
+              "id": "google.vertex.gemini",
+              "name": "Vertex AI (Gemini, EU regions)",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "In-memory cache up to 24h (can be disabled). ZDR terms available via the account team.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu",
+                "mistral.la_plateforme.api"
+              ],
+              "note": "EU at-rest locations include NL, FR, DE and BE. The 'eu' multi-region endpoint is available. Google is a US company, so CLOUD Act exposure remains.",
+              "source_urls": [
+                "https://cloud.google.com/vertex-ai/generative-ai/docs/vertex-ai-zero-data-retention",
+                "https://docs.cloud.google.com/gemini/docs/discover/data-governance",
+                "https://optinest.de/ai-infrastructure/sovereignty/residency-guarantees/vertex-ai-data-residency-gdpr-rules-and-eu"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "signatory",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai",
+        "https://www.theregister.com/off-prem/2025/07/25/microsoft-exec-admits-it-cannot-guarantee-data-sovereignty/458553"
+      ],
+      "products": [
+        {
+          "id": "copilot_consumer",
+          "name": "Microsoft Copilot (consumer)",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "microsoft.copilot.consumer",
+              "name": "Copilot (consumer app, personal MSA)",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Consumer privacy settings.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "microsoft.m365_copilot.business"
+              ],
+              "note": "Microsoft does not train on EEA consumer data 'until further notice'. Outside the EEA, training is on by default with an opt-out. Still consumer terms with no DPA.",
+              "source_urls": [
+                "https://support.microsoft.com/en-us/microsoft-copilot/privacy-faq-for-microsoft-copilot",
+                "https://www.microsoft.com/en-us/microsoft-copilot/blog/2024/08/16/transparency-and-control-in-consumer-data-use/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m365_copilot",
+          "name": "Microsoft 365 Copilot",
+          "category": "productivity_suite",
+          "tiers": [
+            {
+              "id": "microsoft.m365_copilot.business",
+              "name": "Microsoft 365 Copilot / Copilot Chat (work account)",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Follows Microsoft 365 retention policies (Purview).",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II",
+                "C5"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "Data at rest stays in the EU Data Boundary. But FLEX ROUTING has been ON by default for EU/EFTA tenants since 17 Apr 2026, so LLM inference can leave the EU at peak load. Admins can disable it (Admin Center > Copilot > Settings). Anthropic models, a subprocessor since Jan 2026, are excluded from the EU Data Boundary. Prompts are never used to train foundation models.",
+              "source_urls": [
+                "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-privacy",
+                "https://learn.microsoft.com/en-us/microsoft-365/copilot/copilot-flex-routing",
+                "https://office365itpros.com/2026/04/07/flex-routing-copilot-europe/",
+                "https://learn.microsoft.com/en-us/microsoft-365/copilot/connect-to-ai-subprocessor",
+                "https://techcommunity.microsoft.com/blog/microsoft365copilotblog/microsoft-365-copilot-achieves-isoiec-420012023-certification/4397144",
+                "https://learn.microsoft.com/en-us/compliance/regulatory/offering-c5-germany"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        },
+        {
+          "id": "copilot_studio",
+          "name": "Copilot Studio",
+          "category": "agent_builder",
+          "tiers": [
+            {
+              "id": "microsoft.copilot_studio.business",
+              "name": "Copilot Studio",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Power Platform environment settings.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "The EU Data Boundary applies only if all environments are in EU regions. The 'Move data across regions' and 'flex routing' settings can send prompts outside the EU. Agents you build may make you a PROVIDER of an AI system under the AI Act.",
+              "source_urls": [
+                "https://learn.microsoft.com/en-us/microsoft-copilot-studio/geo-data-residency",
+                "https://learn.microsoft.com/en-us/power-platform/admin/geographical-availability-copilot",
+                "https://windowsnews.ai/article/microsoft-365-copilot-aces-iso-42001-surveillance-audit-copilot-studio-joins-certified-scope.420912"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        },
+        {
+          "id": "azure_openai",
+          "name": "Azure OpenAI / Microsoft Foundry",
+          "category": "api",
+          "tiers": [
+            {
+              "id": "microsoft.azure_openai.foundry",
+              "name": "Azure OpenAI / Foundry (EU Data Zone or EU region)",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Abuse-monitoring store up to 30 days (reviewed by EEA staff for EEA deployments). Modified abuse monitoring available on approval.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II",
+                "C5"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu",
+                "mistral.la_plateforme.api"
+              ],
+              "note": "A DataZone EU deployment keeps processing within EU member states. 'Global' deployments can process anywhere. Claude in Foundry is not yet on EU infrastructure ('coming 2026').",
+              "source_urls": [
+                "https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy",
+                "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/abuse-monitoring",
+                "https://www.infoq.com/news/2026/07/claude-foundry-ga-europe/",
+                "https://learn.microsoft.com/en-us/compliance/regulatory/offering-c5-germany"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        },
+        {
+          "id": "github_copilot",
+          "name": "GitHub Copilot",
+          "category": "coding",
+          "tiers": [
+            {
+              "id": "microsoft.github_copilot.free",
+              "name": "GitHub Copilot Free",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "Interaction data used for training since 24 Apr 2026 unless opted out.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "microsoft.github_copilot.business"
+              ],
+              "note": "Since 24 Apr 2026, prompts, outputs and code snippets are used for training unless the user disables 'Allow GitHub to use my data for AI model training'.",
+              "source_urls": [
+                "https://github.blog/news-insights/company-news/updates-to-github-copilot-interaction-data-usage-policy/",
+                "https://www.theregister.com/2026/03/26/github_ai_training_policy_changes/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism"
+              ]
+            },
+            {
+              "id": "microsoft.github_copilot.pro",
+              "name": "GitHub Copilot Pro / Pro+",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "As Free.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "microsoft.github_copilot.business",
+                "microsoft.github_copilot.enterprise"
+              ],
+              "note": "Same training change as Free (24 Apr 2026).",
+              "source_urls": [
+                "https://github.blog/news-insights/company-news/updates-to-github-copilot-interaction-data-usage-policy/",
+                "https://github.com/orgs/community/discussions/188488"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism"
+              ]
+            },
+            {
+              "id": "microsoft.github_copilot.business",
+              "name": "GitHub Copilot Business",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Contractual business terms.",
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II",
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "microsoft.github_copilot.enterprise",
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "Contractually excluded from training. EU data residency for Copilot (all inference in the EU) has been available since 13 Apr 2026 on GitHub Enterprise Cloud with data residency (GHE.com). It is off by default and an admin must opt in.",
+              "source_urls": [
+                "https://github.blog/changelog/2026-04-13-copilot-data-residency-in-us-eu-and-fedramp-compliance-now-available/",
+                "https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency",
+                "https://github.blog/changelog/2024-06-03-github-copilot-compliance-soc-2-type-1-report-and-iso-iec-270012013-certification-scope/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            },
+            {
+              "id": "microsoft.github_copilot.enterprise",
+              "name": "GitHub Copilot Enterprise",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Contractual enterprise terms.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs",
+                "DPF"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II",
+                "ISO 42001"
+              ],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "As Business. Data residency covers agent mode, chat, the cloud agent and code review.",
+              "source_urls": [
+                "https://github.blog/changelog/2026-04-13-copilot-data-residency-in-us-eu-and-fedramp-compliance-now-available/",
+                "https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ],
+      "sovereignty_note": "June 2025: Microsoft France testified under oath before the French Senate that it cannot guarantee EU data will never be handed to US authorities (CLOUD Act). Source: https://www.theregister.com/off-prem/2025/07/25/microsoft-exec-admits-it-cannot-guarantee-data-sovereignty/458553"
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_signed",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://www.euronews.com/next/2025/07/18/meta-rebuffs-eus-ai-code-of-practice"
+      ],
+      "products": [
+        {
+          "id": "meta_ai",
+          "name": "Meta AI",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "meta.meta_ai.consumer",
+              "name": "Meta AI (WhatsApp / Instagram / Facebook / app)",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "yes_default",
+              "data_retention": {
+                "default": null,
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise",
+                "microsoft.m365_copilot.business"
+              ],
+              "note": "Since 27 May 2025, EU users' public posts and their interactions with Meta AI are used for training. An objection form covered public content. Using AI chats for ad targeting is excluded in the EU. Not intended for business use.",
+              "source_urls": [
+                "https://about.fb.com/news/2025/04/making-ai-work-harder-for-europeans/",
+                "https://www.silicon.co.uk/cloud/ai/meta-ai-training-eu-608248",
+                "https://au.news.yahoo.com/meta-ai-chats-targeted-ads-101618697.html"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "transfer_mechanism",
+                "subprocessor_list_public",
+                "admin_controls.data_export_deletion"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "llama",
+          "name": "Llama (open weights)",
+          "category": "self_hosted",
+          "tiers": [
+            {
+              "id": "meta.llama.self_hosted",
+              "name": "Llama self-hosted (EU infra / on-prem)",
+              "tier_type": "self_hosted",
+              "parent_jurisdiction": "self",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Fully under your control.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "not_needed"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [],
+              "note": "No data leaves your infrastructure. Security depends on your own hosting (or your EU hosting provider's certifications). LICENCE: the Llama 4 multimodal models exclude EU-domiciled companies. Fine-tuning or putting a model on the market can make you a PROVIDER under the AI Act. The model provider (Meta) has not signed the GPAI Code.",
+              "source_urls": [
+                "https://www.llama.com/faq/",
+                "https://ioplus.nl/en/posts/european-union-excluded-from-llama-4-multimodal-models",
+                "https://www.llama.com/llama4/use-policy/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral AI",
+      "hq_country": "FR",
+      "parent_jurisdiction": "EU",
+      "gpai_code_of_practice": "signatory",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai",
+        "https://help.mistral.ai/en/articles/347629-where-do-you-store-my-data-or-my-organization-s-data"
+      ],
+      "products": [
+        {
+          "id": "lechat",
+          "name": "Le Chat (renamed 'Vibe' in 2026)",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "mistral.lechat.free",
+              "name": "Le Chat / Vibe Free",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": null
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise"
+              ],
+              "note": "EU company, data primarily hosted in the EU. Some features may temporarily transfer data outside the EU via US cloud subprocessors (Google Cloud and others; see Mistral Trust Center). Training is on by default with an opt-out.",
+              "source_urls": [
+                "https://help.mistral.ai/en/articles/455207-can-i-opt-out-of-my-input-or-output-data-being-used-for-training",
+                "https://help.mistral.ai/en/articles/347629-where-do-you-store-my-data-or-my-organization-s-data",
+                "https://www.waimakers.com/en/resources/gdpr-compliance/mistral-ai"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "eu_data_residency.inference",
+                "data_retention.default"
+              ]
+            },
+            {
+              "id": "mistral.lechat.pro",
+              "name": "Le Chat / Vibe Pro",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": null
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise"
+              ],
+              "note": "Policy changed in early Sep 2026: Pro input and output can now be used for training unless the user opts out. Older help pages still say Pro is not trained by default. The conservative value is stored.",
+              "source_urls": [
+                "https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-09-02-mistral-starts-training-on-free-and-paid-consumer-input-by-d/",
+                "https://anarlog.so/blog/mistral-data-retention-policy/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "conflicting",
+              "unverified_fields": [
+                "eu_data_residency.inference",
+                "data_retention.default"
+              ]
+            },
+            {
+              "id": "mistral.lechat.team",
+              "name": "Le Chat / Vibe Team",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": null
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise"
+              ],
+              "note": "CONFLICTING: the Sep 2026 policy lists Team among the plans trained unless opted out, while older docs say Team is opted out by default. Check your Admin Console and switch training off explicitly.",
+              "source_urls": [
+                "https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-09-02-mistral-starts-training-on-free-and-paid-consumer-input-by-d/",
+                "https://docs.mistral.ai/admin/monitor-comply/privacy-data-controls",
+                "https://legal.mistral.ai/terms/data-processing-addendum/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "conflicting",
+              "unverified_fields": [
+                "eu_data_residency.inference",
+                "data_retention.default",
+                "admin_controls.sso",
+                "admin_controls.audit_logs"
+              ]
+            },
+            {
+              "id": "mistral.lechat.enterprise",
+              "name": "Le Chat / Vibe Enterprise",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "Contract-defined.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.self_hosted.eu"
+              ],
+              "note": "Training off by default. Can be deployed in a private cloud or on-prem for full EU control. EU parent, so no CLOUD Act exposure at parent level (but check US subprocessors).",
+              "source_urls": [
+                "https://docs.mistral.ai/admin/security-access/privacy",
+                "https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-09-02-mistral-starts-training-on-free-and-paid-consumer-input-by-d/",
+                "https://legal.mistral.ai/terms/data-processing-addendum/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "la_plateforme",
+          "name": "La Plateforme (API)",
+          "category": "api",
+          "tiers": [
+            {
+              "id": "mistral.la_plateforme.api",
+              "name": "Mistral La Plateforme API",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": "30 rolling days for abuse monitoring; ZDR on the Scale plan for stateless endpoints.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.self_hosted.eu"
+              ],
+              "note": "All data hosted in the EU by default. The Swedish site is a future inference data centre.",
+              "source_urls": [
+                "https://anarlog.so/blog/mistral-data-retention-policy/",
+                "https://legal.mistral.ai/terms/data-processing-addendum/",
+                "https://wavect.io/blog/eu-data-residency-ai-apps-2026/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "admin_controls.sso",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mistral_self_hosted",
+          "name": "Mistral open-weight models",
+          "category": "self_hosted",
+          "tiers": [
+            {
+              "id": "mistral.self_hosted.eu",
+              "name": "Mistral open-weight self-hosted (EU / on-prem)",
+              "tier_type": "self_hosted",
+              "parent_jurisdiction": "self",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Fully under your control.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "not_needed"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [],
+              "note": "Security depends on your own hosting. The model provider signed the GPAI Code.",
+              "source_urls": [
+                "https://mistral.ai/it/products/mistral-compute",
+                "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_signed",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://companyscope.io/vendors/perplexity"
+      ],
+      "products": [
+        {
+          "id": "perplexity",
+          "name": "Perplexity",
+          "category": "search_assistant",
+          "tiers": [
+            {
+              "id": "perplexity.free",
+              "name": "Perplexity Free",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "'AI data retention' is on by default.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "perplexity.enterprise"
+              ],
+              "note": "Opting out applies only to future data. Data is stored in the US by default.",
+              "source_urls": [
+                "https://www.perplexity.ai/help-center/en/articles/11564572-data-collection-at-perplexity",
+                "https://joindeleteme.com/ai-privacy-settings/perplexity-ai-opt-out-data-training-guide/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "perplexity.pro",
+              "name": "Perplexity Pro / Max",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": "'AI data retention' is on by default.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "perplexity.enterprise"
+              ],
+              "note": "Same defaults as Free.",
+              "source_urls": [
+                "https://www.perplexity.ai/help-center/en/articles/11564572-data-collection-at-perplexity"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "perplexity.enterprise",
+              "name": "Perplexity Enterprise Pro / Max",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": null,
+                "inference": "none"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Enterprise settings.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise"
+              ],
+              "note": "Never used for training (also contractually with its model providers). Audit logs need 50+ seats. EU storage availability is reported as 'limited'; primary infrastructure is in the US.",
+              "source_urls": [
+                "https://www.perplexity.ai/hub/blog/how-perplexity-enterprise-pro-keeps-your-data-secure",
+                "https://www.perplexity.ai/help-center/en/articles/11652747-audit-logs",
+                "https://www.perplexity.ai/hub/legal/dpa"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "eu_data_residency.storage",
+                "subprocessor_list_public"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "hq_country": "CN",
+      "parent_jurisdiction": "CN",
+      "gpai_code_of_practice": "not_signed",
+      "known_regulatory_actions": [
+        {
+          "authority": "Garante (IT)",
+          "date": "2025-01-30",
+          "action": "Urgent limitation (block) on processing Italian users' data",
+          "status": "In effect (definitive limitation)",
+          "source_url": "https://www.twobirds.com/en/insights/2025/the-garante-imposes-a-definitive-limitation-on-the-processing-of-italian-users%E2%80%99-personal-data"
+        },
+        {
+          "authority": "Autoriteit Persoonsgegevens (NL)",
+          "date": "2025-01-31",
+          "action": "Public warning against using DeepSeek; broader investigation into transfers to China",
+          "status": "Warning issued; investigation opened",
+          "source_url": "https://www.autoriteitpersoonsgegevens.nl/actueel/ap-pas-op-met-gebruik-chatbot-deepseek"
+        },
+        {
+          "authority": "Berlin DPA (DE)",
+          "date": "2025-06",
+          "action": "Reported the app to Apple and Google as illegal content under DSA Art. 16 (unlawful transfer to China, GDPR Art. 46(1))",
+          "status": "Reported",
+          "source_url": "https://www.bleepingcomputer.com/news/security/germany-asks-google-apple-remove-deepseek-ai-from-app-stores/"
+        }
+      ],
+      "vendor_source_urls": [
+        "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html",
+        "https://en.wikipedia.org/wiki/General-Purpose_AI_Code_of_Practice"
+      ],
+      "products": [
+        {
+          "id": "deepseek",
+          "name": "DeepSeek",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "deepseek.app",
+              "name": "DeepSeek app / web",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": null,
+              "data_retention": {
+                "default": null,
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": [
+                "none"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise",
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "Data is collected, processed and stored in the PRC (privacy policy updated 10 Feb 2026). Inputs, chat history, files, device data and keystroke patterns are collected. The National Intelligence Law applies. The Dutch AP explicitly warns against its use.",
+              "source_urls": [
+                "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html",
+                "https://www.promptquorum.com/local-llms/deepseek-local-china-data-privacy-2026",
+                "https://nltimes.nl/2025/02/01/dutch-data-protection-authority-warns-chinese-chatbot-deepseek"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "trains_on_customer_data",
+                "data_retention.default",
+                "subprocessor_list_public",
+                "admin_controls.data_export_deletion"
+              ]
+            },
+            {
+              "id": "deepseek.api",
+              "name": "DeepSeek API (hosted by DeepSeek)",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": null,
+              "data_retention": {
+                "default": null,
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": null,
+              "transfer_mechanism": [
+                "none"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": null,
+                "user_management": null,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu",
+                "mistral.la_plateforme.api"
+              ],
+              "note": "The privacy policy covers API use as well, with storage in the PRC. Self-hosting the open-weight DeepSeek models on EU infrastructure removes the transfer issue (see Self-hosted).",
+              "source_urls": [
+                "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "unverified",
+              "unverified_fields": [
+                "trains_on_customer_data",
+                "data_retention.default",
+                "dpa_available",
+                "subprocessor_list_public",
+                "admin_controls.audit_logs",
+                "admin_controls.user_management",
+                "admin_controls.data_export_deletion"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "xai",
+      "name": "xAI (Grok)",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "partial",
+      "known_regulatory_actions": [
+        {
+          "authority": "Data Protection Commission (IE)",
+          "date": "2025-04-11",
+          "action": "Inquiry into use of EU users' X posts to train Grok",
+          "status": "Open",
+          "source_url": "https://techcrunch.com/2025/04/11/irelands-data-regulator-investigates-xs-use-of-european-user-data-to-train-grok"
+        },
+        {
+          "authority": "European Commission (DSA)",
+          "date": "2026-01-26",
+          "action": "Formal proceedings over Grok generating sexualised deepfakes of women and minors",
+          "status": "Open",
+          "source_url": "https://www.aljazeera.com/news/2026/1/26/eu-launches-probe-into-grok-ai-feature-creating-deepfakes-of-women-minors"
+        },
+        {
+          "authority": "Data Protection Commission (IE)",
+          "date": "2026-02-17",
+          "action": "Inquiry into X (XIUC) over non-consensual intimate images generated with Grok (GDPR Arts. 5, 6, 25, 35)",
+          "status": "Open",
+          "source_url": "https://www.dataprotection.ie/en/news-media/press-releases/data-protection-commission-opens-investigation-x-xiuc"
+        },
+        {
+          "authority": "Rechtbank Amsterdam (NL)",
+          "date": "2026-03-26",
+          "action": "Preliminary injunction banning Grok from generating non-consensual nudes and CSAM in NL; €100k/day penalty, capped at €10m per entity",
+          "status": "In force",
+          "source_url": "https://www.techpolicy.press/dutch-court-orders-x-grok-to-stop-aigenerated-sexual-abuse-content/"
+        }
+      ],
+      "vendor_source_urls": [
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai"
+      ],
+      "products": [
+        {
+          "id": "grok",
+          "name": "Grok",
+          "category": "assistant",
+          "tiers": [
+            {
+              "id": "xai.grok.consumer",
+              "name": "Grok (X / grok.com, free & premium)",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "mistral.lechat.enterprise",
+                "microsoft.m365_copilot.business"
+              ],
+              "note": "Trains on X posts and Grok use by default. The opt-out is under Settings > Privacy > Grok & Third-party Collaborators and does not remove past training. xAI signed only the Safety & Security chapter of the GPAI Code.",
+              "source_urls": [
+                "https://www.windowscentral.com/software-apps/windows-11/how-to-prevent-grok-from-using-your-data-for-ai-training-on-x",
+                "https://www.helpnetsecurity.com/2026/02/17/ireland-grok-ai-chatbot-deepfakes-investigation/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "transfer_mechanism",
+                "subprocessor_list_public",
+                "admin_controls.data_export_deletion"
+              ]
+            },
+            {
+              "id": "xai.api.business",
+              "name": "xAI API / Grok Business & Enterprise",
+              "tier_type": "api",
+              "eu_data_residency": {
+                "storage": null,
+                "inference": null
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "API requests are stored 30 days for abuse audits, then deleted. ZDR for enterprise accounts only.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "mistral.la_plateforme.api",
+                "microsoft.azure_openai.foundry"
+              ],
+              "note": "xAI acts as processor under its DPA. No EU hosting information was found.",
+              "source_urls": [
+                "https://docs.x.ai/developers/faq/security",
+                "https://x.ai/legal/terms-of-service-enterprise",
+                "https://meetily.ai/llm-privacy/xai"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "eu_data_residency.storage",
+                "eu_data_residency.inference",
+                "transfer_mechanism",
+                "subprocessor_list_public",
+                "admin_controls.sso",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deepl",
+      "name": "DeepL",
+      "hq_country": "DE",
+      "parent_jurisdiction": "EU",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://support.deepl.com/hc/en-us/articles/26380849099932-DeepL-infrastructure-and-data-protection"
+      ],
+      "products": [
+        {
+          "id": "deepl",
+          "name": "DeepL Translator / Write",
+          "category": "translation",
+          "tiers": [
+            {
+              "id": "deepl.free",
+              "name": "DeepL Free",
+              "tier_type": "free",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "yes_default",
+              "data_retention": {
+                "default": "Texts processed 'for a limited period' to train and improve DeepL's networks.",
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": [
+                "not_needed"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": false
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II",
+                "C5"
+              ],
+              "lower_risk_alternatives": [
+                "deepl.pro"
+              ],
+              "note": "The free version uses texts for training, and its terms reportedly bar texts that contain personal data. The EU company runs servers in the EU (IE, NL) plus AWS.",
+              "source_urls": [
+                "https://a7.de/en/blog/can-i-use-deepl-at-work/",
+                "https://note.com/yusuke_webmarke/n/nee8e85fd04c7?hl=en",
+                "https://support.deepl.com/hc/en-us/articles/26380849099932-DeepL-infrastructure-and-data-protection"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "deepl.pro",
+              "name": "DeepL Pro (Starter / Advanced / Ultimate / API Pro)",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Deleted after translation; saved translations are never used for training.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "not_needed"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II",
+                "C5"
+              ],
+              "lower_risk_alternatives": [],
+              "note": "An EU provider with EU servers (Ireland, Netherlands). It also uses AWS infrastructure, so a US subprocessor is involved. Offers BYOK, MFA and audit logs.",
+              "source_urls": [
+                "https://www.deepl.com/en/pro",
+                "https://www.deepl.com/en/blog/new-security-features-innovation",
+                "https://www.deepl.com/en/press-release/deepl-achieves-iso-27001-certification",
+                "https://risclens.com/compliance/directory/deepl"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "subprocessor_list_public"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grammarly",
+      "name": "Grammarly (Superhuman)",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://www.grammarly.com/compliance"
+      ],
+      "products": [
+        {
+          "id": "grammarly",
+          "name": "Grammarly",
+          "category": "writing",
+          "tiers": [
+            {
+              "id": "grammarly.individual",
+              "name": "Grammarly Free / Premium / Pro (single user)",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": [
+                "DPF"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 27701",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "grammarly.business",
+                "deepl.pro"
+              ],
+              "note": "'Product Improvement and Training' is on by default for individual users. Data is stored on AWS in the US.",
+              "source_urls": [
+                "https://support.grammarly.com/hc/en-us/articles/25555503115277-Product-Improvement-and-Training-Control",
+                "https://support.grammarly.com/hc/en-us/articles/20916119474829-Privacy-and-security-FAQs",
+                "https://support.grammarly.com/hc/en-us/articles/360021115751-Does-Grammarly-participate-in-the-EU-U-S-Data-Privacy-Framework-EU-U-S-DPF-the-UK-Extension-to-the-EU-U-S-DPF-and-the-Swiss-U-S-Data-Privacy-Framework"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "grammarly.business",
+              "name": "Grammarly Business / Enterprise",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "no_default",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "DPF",
+                "SCCs"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 27017",
+                "ISO 27018",
+                "ISO 27701",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "deepl.pro"
+              ],
+              "note": "Training on customer content is off by default for business and education accounts. Data is hosted in the US.",
+              "source_urls": [
+                "https://superhuman.com/legal/dpa",
+                "https://www.grammarly.com/compliance",
+                "https://support.grammarly.com/hc/en-us/articles/360049454572-What-data-transfer-mechanisms-does-Grammarly-use-for-transferring-EU-data-to-the-United-States"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "subprocessor_list_public",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://www.notion.com/help/notion-ai-security-practices"
+      ],
+      "products": [
+        {
+          "id": "notion_ai",
+          "name": "Notion AI",
+          "category": "productivity_suite",
+          "tiers": [
+            {
+              "id": "notion.ai.business",
+              "name": "Notion AI (Free / Plus / Business)",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "LLM providers (OpenAI, Anthropic, etc.) keep data 30 days or less.",
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": false,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "notion.ai.enterprise"
+              ],
+              "note": "Contracts with LLM providers prohibit training. Data is stored in the US on non-Enterprise plans.",
+              "source_urls": [
+                "https://www.notion.com/help/notion-ai-security-practices",
+                "https://compound.law/en-DE/tools/notion-ai/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism",
+                "admin_controls.sso"
+              ]
+            },
+            {
+              "id": "notion.ai.enterprise",
+              "name": "Notion AI (Enterprise)",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Zero data retention at LLM providers.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "EU data residency (Frankfurt, AWS) covers data at rest. Notion AI inference may be routed outside the selected region.",
+              "source_urls": [
+                "https://www.notion.com/help/data-residency",
+                "https://www.notion.com/help/notion-ai-security-practices"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "transfer_mechanism"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zoom",
+      "name": "Zoom",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://www.zoom.com/en/trust/gdpr/"
+      ],
+      "products": [
+        {
+          "id": "ai_companion",
+          "name": "Zoom AI Companion",
+          "category": "meeting_assistant",
+          "tiers": [
+            {
+              "id": "zoom.ai_companion.paid",
+              "name": "Zoom AI Companion (paid Zoom Workplace)",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "optional"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Follows Zoom account settings.",
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "DPF",
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 27017",
+                "ISO 27018",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [],
+              "note": "Audio, video, chat and other communications content is not used to train Zoom or third-party models. EU accounts can use ZM+/ZMO processing. Features using third-party models (e.g. Perplexity) may process data in the US.",
+              "source_urls": [
+                "https://www.zoom.com/en/products/ai-assistant/resources/privacy-security/",
+                "https://library.zoom.com/zoom-workplace/artificial-intelligence/artificial-intelligence-bluepaper/security-and-compliance/data-residency-storage-and-model-architecture",
+                "https://www.zoom.com/en/trust/legal-compliance/iso-27001/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "otter",
+      "name": "Otter.ai",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [
+        {
+          "authority": "US District Court N.D. Cal.",
+          "date": "2025-10",
+          "action": "Consolidated class action (In re Otter.AI Privacy Litigation): recording meetings without all-party consent and training on the recordings",
+          "status": "Pending",
+          "source_url": "https://www.npr.org/2025/08/15/g-s1-83087/otter-ai-transcription-class-action-lawsuit"
+        }
+      ],
+      "vendor_source_urls": [
+        "https://otter.ai/privacy-security"
+      ],
+      "products": [
+        {
+          "id": "otter",
+          "name": "Otter.ai",
+          "category": "meeting_assistant",
+          "tiers": [
+            {
+              "id": "otter.individual",
+              "name": "Otter Basic / Pro",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "zoom.ai_companion.paid",
+                "fireflies.all"
+              ],
+              "note": "Trains on de-identified audio and transcripts by default; opting out requires an email to privacy@otter.ai. Hosted in AWS US-West with no EU option. The bot can join meetings without all-party consent, which is a GDPR and consent risk for every participant.",
+              "source_urls": [
+                "https://otter.ai/privacy-policy",
+                "https://www.numigtm.com/blog/where-does-otter-ai-send-your-meeting-data",
+                "https://otter.ai/blog/otter-ai-achieves-soc-2-type-ii-attestation-report"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "transfer_mechanism"
+              ]
+            },
+            {
+              "id": "otter.business",
+              "name": "Otter Business / Enterprise",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": null,
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "zoom.ai_companion.paid",
+                "fireflies.all"
+              ],
+              "note": "A no-training clause must be negotiated in the MSA; it is not confirmed as the default. No EU residency.",
+              "source_urls": [
+                "https://help.otter.ai/hc/en-us/articles/13352505516695-Enterprise-Features-Overview",
+                "https://www.getvoibe.com/resources/is-otter-safe/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "unverified",
+              "unverified_fields": [
+                "trains_on_customer_data",
+                "data_retention.default",
+                "transfer_mechanism",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fireflies",
+      "name": "Fireflies.ai",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://trust.fireflies.ai/"
+      ],
+      "products": [
+        {
+          "id": "fireflies",
+          "name": "Fireflies.ai",
+          "category": "meeting_assistant",
+          "tiers": [
+            {
+              "id": "fireflies.all",
+              "name": "Fireflies (all plans)",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "zoom.ai_companion.paid"
+              ],
+              "note": "States it never trains on customer data, across all plans and with its model providers. EU 'Private Storage' is Enterprise-only, and transcription and AI processing still run in the US. Meeting-bot consent issues also apply.",
+              "source_urls": [
+                "https://trust.fireflies.ai/faq",
+                "https://www.numigtm.com/blog/is-fireflies-ai-gdpr-compliant",
+                "https://guide.fireflies.ai/articles/9596505232-learn-about-data-storage-and-transfer"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "admin_controls.sso",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "midjourney",
+      "name": "Midjourney",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_signed",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service"
+      ],
+      "products": [
+        {
+          "id": "midjourney",
+          "name": "Midjourney",
+          "category": "image_generation",
+          "tiers": [
+            {
+              "id": "midjourney.all",
+              "name": "Midjourney (Basic / Standard / Pro / Mega)",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "yes_default",
+              "data_retention": {
+                "default": null,
+                "configurable": false,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "canva.teams_enterprise"
+              ],
+              "note": "Content is public by default; Stealth mode is Pro/Mega only and 'best efforts'. Images and prompts may be used to train models, with a perpetual, irrevocable licence to Midjourney. No SOC 2. Midjourney is not listed as a GPAI Code signatory.",
+              "source_urls": [
+                "https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service",
+                "https://docs.midjourney.com/hc/en-us/articles/32019750070669-Stealth-Mode",
+                "https://www.credo.ai/ai-vendor-directory/midjourney"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "transfer_mechanism",
+                "subprocessor_list_public",
+                "admin_controls.data_export_deletion"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canva",
+      "name": "Canva",
+      "hq_country": "AU",
+      "parent_jurisdiction": "other",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://www.canva.com/trust/privacy/"
+      ],
+      "products": [
+        {
+          "id": "canva_ai",
+          "name": "Canva AI (Magic Studio)",
+          "category": "design",
+          "tiers": [
+            {
+              "id": "canva.free_pro",
+              "name": "Canva Free / Pro",
+              "tier_type": "personal_paid",
+              "eu_data_residency": {
+                "storage": "none",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "opt_out",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": false,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": false,
+                "audit_logs": false,
+                "user_management": false,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [
+                "canva.teams_enterprise"
+              ],
+              "note": "AI training is on by default in the privacy settings for Free and Pro. Headquartered in Australia; data is stored on AWS, including in the US.",
+              "source_urls": [
+                "https://www.canva.com/trust/privacy/",
+                "https://www.peterbrady.co.uk/ai-exposure/canva/",
+                "https://www.canva.com/security/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "subprocessor_list_public"
+              ]
+            },
+            {
+              "id": "canva.teams_enterprise",
+              "name": "Canva Teams / Business / Enterprise",
+              "tier_type": "business",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": "none"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": null,
+                "configurable": true,
+                "zdr_available": false
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "SCCs"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [],
+              "note": "Team and Enterprise content is not used for AI training and this cannot be enabled. A DPA with SCCs (EU to AU/US) is included. Only Enterprise can request data residency; Teams data is processed globally, including in the US.",
+              "source_urls": [
+                "https://www.canva.com/policies/data-processing-addendum/",
+                "https://compound.law/en-DE/tools/canva-ai/",
+                "https://www.canva.com/newsroom/news/safe-ai-canva-shield/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "data_retention.default",
+                "subprocessor_list_public",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "salesforce",
+      "name": "Salesforce",
+      "hq_country": "US",
+      "parent_jurisdiction": "US",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://compliance.salesforce.com/en/categories/iso-42001"
+      ],
+      "products": [
+        {
+          "id": "agentforce",
+          "name": "Einstein / Agentforce",
+          "category": "crm_ai",
+          "tiers": [
+            {
+              "id": "salesforce.agentforce.enterprise",
+              "name": "Salesforce Einstein / Agentforce",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "optional",
+                "inference": null
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Einstein Trust Layer has zero data retention agreements with LLM providers.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "DPF",
+                "SCCs"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001",
+                "ISO 42001",
+                "SOC 2 Type II"
+              ],
+              "lower_risk_alternatives": [],
+              "note": "The Hyperforce EU Operating Zone offers EU data residency (DE, FR). LLM inference location depends on the model provider; not verified for EU.",
+              "source_urls": [
+                "https://developer.salesforce.com/docs/ai/agentforce/guide/trust.html",
+                "https://www.salesforce.com/platform/data-residence-eu-oz/",
+                "https://compliance.salesforce.com/en/categories/iso-42001",
+                "https://dpa-atlas.foundagent.net/gdpr/salesforce"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "eu_data_residency.inference"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aleph_alpha",
+      "name": "Aleph Alpha",
+      "hq_country": "DE",
+      "parent_jurisdiction": "EU",
+      "parent_change_pending": "Cohere (Canada) signed a definitive merger agreement on 16 Sep 2026; closing is expected later in 2026, subject to approvals. The parent jurisdiction may change to Canada ('other').",
+      "gpai_code_of_practice": "signatory",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [
+        "https://techcrunch.com/2026/04/25/why-cohere-is-merging-with-aleph-alpha/",
+        "https://www.innobu.com/en/articles/aleph-alpha-cohere-sovereign-ai-2026.html"
+      ],
+      "products": [
+        {
+          "id": "pharia",
+          "name": "PhariaAI",
+          "category": "enterprise_platform",
+          "tiers": [
+            {
+              "id": "aleph_alpha.pharia.enterprise",
+              "name": "Aleph Alpha PhariaAI (STACKIT / on-prem)",
+              "tier_type": "enterprise",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Customer-controlled (on-prem or STACKIT).",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "not_needed"
+              ],
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": null,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [
+                "ISO 27001"
+              ],
+              "lower_risk_alternatives": [],
+              "note": "Runs on German infrastructure (STACKIT/Schwarz Group) or in the customer's own data centre, with no US hyperscaler involved. The Luminous API is no longer marketed to new customers.",
+              "source_urls": [
+                "https://vstorm.co/agentic-ai/ai-platforms/top-5-sovereign-ai-platforms-in-europe-ranked-by-compliance-regional-fit-and-data-control/",
+                "https://megatek.ai/en/software/aleph-alpha-phariaai/",
+                "https://innfactory.ai/en/ai-models/aleph-alpha-luminous/"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": [
+                "subprocessor_list_public",
+                "admin_controls.sso",
+                "admin_controls.audit_logs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "selfhosted",
+      "name": "Self-hosted open-weight models",
+      "hq_country": "self",
+      "parent_jurisdiction": "self",
+      "gpai_code_of_practice": "not_applicable",
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [],
+      "products": [
+        {
+          "id": "open_weight",
+          "name": "Open-weight models (Llama, Mistral, Qwen, DeepSeek, Gemma …)",
+          "category": "self_hosted",
+          "tiers": [
+            {
+              "id": "selfhosted.open_weight.eu",
+              "name": "Self-hosted on EU infrastructure / on-prem",
+              "tier_type": "self_hosted",
+              "eu_data_residency": {
+                "storage": "default",
+                "inference": "default"
+              },
+              "trains_on_customer_data": "never",
+              "data_retention": {
+                "default": "Fully under your control.",
+                "configurable": true,
+                "zdr_available": true
+              },
+              "dpa_available": true,
+              "transfer_mechanism": [
+                "not_needed"
+              ],
+              "subprocessor_list_public": true,
+              "admin_controls": {
+                "sso": true,
+                "audit_logs": true,
+                "user_management": true,
+                "data_export_deletion": true
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [],
+              "note": "The lowest sovereignty risk, as long as the hosting provider is EU-headquartered (a US hyperscaler's EU region still carries CLOUD Act exposure). Check each model's licence: Llama 4 multimodal excludes EU companies, and Chinese-origin weights (Qwen, DeepSeek) raise no transfer issue when run locally, but check licence and content-filter behaviour. Operating, fine-tuning or distributing a model can bring AI Act provider obligations. Security (SSO, logs, patching) is your own responsibility.",
+              "source_urls": [
+                "https://www.promptquorum.com/local-llms/deepseek-local-china-data-privacy-2026",
+                "https://ioplus.nl/en/posts/european-union-excluded-from-llama-4-multimodal-models",
+                "https://danubedata.ro/blog/us-cloud-act-european-alternatives-2026"
+              ],
+              "last_verified": "2026-09-23",
+              "status": "verified",
+              "unverified_fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "custom",
+      "name": "Other tool",
+      "hq_country": null,
+      "parent_jurisdiction": null,
+      "gpai_code_of_practice": null,
+      "known_regulatory_actions": [],
+      "vendor_source_urls": [],
+      "products": [
+        {
+          "id": "other",
+          "name": "Other tool (free text)",
+          "category": "unknown",
+          "tiers": [
+            {
+              "id": "custom.other.unknown",
+              "name": "Other tool (not in knowledge base)",
+              "tier_type": null,
+              "eu_data_residency": {
+                "storage": null,
+                "inference": null
+              },
+              "trains_on_customer_data": null,
+              "data_retention": {
+                "default": null,
+                "configurable": null,
+                "zdr_available": null
+              },
+              "dpa_available": null,
+              "transfer_mechanism": null,
+              "subprocessor_list_public": null,
+              "admin_controls": {
+                "sso": null,
+                "audit_logs": null,
+                "user_management": null,
+                "data_export_deletion": null
+              },
+              "certifications": [],
+              "lower_risk_alternatives": [
+                "selfhosted.open_weight.eu"
+              ],
+              "note": "No verified data. Every field is scored with conservative (worst-case) defaults. The user's own answers (tier, residency, data types) still apply.",
+              "source_urls": [],
+              "last_verified": "2026-09-23",
+              "status": "unverified",
+              "unverified_fields": [
+                "tier_type",
+                "hq_country",
+                "parent_jurisdiction",
+                "gpai_code_of_practice",
+                "eu_data_residency.storage",
+                "eu_data_residency.inference",
+                "trains_on_customer_data",
+                "data_retention.default",
+                "data_retention.configurable",
+                "data_retention.zdr_available",
+                "dpa_available",
+                "transfer_mechanism",
+                "subprocessor_list_public",
+                "admin_controls.sso",
+                "admin_controls.audit_logs",
+                "admin_controls.user_management",
+                "admin_controls.data_export_deletion"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

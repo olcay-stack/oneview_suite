@@ -1,0 +1,579 @@
+{
+  "meta": {
+    "lang": "en",
+    "title": "AI Sovereignty Scan — Oneview Logic",
+    "description": "Assess your organisation's EU AI Act, GDPR and data-sovereignty risk per AI tool and account tier.",
+    "noscript": "This scan needs JavaScript. Please enable it, or email info@oneviewlogic.com for a manual assessment."
+  },
+  "header": {
+    "brand": "Oneview Logic",
+    "product": "AI Sovereignty Scan",
+    "skip": "Skip to main content",
+    "lang_label": "Language",
+    "lang_switch_confirm": "Switching language restarts the scan and clears your answers. Continue?"
+  },
+  "hero": {
+    "eyebrow": "EU AI Act · GDPR · Data sovereignty",
+    "title": "How sovereign is your AI use?",
+    "subtitle": "In about 10 minutes, map the AI tools your organisation uses and get an indicative risk score per tool and account tier. You also get a branded report with a prioritised action plan.",
+    "points": [
+      "Covers {tools} AI products and account tiers",
+      "Reflects the Digital Omnibus on AI (Regulation (EU) 2026/1744)",
+      "Your answers stay in this browser tab until you send the report"
+    ],
+    "as_of": "Knowledge base as of {date}"
+  },
+  "progress": {
+    "label": "Progress",
+    "step_of": "Step {n} of {total}",
+    "steps": {
+      "company": "Company",
+      "tools": "AI tools",
+      "usecases": "Use cases",
+      "governance": "Governance",
+      "results": "Results"
+    }
+  },
+  "nav": {
+    "next": "Next",
+    "back": "Back",
+    "see_results": "Show my results",
+    "restart": "Start a new scan",
+    "edit": "Edit answers"
+  },
+  "form": {
+    "required": "required",
+    "optional": "optional",
+    "error_summary": "Please correct the following:"
+  },
+  "company": {
+    "title": "Company information",
+    "intro": "We use these details to personalise your report and to send it to Oneview Logic. Fields marked * are required.",
+    "name": "Company name",
+    "email": "Email address",
+    "email_hint": "The report is sent to Oneview Logic; you can also receive a copy.",
+    "contact": "Contact person",
+    "job_title": "Job title",
+    "phone": "Phone",
+    "phone_hint": "International format, e.g. +31 30 123 4567",
+    "country": "Country",
+    "website": "Website",
+    "sector": "Sector",
+    "sector_placeholder": "Select a sector",
+    "employees": "Number of employees",
+    "employees_placeholder": "Select a range",
+    "consent": "I agree that Oneview Logic processes the data I submit to generate this report and email it to me and to Oneview Logic.",
+    "privacy_link": "Read the privacy notice",
+    "honeypot": "Leave this field empty",
+    "errors": {
+      "name": "Enter your company name.",
+      "email": "Enter a valid email address, e.g. name@company.com.",
+      "phone": "Enter the phone number in international format, e.g. +31 30 123 4567.",
+      "website": "Enter a valid website address, e.g. www.company.com.",
+      "consent": "Please agree to the processing of your data to continue."
+    },
+    "sectors": {
+      "manufacturing": "Manufacturing",
+      "logistics": "Logistics",
+      "healthcare": "Healthcare",
+      "finance": "Finance / Insurance",
+      "public": "Public sector",
+      "education": "Education",
+      "retail": "Retail / E-commerce",
+      "it": "IT / Software",
+      "legal": "Legal / Consulting",
+      "energy": "Energy / Utilities",
+      "construction": "Construction",
+      "other": "Other"
+    },
+    "sizes": {
+      "1-9": "1–9",
+      "10-49": "10–49",
+      "50-249": "50–249",
+      "250-999": "250–999",
+      "1000+": "1,000+"
+    },
+    "countries": {
+      "NL": "Netherlands",
+      "BE": "Belgium",
+      "DE": "Germany",
+      "FR": "France",
+      "LU": "Luxembourg",
+      "AT": "Austria",
+      "DK": "Denmark",
+      "ES": "Spain",
+      "IE": "Ireland",
+      "IT": "Italy",
+      "PL": "Poland",
+      "SE": "Sweden",
+      "FI": "Finland",
+      "PT": "Portugal",
+      "OTHER_EU": "Other EU/EEA country",
+      "NON_EU": "Outside the EU/EEA"
+    }
+  },
+  "tools": {
+    "title": "AI tool inventory",
+    "intro": "Select every AI tool used in your organisation, including tools employees use with personal accounts. Then say which account tiers are in use and answer a few questions per tool.",
+    "filter": "Filter tools",
+    "filter_placeholder": "Type a tool or vendor name…",
+    "selected_count": "{count} tool(s) selected",
+    "none_selected": "No tools selected yet. If your organisation really uses no AI tools, you can continue; the score will then reflect governance only.",
+    "select": "Select",
+    "selected": "Selected",
+    "remove": "Remove",
+    "tiers": "Account tier(s) in use",
+    "tiers_error": "Select at least one account tier for {tool}.",
+    "users": "Approx. users",
+    "users_for": "Approximate number of users of {tier}",
+    "residency": "Is EU data residency enabled?",
+    "residency_hint": "Ask your admin if unsure. \"Don't know\" is scored as not enabled.",
+    "data": "What data goes into it?",
+    "data_error": "Select at least one data type for {tool}.",
+    "approval": "How is it used?",
+    "custom": {
+      "title": "Other tool",
+      "intro": "Not in the list? Add it here. Tools that are not in our knowledge base are scored with conservative (worst-case) defaults.",
+      "add": "Add another tool",
+      "name": "Tool name",
+      "name_error": "Enter the name of the tool.",
+      "tier": "Account type",
+      "tier_placeholder": "Select account type"
+    },
+    "kb_unverified": "Some facts about this tier could not be verified and are scored conservatively.",
+    "kb_conflicting": "Sources conflict for this tier; the stricter reading is used.",
+    "answers": {
+      "yes": "Yes",
+      "no": "No",
+      "dk": "Don't know"
+    },
+    "data_types": {
+      "public": "Public information",
+      "internal_docs": "Internal documents",
+      "customer_personal": "Customer personal data",
+      "employee": "Employee data",
+      "special_category": "Special-category data (health, etc.)",
+      "source_code": "Source code",
+      "trade_secrets": "Trade secrets / confidential"
+    },
+    "approval_options": {
+      "approved": "Company-approved",
+      "shadow": "Shadow AI (personal accounts)",
+      "dk": "Don't know"
+    },
+    "tier_types": {
+      "free": "Free",
+      "personal_paid": "Paid personal",
+      "business": "Business / Team",
+      "enterprise": "Enterprise",
+      "api": "API / Cloud",
+      "self_hosted": "Self-hosted"
+    }
+  },
+  "usecases": {
+    "title": "Use cases",
+    "intro": "What is AI used for in your organisation? Select everything that applies. Each use case maps to an EU AI Act risk category.",
+    "tier_label": "AI Act category",
+    "items": {
+      "recruitment_hr": {
+        "label": "Recruitment / HR screening",
+        "hint": "CV screening, candidate ranking, interview analysis"
+      },
+      "employee_monitoring": {
+        "label": "Employee monitoring / performance evaluation",
+        "hint": "Productivity scoring, task allocation, promotion or termination decisions"
+      },
+      "credit_insurance": {
+        "label": "Credit or insurance scoring",
+        "hint": "Creditworthiness, pricing of life or health insurance"
+      },
+      "education_assessment": {
+        "label": "Education / exam assessment",
+        "hint": "Grading, admission, proctoring"
+      },
+      "biometric_identification": {
+        "label": "Biometric identification or categorisation",
+        "hint": "Face or fingerprint recognition, categorising people by biometric traits"
+      },
+      "emotion_recognition": {
+        "label": "Emotion recognition of employees or students",
+        "hint": "Inferring emotions at work or in education — prohibited since 2 Feb 2025"
+      },
+      "critical_infrastructure": {
+        "label": "Critical infrastructure",
+        "hint": "Safety components in energy, water, traffic or digital infrastructure"
+      },
+      "customer_chatbot": {
+        "label": "Customer-facing chatbot",
+        "hint": "Customers or citizens interact directly with AI"
+      },
+      "external_content": {
+        "label": "AI-generated content published externally",
+        "hint": "Marketing texts, images, video, news or public information"
+      },
+      "internal_productivity": {
+        "label": "Internal productivity / writing",
+        "hint": "Emails, summaries, drafting, meeting notes"
+      },
+      "coding": {
+        "label": "Coding assistance",
+        "hint": "Code completion, code review, agents"
+      },
+      "data_analysis": {
+        "label": "Data analysis",
+        "hint": "Reports, forecasts, spreadsheet analysis"
+      },
+      "translation": {
+        "label": "Translation",
+        "hint": "Documents, emails, websites"
+      }
+    },
+    "tiers": {
+      "prohibited": "Prohibited",
+      "high_risk": "High-risk",
+      "transparency": "Transparency duty",
+      "minimal": "Minimal risk"
+    }
+  },
+  "governance": {
+    "title": "Governance",
+    "intro": "How far is your organisation with AI governance? Answer honestly. \"Don't know\" is scored as \"no\".",
+    "questions": {
+      "ai_policy": "Is there an AI usage policy (which tools, which data, which purposes)?",
+      "ai_literacy": "Have employees received AI literacy training (AI Act Art. 4)?",
+      "ai_register": "Is there a register of the AI systems in use?",
+      "dpia": "Has a DPIA been carried out for AI processing of personal data?",
+      "dpo": "Is a Data Protection Officer (DPO) appointed?",
+      "vendor_dpas": "Are data processing agreements (DPAs) signed with all AI vendors?",
+      "human_oversight": "Is human oversight defined for decisions made or supported by AI?"
+    },
+    "answers": {
+      "yes": "Yes",
+      "partial": "Partly",
+      "no": "No",
+      "dk": "Don't know"
+    },
+    "error": "Answer all governance questions (you can choose \"Don't know\")."
+  },
+  "results": {
+    "title": "Your AI Sovereignty Scan results",
+    "intro": "This indicative score is based on your answers and our knowledge base as of {date}. Higher means riskier.",
+    "overall": "Overall risk score",
+    "band": "Risk band",
+    "out_of": "out of 100",
+    "prohibited_flag": "Automatic CRITICAL: you selected a use case that is a prohibited AI practice under Art. 5 of the AI Act.",
+    "method_worst_tool": "Your overall score is driven by your riskiest tool ({tool}), so one critical tool is not averaged away.",
+    "method_blended": "Your overall score blends the usage-weighted tool average (80%) with your governance score (20%).",
+    "sub_scores": "Sub-scores",
+    "key_findings": "Key findings",
+    "per_tool": "Per-tool assessment",
+    "sort_by": "Sort by {column}",
+    "table": {
+      "tool": "Tool",
+      "tier": "Tier",
+      "users": "Users",
+      "sovereignty": "Sovereignty",
+      "gdpr": "GDPR",
+      "aiact": "AI Act",
+      "security": "Security",
+      "total": "Total",
+      "reasons": "Main reasons"
+    },
+    "no_tools": "No tools were selected.",
+    "top_actions": "Top 5 prioritised actions",
+    "alternatives": "Lower-risk alternatives",
+    "alternative_line": "{from} ({fromScore}) → {to}: estimated {toScore}",
+    "send": {
+      "title": "Get the full report",
+      "intro": "The report (HTML + PDF) is sent to Oneview Logic (info@oneviewlogic.com). It includes the regulatory context, a tier comparison, a GDPR checklist, the full action plan and sources.",
+      "copy": "Also send a copy to {email}",
+      "button": "Send report",
+      "sending": "Sending…",
+      "success_title": "Report sent",
+      "success": "Thank you. Your report has been sent to Oneview Logic{copy}. We will contact you to discuss the results. Your answers have been cleared from this page.",
+      "success_copy": " and to {email}",
+      "error_title": "The report could not be sent",
+      "error": "Something went wrong ({detail}). Please try again in a few minutes, or email info@oneviewlogic.com.",
+      "error_rate": "Too many requests. Please wait a few minutes and try again.",
+      "error_validation": "Some answers are invalid. Please check step 1."
+    },
+    "disclaimer": "This is an indicative self-assessment, not legal advice."
+  },
+  "dims": {
+    "sovereignty": "Data sovereignty",
+    "gdpr": "GDPR compliance",
+    "aiact": "EU AI Act exposure",
+    "security": "Security & contract",
+    "governance": "Governance",
+    "modifier": "Usage modifiers",
+    "data": "Knowledge base"
+  },
+  "bands": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "jurisdictions": {
+    "US": "United States",
+    "EU": "European Union",
+    "CN": "China",
+    "other": "non-EU (other)",
+    "self": "self-operated"
+  },
+  "reasons": {
+    "jurisdiction_unverified": "Provider jurisdiction unknown (scored as worst case)",
+    "jurisdiction_cn": "Chinese provider: data subject to PRC National Intelligence Law, no adequacy decision",
+    "jurisdiction_eu": "EU-headquartered provider",
+    "jurisdiction_foreign": "Non-EU parent ({country}): foreign access laws such as the US CLOUD Act can reach EU-stored data",
+    "unverified_eu_storage": "EU data storage could not be verified",
+    "unverified_eu_inference": "EU processing (inference) location could not be verified",
+    "eu_storage_unknown": "EU data residency available but you don't know if it is enabled",
+    "eu_inference_unknown": "EU in-region processing available but you don't know if it is enabled",
+    "eu_storage_not_enabled": "EU data residency available but not enabled",
+    "eu_inference_not_enabled": "EU in-region processing available but not enabled",
+    "no_eu_storage": "No EU data residency for this tier",
+    "no_eu_inference": "Processing (inference) outside the EU",
+    "residency_claimed_not_offered": "You indicated EU residency is enabled, but this tier does not offer it",
+    "training_unverified": "Use of your data for model training could not be verified",
+    "training_yes_default": "Trains on your data by default, no practical opt-out",
+    "training_opt_out": "Trains on your data by default (opt-out required)",
+    "training_no_default": "No training by default, but opt-in is possible",
+    "dpa_unverified": "Availability of a GDPR Art. 28 DPA could not be verified",
+    "no_dpa": "No GDPR Art. 28 data processing agreement (consumer terms)",
+    "transfer_unverified": "Legal basis for transfers outside the EU could not be verified",
+    "transfer_none": "No valid transfer mechanism for data leaving the EU",
+    "transfer_dpf_sccs": "Transfers covered by DPF and SCCs (DPF under court challenge)",
+    "transfer_sccs": "Transfers rely on SCCs (transfer impact assessment needed)",
+    "transfer_dpf_only": "Transfers rely only on the EU-US Data Privacy Framework (appeal pending at CJEU)",
+    "no_retention_control": "No configurable retention or zero-data-retention option",
+    "subprocessors_unverified": "Public subprocessor list could not be verified",
+    "no_subprocessor_list": "No public subprocessor list",
+    "regulatory_actions": "Regulatory actions or investigations: {list}",
+    "usecase_prohibited": "Prohibited AI practice selected ({useCases})",
+    "usecase_high_risk": "High-risk use case ({useCases})",
+    "usecase_transparency": "Transparency obligations apply ({useCases})",
+    "usecase_minimal": "Minimal-risk use only",
+    "gpai_unverified": "Model provider's GPAI Code of Practice status unknown",
+    "gpai_partial": "Model provider signed only part of the GPAI Code of Practice",
+    "gpai_not_signed": "Model provider has not signed the GPAI Code of Practice",
+    "gpai_not_applicable": "Downstream application; the underlying model provider's GPAI status is not assessed",
+    "no_ai_literacy": "No AI literacy training in place",
+    "no_ai_policy": "No AI usage policy in place",
+    "no_human_oversight": "Human oversight not defined for high-risk use",
+    "no_sso": "No single sign-on (SSO)",
+    "no_sso_unverified": "SSO availability could not be verified",
+    "no_audit_logs": "No audit logs",
+    "no_audit_logs_unverified": "Audit log availability could not be verified",
+    "no_user_management": "No central user management",
+    "no_user_management_unverified": "Central user management could not be verified",
+    "no_export_deletion": "No data export or deletion controls",
+    "no_export_deletion_unverified": "Data export/deletion controls could not be verified",
+    "self_hosted_responsibility": "Self-hosted: security and certification are your own responsibility",
+    "no_certifications": "No verified security certifications",
+    "no_core_certification": "Neither ISO 27001 nor SOC 2 verified",
+    "consumer_terms": "Consumer terms: no enterprise contract or admin controls",
+    "personal_tier_sensitive": "Free/personal account used with personal or confidential data",
+    "shadow_ai": "Shadow AI: used via unapproved personal accounts",
+    "approval_unknown": "Unknown whether use is company-approved (treated as shadow AI)",
+    "special_category": "Special-category personal data (e.g. health) is entered",
+    "employee_data": "Employee personal data is entered",
+    "customer_personal": "Customer personal data is entered",
+    "public_only": "Only public information is entered (risk reduced)",
+    "kb_unverified": "{count} fact(s) about this tier are unverified and scored conservatively",
+    "kb_conflicting": "Sources conflict for this tier; the stricter reading is used",
+    "gov_missing": "{question} — not in place",
+    "gov_partial": "{question} — only partly in place"
+  },
+  "findings": {
+    "kf_prohibited": "You selected a prohibited AI practice ({useCases}). This has been banned since 2 February 2025 and can be fined up to €35 million or 7% of turnover.",
+    "kf_worst_tool": "Your riskiest tool is {tool} with a score of {score} ({band}).",
+    "kf_shadow": "{count} tool(s) are used without company approval or with unknown approval (shadow AI).",
+    "kf_training": "{count} tool(s) may use your data to train AI models by default.",
+    "kf_non_eu_sensitive": "{count} tool(s) process personal or confidential data without effective EU sovereignty.",
+    "kf_governance_gaps": "Your AI governance has significant gaps (governance risk {score}/100).",
+    "kf_no_tools": "No AI tools were recorded. Check for shadow AI: the Dutch DPA reports rising data breaches from employees using free chatbots.",
+    "kf_tool_count": "{count} AI tool/tier combination(s) were assessed."
+  },
+  "actions": {
+    "stop_prohibited": {
+      "title": "Stop or re-assess prohibited AI use immediately",
+      "detail": "Pause {useCases} and get legal advice. Art. 5 prohibitions have applied since 2 February 2025."
+    },
+    "discontinue_cn": {
+      "title": "Stop using China-based AI services for company data",
+      "detail": "Block {tools} and move users to an approved alternative. If needed, run open-weight models on EU infrastructure instead."
+    },
+    "stop_shadow_ai": {
+      "title": "End shadow AI: provide an approved alternative",
+      "detail": "Offer an approved business tier and block personal accounts for {tools}. Tell employees which tools are allowed."
+    },
+    "upgrade_business_tier": {
+      "title": "Move personal and free accounts to business or enterprise tiers",
+      "detail": "Replace consumer accounts of {tools} with business or enterprise plans that come with a DPA and admin controls."
+    },
+    "disable_training": {
+      "title": "Switch off model training on your data",
+      "detail": "Turn off training in the settings of {tools}, or move to a tier that never trains on customer data."
+    },
+    "art50_transparency": {
+      "title": "Implement AI Act transparency (Art. 50)",
+      "detail": "Tell people when they interact with AI and label AI-generated content ({useCases}). This has applied since {date}; marking for older generative systems applies from {date2}."
+    },
+    "sign_dpas": {
+      "title": "Sign data processing agreements with every AI vendor",
+      "detail": "Sign a GDPR Art. 28 DPA with each vendor. Tools without a DPA: {tools}."
+    },
+    "ai_policy": {
+      "title": "Adopt an AI usage policy",
+      "detail": "Set out which tools are allowed, for which purposes and with which data, and who approves new tools."
+    },
+    "do_dpia": {
+      "title": "Carry out a DPIA for AI processing of personal data",
+      "detail": "A DPIA (GDPR Art. 35) is expected when AI processes personal data at scale or supports decisions about people."
+    },
+    "enable_eu_residency": {
+      "title": "Enable EU data residency where available",
+      "detail": "Switch on EU storage and processing for {tools}. For Microsoft 365 Copilot, also switch off flex routing."
+    },
+    "prepare_high_risk": {
+      "title": "Prepare for AI Act high-risk obligations",
+      "detail": "For {useCases}: set up human oversight, logging, instructions for use, worker information and supplier checks before {date}."
+    },
+    "ai_literacy": {
+      "title": "Run an AI literacy programme",
+      "detail": "Art. 4 requires measures that support AI literacy for staff who use AI. The Omnibus made this an obligation of effort; it did not remove it."
+    },
+    "ai_register": {
+      "title": "Set up a register of AI systems",
+      "detail": "Record each tool, tier, owner, purpose, data categories, DPA and risk category. This also supports your GDPR records of processing."
+    },
+    "sovereign_alternative": {
+      "title": "Use a sovereign alternative for sensitive workloads",
+      "detail": "Consider an EU provider, or open-weight models on EU infrastructure, for sensitive data now handled by {tools}."
+    },
+    "assess_dpo": {
+      "title": "Check whether you need a Data Protection Officer",
+      "detail": "A DPO is mandatory for large-scale monitoring or special-category processing, and advisable for systematic AI processing."
+    },
+    "human_oversight": {
+      "title": "Define human oversight for AI-supported decisions",
+      "detail": "Decide who reviews AI output before it affects people, and how to escalate or override it."
+    }
+  },
+  "horizons": {
+    "d30": "Quick wins — within 30 days",
+    "d90": "Within 90 days",
+    "dec2027": "Before 2 December 2027"
+  },
+  "report": {
+    "title": "AI Sovereignty Scan",
+    "prepared_for": "Prepared for",
+    "date": "Date",
+    "generated_by": "Generated by Oneview Logic's AI Sovereignty Scan",
+    "toc": "Contents",
+    "exec_summary": "Executive summary",
+    "regulatory_context": "Regulatory context",
+    "applies_now": "Applies now",
+    "applies_later": "Applies later",
+    "relevant_to_you": "Relevant to your use cases",
+    "omnibus_changes": "What the Digital Omnibus on AI changed",
+    "netherlands": "Netherlands: supervision and implementation",
+    "transfers": "International data transfers",
+    "penalties": "Penalties (Art. 99)",
+    "sme_context": "Your company size",
+    "sme": {
+      "1-9": "Micro-enterprise: if your turnover is within SME limits, AI Act fines are capped at the lower of the fixed amount and the percentage of turnover, and SME support measures apply.",
+      "10-49": "Small enterprise: if your turnover is within SME limits, AI Act fines are capped at the lower amount, and SME support (e.g. priority sandbox access) applies.",
+      "50-249": "Medium-sized enterprise: SME relief applies if your turnover or balance sheet is within SME limits (lower fine cap, simplified documentation).",
+      "250-999": "Not an SME. Under the Omnibus you may qualify as a small mid-cap (fewer than 750 employees, turnover ≤ €150m or balance sheet ≤ €129m), which gives partial relief.",
+      "1000+": "Large enterprise: the full fine regime applies (the higher of the fixed amount and the percentage of worldwide turnover)."
+    },
+    "per_tool": "Per-tool assessment",
+    "alternatives": "Tier comparison and alternatives",
+    "alternatives_intro": "For each tool scoring High or Critical: estimated score after switching, assuming EU residency is enabled and use is company-approved.",
+    "no_alternatives": "No tool scored High or Critical, or no lower-risk alternative is known.",
+    "current": "Current",
+    "alternative": "Alternative",
+    "estimated": "Estimated",
+    "gdpr_checklist": "GDPR audit checklist",
+    "checklist": {
+      "dpas": "Data processing agreements with AI vendors",
+      "dpia": "DPIA for AI processing",
+      "transfers": "Lawful international transfers",
+      "retention": "Retention control / zero data retention",
+      "ropa": "Records of processing (AI register)",
+      "dpo": "Data Protection Officer",
+      "ok": "In place",
+      "partial": "Partly",
+      "gap": "Gap",
+      "tools_without_dpa": "Tools without DPA: {tools}",
+      "tools_transfer_gap": "Tools without a verified transfer mechanism: {tools}",
+      "tools_no_retention": "Tools without retention control: {tools}",
+      "all_tools_ok": "All assessed tools OK"
+    },
+    "action_plan": "Prioritised action plan",
+    "methodology": "Methodology",
+    "methodology_text": "Each tool × tier gets four sub-scores (0–100, higher is riskier): data sovereignty (30%), GDPR compliance (30%), EU AI Act exposure (25%) and security & contract (15%). Modifiers are then added for free or personal tiers used with sensitive data, shadow AI, and special-category or employee data (capped at +35). The organisation score is the usage-weighted tool average (80%) blended with the governance score (20%). It is never lower than 80% of the riskiest high-exposure tool. Knowledge-base facts that could not be verified, and \"don't know\" answers, are scored as the riskier option. A prohibited use case always gives a Critical result.",
+    "sources": "Sources",
+    "sources_intro": "Facts verified on {date}. Every fact in the knowledge base has a source and a verification date.",
+    "unverified_intro": "Facts marked unverified for your tools (scored conservatively):",
+    "last_verified": "last verified",
+    "disclaimer_title": "Disclaimer",
+    "disclaimer": "This is an indicative self-assessment, not legal advice. Results depend on your answers and on publicly available vendor information that can change at any time. Have the conclusions reviewed by a qualified adviser before relying on them.",
+    "company_details": "Submitted company details",
+    "use_cases": "Use cases",
+    "governance_answers": "Governance answers",
+    "page": "Page",
+    "of": "of",
+    "none": "None",
+    "timeline_milestone": "Milestone",
+    "status": "Status",
+    "src_gpai": "GPAI Code of Practice",
+    "src_dpf": "EU-US Data Privacy Framework",
+    "src_sccs": "Standard Contractual Clauses",
+    "src_cloud_act": "US CLOUD Act",
+    "src_omnibus_gdpr": "Digital Omnibus (GDPR changes)"
+  },
+  "email": {
+    "subject": "AI Sovereignty Scan – {company} – {band} ({score})",
+    "internal_intro": "A new AI Sovereignty Scan was submitted via the website. The full report is attached as a PDF and included below.",
+    "client_intro": "Dear {name},\n\nThank you for completing the AI Sovereignty Scan. Your report is attached as a PDF and included below. Oneview Logic will contact you to discuss the results.\n\nKind regards,\nOneview Logic",
+    "client_greeting_fallback": "Sir/Madam",
+    "field": "Field",
+    "value": "Value",
+    "copy_requested": "Copy sent to submitter",
+    "language": "Language",
+    "attachment_name": "AI-Sovereignty-Scan"
+  },
+  "privacy": {
+    "title": "Privacy notice — AI Sovereignty Scan",
+    "back": "Back to the scan",
+    "sections": [
+      {
+        "h": "Who we are",
+        "p": "Oneview Logic B.V., Vinkenburgstraat 2A, 3512 AB Utrecht, the Netherlands (KvK 92832601) is the controller for the data you submit. Contact: info@oneviewlogic.com."
+      },
+      {
+        "h": "What we process and why",
+        "p": "Your company details, contact details and scan answers. We use them to generate your report, email it to you (if you ask) and to Oneview Logic, and to contact you about the results. Legal basis: your consent (GDPR Art. 6(1)(a)), which you can withdraw at any time."
+      },
+      {
+        "h": "What we do not do",
+        "p": "The scan does not use cookies, analytics or browser storage. Your answers stay in the open browser tab until you send them and are cleared afterwards. The server does not store the report and does not log its contents."
+      },
+      {
+        "h": "Recipients and retention",
+        "p": "The report is sent by email through our email provider to info@oneviewlogic.com and, if you choose, to you. We keep the email for as long as needed to follow up with you, and at most 24 months, unless a customer relationship follows."
+      },
+      {
+        "h": "Your rights",
+        "p": "You may request access, correction, deletion, restriction or portability, and you may object. Email info@oneviewlogic.com. You can also complain to the Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl)."
+      }
+    ]
+  },
+  "footer": {
+    "address": "Oneview Logic B.V. · Vinkenburgstraat 2A, 3512 AB Utrecht · KvK 92832601 · info@oneviewlogic.com",
+    "privacy": "Privacy notice"
+  }
+}
