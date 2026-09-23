@@ -14,6 +14,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadKnowledgeBase } from "./kb.js";
 import { handleSubmission } from "./submit.js";
 import { mailConfig } from "./mailer.js";
+import { healthReport } from "./health.js";
 
 export { loadKnowledgeBase };
 
@@ -81,6 +82,10 @@ export function createApp(deps = {}) {
     res.redirect(302, nl ? "/nl/" : "/en/");
   });
   app.get("/healthz", (_req, res) => res.json({ ok: true }));
+  app.get("/api/health", async (req, res) => {
+    const { status, body } = await healthReport(process.env, typeof req.query.verify === "string" ? req.query.verify : null);
+    res.status(status).json(body);
+  });
   app.get("/api/config", (_req, res) => res.json({ copyToClient: cfg.copyToClient }));
 
   app.use("/data", (req, res, next) => (/^\/[\w-]+\.json$/.test(req.path) ? next() : res.status(404).end()));
@@ -102,7 +107,7 @@ export function createApp(deps = {}) {
       transport,
       toPdf: toPdf || (toPdf = await pdfEngine()),
       now: now(),
-      onError: (cls) => process.env.NODE_ENV !== "test" && console.error(`submit failed: ${cls}`),
+      onError: (info) => process.env.NODE_ENV !== "test" && console.error(`submit failed: ${info}`),
     });
     res.status(status).json(body);
   });

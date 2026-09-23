@@ -8,6 +8,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import submit, { config as submitConfig } from "../netlify/functions/submit.mjs";
 import configFn, { config as configConfig } from "../netlify/functions/config.mjs";
+import health from "../netlify/functions/health.mjs";
 import { buildDocDefinition, renderPdfDoc } from "../server/pdf-doc.js";
 import { LOGO_SVG } from "../server/report-template.js";
 import { loadKnowledgeBase } from "../server/kb.js";
@@ -100,12 +101,42 @@ describe("Netlify functions", () => {
     assert.equal(smtp.messages.length, 0);
   });
 
-  test("SMTP failure → 502 without leaking details", async () => {
+  test("SMTP failure → 502 naming the failing step, without leaking details", async () => {
     process.env.SMTP_PORT = "1"; // nothing listens here
     const res = await submit(request(payload()));
     process.env.SMTP_PORT = String(smtp.port);
     assert.equal(res.status, 502);
-    assert.deepEqual(await res.json(), { error: "delivery_failed" });
+    const body = await res.json();
+    assert.equal(body.error, "delivery_failed");
+    assert.equal(body.stage, "smtp");
+    assert.match(body.code, /^E[A-Z]+/);
+    assert.deepEqual(Object.keys(body).sort(), ["code", "error", "stage"]);
+  });
+
+  test("missing SMTP_HOST → 502 with stage 'config'", async () => {
+    const host = process.env.SMTP_HOST;
+    delete process.env.SMTP_HOST;
+    const res = await submit(request(payload()));
+    process.env.SMTP_HOST = host;
+    assert.equal(res.status, 502);
+    assert.deepEqual(await res.json(), { error: "delivery_failed", stage: "config", code: "SMTP_HOST_MISSING" });
+  });
+
+  test("GET /api/health reports settings as booleans and verifies SMTP with the token", async () => {
+    const plain = await (await health(new Request("https://scan.example/api/health"))).json();
+    assert.equal(plain.smtp.hostSet, true);
+    assert.equal(plain.smtp.passSet, true);
+    assert.ok(!JSON.stringify(plain).includes("test.local"), "never echoes values");
+    assert.equal((await health(new Request("https://scan.example/api/health?verify=wrong"))).status, 403);
+    process.env.DIAG_TOKEN = "s3cret-token";
+    const verified = await (await health(new Request("https://scan.example/api/health?verify=s3cret-token"))).json();
+    assert.equal(verified.smtpVerify, "ok");
+    process.env.SMTP_PORT = "1";
+    const failed = await (await health(new Request("https://scan.example/api/health?verify=s3cret-token"))).json();
+    process.env.SMTP_PORT = String(smtp.port);
+    assert.equal(failed.ok, false);
+    assert.match(failed.smtpVerify, /^E[A-Z]+/);
+    delete process.env.DIAG_TOKEN;
   });
 });
 

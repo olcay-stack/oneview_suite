@@ -85,6 +85,20 @@ Good to know:
 - Netlify runs on US-headquartered infrastructure (AWS). Its EU edge serves the pages, but functions run in the region configured for the site (**Site configuration → Functions → Region**, if your plan offers it; choose Frankfurt `eu-central-1`). For a fully EU-sovereign setup use the Docker/VPS option below.
 - To build locally the way Netlify does: `npx netlify-cli build --offline` (from the repository root).
 
+### Troubleshooting "HTTP 502"
+
+A 502 means the report was built but could not be delivered. The error message in the UI shows the failing step and code, e.g. `HTTP 502 · smtp · EAUTH:535`. The same line appears in **Logs → Functions → submit** as `submit failed: stage=… code=…`.
+
+| Shown | Meaning / fix |
+|---|---|
+| `config · SMTP_HOST_MISSING` / `SMTP_PASS_MISSING` | The function doesn't see the variable. In **Environment variables**, make sure the scope includes **Functions** (not only Builds), then **redeploy**. |
+| `smtp · EAUTH:535` | Wrong username/password. Microsoft 365: SMTP AUTH must be enabled for the mailbox. Gmail/Workspace: use an **app password**. |
+| `smtp · ETIMEDOUT` / `ESOCKET` / `ECONNECTION` | Host or port wrong or blocked. Use port **587** (STARTTLS) or **465** (TLS). Port 25 is blocked on Netlify. |
+| `smtp · EENVELOPE:550/553/554` | The sender isn't allowed: `MAIL_FROM` must be the SMTP account or a verified sender/domain. |
+| `pdf · …` | PDF rendering failed. Send the log line to the developer. |
+
+`GET /api/health` shows which mail settings the function can see (true/false only, never the values). To test the SMTP login itself, set a `DIAG_TOKEN` environment variable and open `/api/health?verify=<DIAG_TOKEN>`. It returns `"smtpVerify": "ok"` or the error code.
+
 ## Deploy (EU hosting, Docker/VPS)
 
 The app is a single Node process that needs Chromium, so a container or a small VPS is the easiest route. Choose an EU-headquartered provider and region to stay consistent with the product's message, for example Hetzner (DE/FI), Scaleway (FR), OVHcloud (FR) or a Dutch provider such as TransIP or Leaseweb.

@@ -6,7 +6,7 @@ import { assess } from "../public/assets/scoring.js";
 import { lookup } from "../public/assets/i18n.js";
 import { validateSubmission } from "./validate.js";
 import { buildReportHtml, buildSubject, englishSummary, internalIntro, clientIntro, clientText, pdfFilename } from "./report.js";
-import { createTransport, sendReport } from "./mailer.js";
+import { createTransport, sendReport, errorCode } from "./mailer.js";
 
 /**
  * @param {unknown} body parsed JSON body
@@ -16,7 +16,7 @@ import { createTransport, sendReport } from "./mailer.js";
  * @param {Function} deps.toPdf   async ({ html, value, result, i18n, regulation, kbIndex, now, footer, pageLabel, ofLabel }) => Buffer
  * @param {object} [deps.transport] nodemailer transport (created from cfg if absent)
  * @param {Date}   [deps.now]
- * @param {Function} [deps.onError] receives an error *class* string only
+ * @param {Function} [deps.onError] receives "stage=… code=…" (no personal data)
  */
 export async function handleSubmission(body, { kb, cfg, toPdf, transport, now = new Date(), onError = () => {} }) {
   const checked = validateSubmission(body, { kbIndex: kb.index, regulation: kb.regulation });
@@ -26,11 +26,15 @@ export async function handleSubmission(body, { kb, cfg, toPdf, transport, now = 
   const value = checked.value;
   const d = kb.i18n[value.lang];
   const en = kb.i18n.en;
+  let stage = "report";
   try {
     // Authoritative score: recomputed here, never taken from the browser.
     const result = assess({ tools: value.tools, useCases: value.useCases, governance: value.governance }, kb);
     const base = { value, result, i18n: d, regulation: kb.regulation, kbIndex: kb.index, now };
     const html = buildReportHtml(base);
+    stage = "config";
+    const mailer = transport || createTransport(cfg);
+    stage = "pdf";
     const pdf = await toPdf({
       ...base,
       html,
@@ -39,7 +43,8 @@ export async function handleSubmission(body, { kb, cfg, toPdf, transport, now = 
       ofLabel: lookup(d, "report.of"),
     });
 
-    await sendReport(transport || createTransport(cfg), cfg, {
+    stage = "smtp";
+    const sent = await sendReport(mailer, cfg, {
       subject: buildSubject(d, value, result),
       internalHtml: buildReportHtml({ ...base, intro: internalIntro(d, en, value, result) }),
       clientHtml: buildReportHtml({ ...base, intro: clientIntro(d, value) }),
@@ -50,10 +55,12 @@ export async function handleSubmission(body, { kb, cfg, toPdf, transport, now = 
       clientEmail: value.company.email,
       sendCopy: value.sendCopy,
     });
-    return { status: 200, body: { ok: true, copySent: Boolean(value.sendCopy && cfg.copyToClient) } };
+    if (sent.copyError) onError(`stage=smtp-copy code=${sent.copyError}`);
+    return { status: 200, body: { ok: true, copySent: Boolean(sent.client) } };
   } catch (err) {
-    // Error class only — SMTP errors can echo addresses or content.
-    onError(err?.code || err?.name || "Error");
-    return { status: 502, body: { error: "delivery_failed" } };
+    // Stage + error code only — never messages, addresses or report content.
+    const code = errorCode(err);
+    onError(`stage=${stage} code=${code}`);
+    return { status: 502, body: { error: "delivery_failed", stage, code } };
   }
 }

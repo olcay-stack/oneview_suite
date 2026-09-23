@@ -28,7 +28,7 @@ export default async (req) => {
     cfg: mailConfig(process.env),
     toPdf: renderPdfDoc,
     now: new Date(),
-    onError: (cls) => console.error(`submit failed: ${cls}`), // error class only, no personal data
+    onError: (info) => console.error(`submit failed: ${info}`), // stage + error code only, no personal data
   });
   return json(status, out);
 };

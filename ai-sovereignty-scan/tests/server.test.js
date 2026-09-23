@@ -151,7 +151,10 @@ describe("API end-to-end (real PDF + SMTP capture)", () => {
     assert.deepEqual(await res.json(), { ok: true, copySent: true });
     assert.equal(smtp.messages.length, 2);
 
-    const [internal, client] = smtp.messages.map((m) => m.mail);
+    // Internal mail and client copy are sent in parallel: find each by recipient.
+    const byTo = (addr) => smtp.messages.find((m) => m.mail.to.text === addr).mail;
+    const internal = byTo("info@oneviewlogic.com");
+    const client = byTo("jane@acme.example");
     assert.equal(internal.to.text, "info@oneviewlogic.com");
     assert.equal(client.to.text, "jane@acme.example");
     assert.equal(internal.replyTo.text, "jane@acme.example");

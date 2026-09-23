@@ -918,8 +918,14 @@ async function submit() {
     return;
   }
   const status = res ? res.status : 0;
+  // The server reports which step failed (e.g. "smtp · EAUTH:535") — shown so it can be passed on to support.
+  let detail = status ? `HTTP ${status}` : "network";
+  if (res && status === 502) {
+    const info = await res.json().catch(() => null);
+    if (info && info.stage) detail += ` · ${info.stage}${info.code ? ` · ${info.code}` : ""}`;
+  }
   const message =
-    status === 429 ? tr("results.send.error_rate") : status === 400 ? tr("results.send.error_validation") : tr("results.send.error", { detail: status ? `HTTP ${status}` : "network" });
+    status === 429 ? tr("results.send.error_rate") : status === 400 ? tr("results.send.error_validation") : tr("results.send.error", { detail });
   state.submit = { status: "error", message };
   render({ focus: "send-status" });
 }
