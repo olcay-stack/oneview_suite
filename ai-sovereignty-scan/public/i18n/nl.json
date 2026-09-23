@@ -1,0 +1,579 @@
+{
+  "meta": {
+    "lang": "nl",
+    "title": "AI Sovereignty Scan — Oneview Logic",
+    "description": "Breng per AI-tool en accounttype het risico voor uw organisatie in kaart onder de AI-verordening, de AVG en datasoevereiniteit.",
+    "noscript": "Deze scan werkt alleen met JavaScript. Schakel JavaScript in of mail naar info@oneviewlogic.com voor een handmatige beoordeling."
+  },
+  "header": {
+    "brand": "Oneview Logic",
+    "product": "AI Sovereignty Scan",
+    "skip": "Direct naar de inhoud",
+    "lang_label": "Taal",
+    "lang_switch_confirm": "Als u van taal wisselt, begint de scan opnieuw en worden uw antwoorden gewist. Doorgaan?"
+  },
+  "hero": {
+    "eyebrow": "AI-verordening · AVG · Datasoevereiniteit",
+    "title": "Hoe soeverein is uw AI-gebruik?",
+    "subtitle": "Breng in ongeveer tien minuten in kaart welke AI-tools uw organisatie gebruikt. U krijgt per tool en accounttype een indicatieve risicoscore, plus een rapport met een actieplan op volgorde van prioriteit.",
+    "points": [
+      "Omvat {tools} AI-producten en accounttypes",
+      "Actueel met de Digitale Omnibus AI (Verordening (EU) 2026/1744)",
+      "Uw antwoorden blijven in dit browsertabblad totdat u het rapport verstuurt"
+    ],
+    "as_of": "Kennisbank bijgewerkt tot {date}"
+  },
+  "progress": {
+    "label": "Voortgang",
+    "step_of": "Stap {n} van {total}",
+    "steps": {
+      "company": "Organisatie",
+      "tools": "AI-tools",
+      "usecases": "Toepassingen",
+      "governance": "Governance",
+      "results": "Resultaten"
+    }
+  },
+  "nav": {
+    "next": "Volgende",
+    "back": "Vorige",
+    "see_results": "Bekijk mijn resultaten",
+    "restart": "Nieuwe scan starten",
+    "edit": "Antwoorden aanpassen"
+  },
+  "form": {
+    "required": "verplicht",
+    "optional": "optioneel",
+    "error_summary": "Controleer de volgende punten:"
+  },
+  "company": {
+    "title": "Gegevens van uw organisatie",
+    "intro": "Met deze gegevens stellen we uw rapport op en sturen we het naar Oneview Logic. Velden met een * zijn verplicht.",
+    "name": "Bedrijfsnaam",
+    "email": "E-mailadres",
+    "email_hint": "Het rapport gaat naar Oneview Logic; u kunt zelf ook een kopie ontvangen.",
+    "contact": "Contactpersoon",
+    "job_title": "Functie",
+    "phone": "Telefoonnummer",
+    "phone_hint": "Internationaal formaat, bijv. +31 30 123 4567",
+    "country": "Land",
+    "website": "Website",
+    "sector": "Sector",
+    "sector_placeholder": "Kies een sector",
+    "employees": "Aantal medewerkers",
+    "employees_placeholder": "Kies een categorie",
+    "consent": "Ik ga ermee akkoord dat Oneview Logic de ingevulde gegevens verwerkt om dit rapport op te stellen en naar mij en naar Oneview Logic te e-mailen.",
+    "privacy_link": "Lees de privacyverklaring",
+    "honeypot": "Laat dit veld leeg",
+    "errors": {
+      "name": "Vul uw bedrijfsnaam in.",
+      "email": "Vul een geldig e-mailadres in, bijv. naam@bedrijf.nl.",
+      "phone": "Vul het telefoonnummer in internationaal formaat in, bijv. +31 30 123 4567.",
+      "website": "Vul een geldig websiteadres in, bijv. www.bedrijf.nl.",
+      "consent": "Geef toestemming voor de verwerking van uw gegevens om verder te gaan."
+    },
+    "sectors": {
+      "manufacturing": "Maakindustrie",
+      "logistics": "Logistiek",
+      "healthcare": "Zorg",
+      "finance": "Financiële dienstverlening / verzekeringen",
+      "public": "Overheid / publieke sector",
+      "education": "Onderwijs",
+      "retail": "Retail / e-commerce",
+      "it": "IT / software",
+      "legal": "Juridisch / advies",
+      "energy": "Energie / nutsbedrijven",
+      "construction": "Bouw",
+      "other": "Anders"
+    },
+    "sizes": {
+      "1-9": "1–9",
+      "10-49": "10–49",
+      "50-249": "50–249",
+      "250-999": "250–999",
+      "1000+": "1.000+"
+    },
+    "countries": {
+      "NL": "Nederland",
+      "BE": "België",
+      "DE": "Duitsland",
+      "FR": "Frankrijk",
+      "LU": "Luxemburg",
+      "AT": "Oostenrijk",
+      "DK": "Denemarken",
+      "ES": "Spanje",
+      "IE": "Ierland",
+      "IT": "Italië",
+      "PL": "Polen",
+      "SE": "Zweden",
+      "FI": "Finland",
+      "PT": "Portugal",
+      "OTHER_EU": "Ander EU/EER-land",
+      "NON_EU": "Buiten de EU/EER"
+    }
+  },
+  "tools": {
+    "title": "Overzicht van AI-tools",
+    "intro": "Selecteer alle AI-tools die in uw organisatie worden gebruikt, ook tools die medewerkers met een privéaccount gebruiken. Geef daarna aan welke accounttypes in gebruik zijn en beantwoord per tool een paar vragen.",
+    "filter": "Tools filteren",
+    "filter_placeholder": "Typ de naam van een tool of leverancier…",
+    "selected_count": "{count} tool(s) geselecteerd",
+    "none_selected": "Nog geen tools geselecteerd. Gebruikt uw organisatie echt geen AI-tools? Dan kunt u doorgaan; de score is dan alleen gebaseerd op governance.",
+    "select": "Selecteren",
+    "selected": "Geselecteerd",
+    "remove": "Verwijderen",
+    "tiers": "Accounttype(s) in gebruik",
+    "tiers_error": "Kies ten minste één accounttype voor {tool}.",
+    "users": "Aantal gebruikers (ca.)",
+    "users_for": "Geschat aantal gebruikers van {tier}",
+    "residency": "Is EU-dataresidentie ingeschakeld?",
+    "residency_hint": "Twijfelt u? Vraag het uw beheerder. \"Weet ik niet\" rekenen we als niet ingeschakeld.",
+    "data": "Welke gegevens gaan erin?",
+    "data_error": "Kies ten minste één soort gegevens voor {tool}.",
+    "approval": "Hoe wordt de tool gebruikt?",
+    "custom": {
+      "title": "Andere tool",
+      "intro": "Staat uw tool er niet bij? Voeg hem hier toe. Tools die niet in onze kennisbank staan, beoordelen we met voorzichtige standaardwaarden (worst case).",
+      "add": "Nog een tool toevoegen",
+      "name": "Naam van de tool",
+      "name_error": "Vul de naam van de tool in.",
+      "tier": "Soort account",
+      "tier_placeholder": "Kies een soort account"
+    },
+    "kb_unverified": "Een deel van de gegevens over dit accounttype kon niet worden geverifieerd; die rekenen we voorzichtig mee.",
+    "kb_conflicting": "Bronnen spreken elkaar tegen voor dit accounttype; we gaan uit van de strengste lezing.",
+    "answers": {
+      "yes": "Ja",
+      "no": "Nee",
+      "dk": "Weet ik niet"
+    },
+    "data_types": {
+      "public": "Openbare informatie",
+      "internal_docs": "Interne documenten",
+      "customer_personal": "Persoonsgegevens van klanten",
+      "employee": "Gegevens van medewerkers",
+      "special_category": "Bijzondere persoonsgegevens (gezondheid e.d.)",
+      "source_code": "Broncode",
+      "trade_secrets": "Bedrijfsgeheimen / vertrouwelijk"
+    },
+    "approval_options": {
+      "approved": "Goedgekeurd door de organisatie",
+      "shadow": "Schaduw-AI (privéaccounts)",
+      "dk": "Weet ik niet"
+    },
+    "tier_types": {
+      "free": "Gratis",
+      "personal_paid": "Betaald privéaccount",
+      "business": "Business / Team",
+      "enterprise": "Enterprise",
+      "api": "API / cloud",
+      "self_hosted": "Zelf gehost"
+    }
+  },
+  "usecases": {
+    "title": "Toepassingen",
+    "intro": "Waarvoor wordt AI in uw organisatie gebruikt? Kies alles wat van toepassing is. Elke toepassing valt in een risicocategorie van de AI-verordening.",
+    "tier_label": "Categorie AI-verordening",
+    "items": {
+      "recruitment_hr": {
+        "label": "Werving / HR-selectie",
+        "hint": "Cv's screenen, kandidaten rangschikken, sollicitatiegesprekken analyseren"
+      },
+      "employee_monitoring": {
+        "label": "Monitoring of beoordeling van medewerkers",
+        "hint": "Productiviteitsscores, taakverdeling, besluiten over promotie of ontslag"
+      },
+      "credit_insurance": {
+        "label": "Krediet- of verzekeringsbeoordeling",
+        "hint": "Kredietwaardigheid, premies voor levens- of zorgverzekeringen"
+      },
+      "education_assessment": {
+        "label": "Onderwijs / beoordeling van examens",
+        "hint": "Beoordelen, toelating, surveillance bij toetsen"
+      },
+      "biometric_identification": {
+        "label": "Biometrische identificatie of categorisering",
+        "hint": "Gezichts- of vingerafdrukherkenning, mensen indelen op biometrische kenmerken"
+      },
+      "emotion_recognition": {
+        "label": "Emotieherkenning bij medewerkers of studenten",
+        "hint": "Emoties afleiden op de werkvloer of in het onderwijs — verboden sinds 2 feb. 2025"
+      },
+      "critical_infrastructure": {
+        "label": "Kritieke infrastructuur",
+        "hint": "Veiligheidscomponenten in energie, water, verkeer of digitale infrastructuur"
+      },
+      "customer_chatbot": {
+        "label": "Chatbot voor klanten",
+        "hint": "Klanten of burgers hebben direct contact met AI"
+      },
+      "external_content": {
+        "label": "AI-gegenereerde content die extern wordt gepubliceerd",
+        "hint": "Marketingteksten, beelden, video, nieuws of publieksinformatie"
+      },
+      "internal_productivity": {
+        "label": "Interne productiviteit / schrijven",
+        "hint": "E-mails, samenvattingen, concepten, notulen"
+      },
+      "coding": {
+        "label": "Hulp bij programmeren",
+        "hint": "Code aanvullen, code reviewen, agents"
+      },
+      "data_analysis": {
+        "label": "Data-analyse",
+        "hint": "Rapportages, prognoses, spreadsheetanalyse"
+      },
+      "translation": {
+        "label": "Vertalen",
+        "hint": "Documenten, e-mails, websites"
+      }
+    },
+    "tiers": {
+      "prohibited": "Verboden",
+      "high_risk": "Hoog risico",
+      "transparency": "Transparantieplicht",
+      "minimal": "Minimaal risico"
+    }
+  },
+  "governance": {
+    "title": "Governance",
+    "intro": "Hoe ver is uw organisatie met AI-governance? Antwoord eerlijk. \"Weet ik niet\" telt als \"nee\".",
+    "questions": {
+      "ai_policy": "Is er beleid voor AI-gebruik (welke tools, welke gegevens, welke doelen)?",
+      "ai_literacy": "Hebben medewerkers training in AI-geletterdheid gehad (AI-verordening art. 4)?",
+      "ai_register": "Is er een register van de AI-systemen die in gebruik zijn?",
+      "dpia": "Is er een DPIA uitgevoerd voor de verwerking van persoonsgegevens met AI?",
+      "dpo": "Is er een functionaris gegevensbescherming (FG) aangesteld?",
+      "vendor_dpas": "Zijn er met alle AI-leveranciers verwerkersovereenkomsten gesloten?",
+      "human_oversight": "Is menselijk toezicht geregeld voor besluiten die (mede) door AI worden genomen?"
+    },
+    "answers": {
+      "yes": "Ja",
+      "partial": "Gedeeltelijk",
+      "no": "Nee",
+      "dk": "Weet ik niet"
+    },
+    "error": "Beantwoord alle governancevragen (u kunt \"Weet ik niet\" kiezen)."
+  },
+  "results": {
+    "title": "Uw resultaten van de AI Sovereignty Scan",
+    "intro": "Deze indicatieve score is gebaseerd op uw antwoorden en onze kennisbank per {date}. Hoe hoger de score, hoe groter het risico.",
+    "overall": "Totale risicoscore",
+    "band": "Risiconiveau",
+    "out_of": "van de 100",
+    "prohibited_flag": "Automatisch KRITIEK: u heeft een toepassing gekozen die onder art. 5 van de AI-verordening een verboden AI-praktijk is.",
+    "method_worst_tool": "Uw totaalscore wordt bepaald door uw meest risicovolle tool ({tool}), zodat één kritieke tool niet wordt weggemiddeld.",
+    "method_blended": "Uw totaalscore combineert het naar gebruik gewogen gemiddelde van de tools (80%) met uw governancescore (20%).",
+    "sub_scores": "Deelscores",
+    "key_findings": "Belangrijkste bevindingen",
+    "per_tool": "Beoordeling per tool",
+    "sort_by": "Sorteer op {column}",
+    "table": {
+      "tool": "Tool",
+      "tier": "Account",
+      "users": "Gebruikers",
+      "sovereignty": "Soevereiniteit",
+      "gdpr": "AVG",
+      "aiact": "AI-verordening",
+      "security": "Beveiliging",
+      "total": "Totaal",
+      "reasons": "Belangrijkste redenen"
+    },
+    "no_tools": "Er zijn geen tools geselecteerd.",
+    "top_actions": "Top 5 acties op volgorde van prioriteit",
+    "alternatives": "Alternatieven met minder risico",
+    "alternative_line": "{from} ({fromScore}) → {to}: geschat {toScore}",
+    "send": {
+      "title": "Ontvang het volledige rapport",
+      "intro": "Het rapport (HTML + pdf) gaat naar Oneview Logic (info@oneviewlogic.com). Het bevat de juridische context, een vergelijking van accounttypes, een AVG-checklist, het volledige actieplan en de bronnen.",
+      "copy": "Stuur ook een kopie naar {email}",
+      "button": "Rapport versturen",
+      "sending": "Bezig met versturen…",
+      "success_title": "Rapport verstuurd",
+      "success": "Dank u wel. Uw rapport is verstuurd naar Oneview Logic{copy}. We nemen contact met u op om de resultaten te bespreken. Uw antwoorden zijn van deze pagina gewist.",
+      "success_copy": " en naar {email}",
+      "error_title": "Het rapport kon niet worden verstuurd",
+      "error": "Er ging iets mis ({detail}). Probeer het over een paar minuten opnieuw of mail naar info@oneviewlogic.com.",
+      "error_rate": "Te veel verzoeken. Wacht een paar minuten en probeer het dan opnieuw.",
+      "error_validation": "Sommige antwoorden zijn ongeldig. Controleer stap 1."
+    },
+    "disclaimer": "Dit is een indicatieve zelfevaluatie, geen juridisch advies."
+  },
+  "dims": {
+    "sovereignty": "Datasoevereiniteit",
+    "gdpr": "AVG-naleving",
+    "aiact": "Blootstelling AI-verordening",
+    "security": "Beveiliging & contract",
+    "governance": "Governance",
+    "modifier": "Gebruiksfactoren",
+    "data": "Kennisbank"
+  },
+  "bands": {
+    "low": "Laag",
+    "medium": "Gemiddeld",
+    "high": "Hoog",
+    "critical": "Kritiek"
+  },
+  "jurisdictions": {
+    "US": "Verenigde Staten",
+    "EU": "Europese Unie",
+    "CN": "China",
+    "other": "buiten de EU (overig)",
+    "self": "in eigen beheer"
+  },
+  "reasons": {
+    "jurisdiction_unverified": "Jurisdictie van de aanbieder onbekend (gerekend als worst case)",
+    "jurisdiction_cn": "Chinese aanbieder: gegevens vallen onder de Chinese Nationale Inlichtingenwet, geen adequaatheidsbesluit",
+    "jurisdiction_eu": "Aanbieder met hoofdkantoor in de EU",
+    "jurisdiction_foreign": "Moederbedrijf buiten de EU ({country}): buitenlandse wetten zoals de Amerikaanse CLOUD Act kunnen ook bij gegevens in de EU",
+    "unverified_eu_storage": "Opslag in de EU kon niet worden geverifieerd",
+    "unverified_eu_inference": "Verwerkingslocatie (inferentie) in de EU kon niet worden geverifieerd",
+    "eu_storage_unknown": "EU-dataresidentie is beschikbaar, maar u weet niet of die aanstaat",
+    "eu_inference_unknown": "Verwerking in de EU is beschikbaar, maar u weet niet of die aanstaat",
+    "eu_storage_not_enabled": "EU-dataresidentie is beschikbaar maar niet ingeschakeld",
+    "eu_inference_not_enabled": "Verwerking in de EU is beschikbaar maar niet ingeschakeld",
+    "no_eu_storage": "Geen EU-dataresidentie voor dit accounttype",
+    "no_eu_inference": "Verwerking (inferentie) buiten de EU",
+    "residency_claimed_not_offered": "U gaf aan dat EU-residentie aanstaat, maar dit accounttype biedt dat niet",
+    "training_unverified": "Niet te verifiëren of uw gegevens worden gebruikt om modellen te trainen",
+    "training_yes_default": "Traint standaard op uw gegevens, zonder praktische opt-out",
+    "training_opt_out": "Traint standaard op uw gegevens (u moet zelf uitschakelen)",
+    "training_no_default": "Standaard geen training, maar opt-in is mogelijk",
+    "dpa_unverified": "Niet te verifiëren of er een verwerkersovereenkomst (art. 28 AVG) is",
+    "no_dpa": "Geen verwerkersovereenkomst (art. 28 AVG); consumentenvoorwaarden",
+    "transfer_unverified": "Grondslag voor doorgifte buiten de EU kon niet worden geverifieerd",
+    "transfer_none": "Geen geldige grondslag voor doorgifte van gegevens buiten de EU",
+    "transfer_dpf_sccs": "Doorgifte gedekt door DPF en SCC's (DPF wordt juridisch aangevochten)",
+    "transfer_sccs": "Doorgifte op basis van SCC's (transfer impact assessment nodig)",
+    "transfer_dpf_only": "Doorgifte alleen op basis van het EU-VS Data Privacy Framework (hoger beroep bij het Hof loopt)",
+    "no_retention_control": "Geen instelbare bewaartermijn en geen zero-data-retention",
+    "subprocessors_unverified": "Openbare lijst van subverwerkers kon niet worden geverifieerd",
+    "no_subprocessor_list": "Geen openbare lijst van subverwerkers",
+    "regulatory_actions": "Handhaving of onderzoek door toezichthouders: {list}",
+    "usecase_prohibited": "Verboden AI-praktijk gekozen ({useCases})",
+    "usecase_high_risk": "Toepassing met hoog risico ({useCases})",
+    "usecase_transparency": "Transparantieverplichtingen van toepassing ({useCases})",
+    "usecase_minimal": "Alleen toepassingen met minimaal risico",
+    "gpai_unverified": "Status van de modelaanbieder onder de GPAI-praktijkcode onbekend",
+    "gpai_partial": "Modelaanbieder heeft de GPAI-praktijkcode maar gedeeltelijk ondertekend",
+    "gpai_not_signed": "Modelaanbieder heeft de GPAI-praktijkcode niet ondertekend",
+    "gpai_not_applicable": "Afgeleide toepassing; de GPAI-status van de onderliggende modelaanbieder is niet beoordeeld",
+    "no_ai_literacy": "Geen training in AI-geletterdheid",
+    "no_ai_policy": "Geen beleid voor AI-gebruik",
+    "no_human_oversight": "Menselijk toezicht niet geregeld bij toepassingen met hoog risico",
+    "no_sso": "Geen single sign-on (SSO)",
+    "no_sso_unverified": "Beschikbaarheid van SSO kon niet worden geverifieerd",
+    "no_audit_logs": "Geen auditlogs",
+    "no_audit_logs_unverified": "Beschikbaarheid van auditlogs kon niet worden geverifieerd",
+    "no_user_management": "Geen centraal gebruikersbeheer",
+    "no_user_management_unverified": "Centraal gebruikersbeheer kon niet worden geverifieerd",
+    "no_export_deletion": "Geen mogelijkheid om gegevens te exporteren of te verwijderen",
+    "no_export_deletion_unverified": "Export- en verwijdermogelijkheden konden niet worden geverifieerd",
+    "self_hosted_responsibility": "Zelf gehost: beveiliging en certificering zijn uw eigen verantwoordelijkheid",
+    "no_certifications": "Geen geverifieerde beveiligingscertificeringen",
+    "no_core_certification": "Geen ISO 27001 of SOC 2 geverifieerd",
+    "consumer_terms": "Consumentenvoorwaarden: geen zakelijk contract en geen beheermogelijkheden",
+    "personal_tier_sensitive": "Gratis of privéaccount gebruikt met persoonsgegevens of vertrouwelijke gegevens",
+    "shadow_ai": "Schaduw-AI: gebruik via niet-goedgekeurde privéaccounts",
+    "approval_unknown": "Onbekend of het gebruik is goedgekeurd (gerekend als schaduw-AI)",
+    "special_category": "Er worden bijzondere persoonsgegevens (bijv. gezondheid) ingevoerd",
+    "employee_data": "Er worden persoonsgegevens van medewerkers ingevoerd",
+    "customer_personal": "Er worden persoonsgegevens van klanten ingevoerd",
+    "public_only": "Er wordt alleen openbare informatie ingevoerd (lager risico)",
+    "kb_unverified": "{count} gegeven(s) over dit accounttype niet geverifieerd en voorzichtig meegerekend",
+    "kb_conflicting": "Bronnen spreken elkaar tegen; we gaan uit van de strengste lezing",
+    "gov_missing": "{question} — niet geregeld",
+    "gov_partial": "{question} — gedeeltelijk geregeld"
+  },
+  "findings": {
+    "kf_prohibited": "U heeft een verboden AI-praktijk gekozen ({useCases}). Die is sinds 2 februari 2025 verboden; de boete kan oplopen tot € 35 miljoen of 7% van de omzet.",
+    "kf_worst_tool": "Uw meest risicovolle tool is {tool}, met een score van {score} ({band}).",
+    "kf_shadow": "{count} tool(s) worden zonder goedkeuring gebruikt, of het is niet bekend of ze zijn goedgekeurd (schaduw-AI).",
+    "kf_training": "{count} tool(s) gebruiken uw gegevens mogelijk standaard om AI-modellen te trainen.",
+    "kf_non_eu_sensitive": "{count} tool(s) verwerken persoonsgegevens of vertrouwelijke gegevens zonder effectieve EU-soevereiniteit.",
+    "kf_governance_gaps": "Uw AI-governance vertoont flinke hiaten (governancerisico {score}/100).",
+    "kf_no_tools": "Er zijn geen AI-tools opgegeven. Controleer op schaduw-AI: de Autoriteit Persoonsgegevens ziet steeds meer datalekken door medewerkers die gratis chatbots gebruiken.",
+    "kf_tool_count": "Er zijn {count} combinatie(s) van AI-tool en accounttype beoordeeld."
+  },
+  "actions": {
+    "stop_prohibited": {
+      "title": "Stop verboden AI-gebruik direct of laat het opnieuw beoordelen",
+      "detail": "Zet {useCases} stil en vraag juridisch advies. De verboden van art. 5 gelden sinds 2 februari 2025."
+    },
+    "discontinue_cn": {
+      "title": "Stop met Chinese AI-diensten voor bedrijfsgegevens",
+      "detail": "Blokkeer {tools} en stap over op een goedgekeurd alternatief. Gebruik zo nodig open-weight-modellen op EU-infrastructuur."
+    },
+    "stop_shadow_ai": {
+      "title": "Maak een einde aan schaduw-AI met een goedgekeurd alternatief",
+      "detail": "Bied een goedgekeurd zakelijk account aan en blokkeer privéaccounts voor {tools}. Laat medewerkers weten welke tools zijn toegestaan."
+    },
+    "upgrade_business_tier": {
+      "title": "Vervang gratis en privéaccounts door zakelijke accounts",
+      "detail": "Stap voor {tools} over van consumentenaccounts naar business- of enterprise-abonnementen met verwerkersovereenkomst en beheermogelijkheden."
+    },
+    "disable_training": {
+      "title": "Zet modeltraining op uw gegevens uit",
+      "detail": "Schakel training uit in de instellingen van {tools}, of kies een accounttype dat nooit op klantgegevens traint."
+    },
+    "art50_transparency": {
+      "title": "Voldoe aan de transparantieplicht (art. 50 AI-verordening)",
+      "detail": "Vertel mensen wanneer ze met AI communiceren en markeer AI-gegenereerde content ({useCases}). Dit geldt sinds {date}; markering voor bestaande generatieve systemen geldt vanaf {date2}."
+    },
+    "sign_dpas": {
+      "title": "Sluit verwerkersovereenkomsten met alle AI-leveranciers",
+      "detail": "Sluit met elke leverancier een verwerkersovereenkomst (art. 28 AVG). Tools zonder verwerkersovereenkomst: {tools}."
+    },
+    "ai_policy": {
+      "title": "Stel beleid voor AI-gebruik vast",
+      "detail": "Leg vast welke tools zijn toegestaan, voor welke doelen en met welke gegevens, en wie nieuwe tools goedkeurt."
+    },
+    "do_dpia": {
+      "title": "Voer een DPIA uit voor AI-verwerkingen van persoonsgegevens",
+      "detail": "Een DPIA (art. 35 AVG) is nodig als AI op grote schaal persoonsgegevens verwerkt of besluiten over mensen ondersteunt."
+    },
+    "enable_eu_residency": {
+      "title": "Schakel EU-dataresidentie in waar dat kan",
+      "detail": "Zet EU-opslag en -verwerking aan voor {tools}. Schakel bij Microsoft 365 Copilot ook flex routing uit."
+    },
+    "prepare_high_risk": {
+      "title": "Bereid u voor op de hoog-risicoverplichtingen",
+      "detail": "Regel voor {useCases} vóór {date}: menselijk toezicht, logging, gebruiksinstructies, informatie aan werknemers en controles op leveranciers."
+    },
+    "ai_literacy": {
+      "title": "Start een programma voor AI-geletterdheid",
+      "detail": "Art. 4 vraagt maatregelen die de AI-geletterdheid ondersteunen van medewerkers die met AI werken. De Omnibus heeft er een inspanningsverplichting van gemaakt, maar de plicht niet geschrapt."
+    },
+    "ai_register": {
+      "title": "Richt een register van AI-systemen in",
+      "detail": "Leg per tool vast: accounttype, eigenaar, doel, categorieën gegevens, verwerkersovereenkomst en risicocategorie. Dat helpt ook bij uw verwerkingsregister onder de AVG."
+    },
+    "sovereign_alternative": {
+      "title": "Kies een soeverein alternatief voor gevoelige toepassingen",
+      "detail": "Overweeg een Europese aanbieder of open-weight-modellen op EU-infrastructuur voor de gevoelige gegevens die nu via {tools} gaan."
+    },
+    "assess_dpo": {
+      "title": "Ga na of u een functionaris gegevensbescherming nodig heeft",
+      "detail": "Een FG is verplicht bij grootschalige monitoring of verwerking van bijzondere persoonsgegevens, en aan te raden bij systematische AI-verwerking."
+    },
+    "human_oversight": {
+      "title": "Regel menselijk toezicht op AI-ondersteunde besluiten",
+      "detail": "Leg vast wie AI-output beoordeelt voordat die gevolgen heeft voor mensen, en hoe u escaleert of ingrijpt."
+    }
+  },
+  "horizons": {
+    "d30": "Snelle winst — binnen 30 dagen",
+    "d90": "Binnen 90 dagen",
+    "dec2027": "Vóór 2 december 2027"
+  },
+  "report": {
+    "title": "AI Sovereignty Scan",
+    "prepared_for": "Opgesteld voor",
+    "date": "Datum",
+    "generated_by": "Opgesteld met de AI Sovereignty Scan van Oneview Logic",
+    "toc": "Inhoud",
+    "exec_summary": "Managementsamenvatting",
+    "regulatory_context": "Juridische context",
+    "applies_now": "Geldt nu",
+    "applies_later": "Geldt later",
+    "relevant_to_you": "Relevant voor uw toepassingen",
+    "omnibus_changes": "Wat de Digitale Omnibus AI heeft veranderd",
+    "netherlands": "Nederland: toezicht en uitvoeringswet",
+    "transfers": "Internationale doorgifte van gegevens",
+    "penalties": "Sancties (art. 99)",
+    "sme_context": "De omvang van uw organisatie",
+    "sme": {
+      "1-9": "Micro-onderneming: als uw omzet binnen de mkb-grenzen valt, is een boete onder de AI-verordening maximaal het laagste van het vaste bedrag en het omzetpercentage, en gelden de ondersteuningsmaatregelen voor het mkb.",
+      "10-49": "Kleine onderneming: als uw omzet binnen de mkb-grenzen valt, geldt het laagste boetemaximum en hebt u recht op mkb-ondersteuning (zoals voorrang in sandboxes).",
+      "50-249": "Middelgrote onderneming: als omzet of balanstotaal binnen de mkb-grenzen valt, geldt de mkb-verlichting (lager boetemaximum, vereenvoudigde documentatie).",
+      "250-999": "Geen mkb. Onder de Omnibus kunt u een small mid-cap zijn (minder dan 750 medewerkers, omzet ≤ € 150 mln of balanstotaal ≤ € 129 mln). Dan geldt gedeeltelijke verlichting.",
+      "1000+": "Grote onderneming: het volledige boeteregime geldt (het hoogste van het vaste bedrag en het percentage van de wereldwijde omzet)."
+    },
+    "per_tool": "Beoordeling per tool",
+    "alternatives": "Vergelijking van accounttypes en alternatieven",
+    "alternatives_intro": "Voor elke tool met score Hoog of Kritiek: de geschatte score na overstappen, uitgaande van ingeschakelde EU-residentie en goedgekeurd gebruik.",
+    "no_alternatives": "Geen enkele tool scoort Hoog of Kritiek, of er is geen alternatief met minder risico bekend.",
+    "current": "Huidig",
+    "alternative": "Alternatief",
+    "estimated": "Geschat",
+    "gdpr_checklist": "AVG-checklist",
+    "checklist": {
+      "dpas": "Verwerkersovereenkomsten met AI-leveranciers",
+      "dpia": "DPIA voor AI-verwerkingen",
+      "transfers": "Rechtmatige doorgifte buiten de EU",
+      "retention": "Beheer van bewaartermijnen / zero data retention",
+      "ropa": "Verwerkingsregister (AI-register)",
+      "dpo": "Functionaris gegevensbescherming",
+      "ok": "Op orde",
+      "partial": "Gedeeltelijk",
+      "gap": "Hiaat",
+      "tools_without_dpa": "Tools zonder verwerkersovereenkomst: {tools}",
+      "tools_transfer_gap": "Tools zonder geverifieerde doorgiftegrondslag: {tools}",
+      "tools_no_retention": "Tools zonder instelbare bewaartermijn: {tools}",
+      "all_tools_ok": "Alle beoordeelde tools op orde"
+    },
+    "action_plan": "Actieplan op volgorde van prioriteit",
+    "methodology": "Methode",
+    "methodology_text": "Elke combinatie van tool en accounttype krijgt vier deelscores (0–100, hoger is risicovoller): datasoevereiniteit (30%), AVG-naleving (30%), blootstelling onder de AI-verordening (25%) en beveiliging & contract (15%). Daarbovenop komen toeslagen voor gratis of privéaccounts met gevoelige gegevens, schaduw-AI, en bijzondere persoonsgegevens of gegevens van medewerkers (maximaal +35). De organisatiescore combineert het naar gebruik gewogen gemiddelde van de tools (80%) met de governancescore (20%). Hij is nooit lager dan 80% van de meest risicovolle tool met hoge blootstelling. Gegevens uit de kennisbank die niet te verifiëren waren, en antwoorden als \"weet ik niet\", rekenen we als de risicovollere optie. Een verboden toepassing leidt altijd tot Kritiek.",
+    "sources": "Bronnen",
+    "sources_intro": "Gegevens geverifieerd op {date}. Elk gegeven in de kennisbank heeft een bron en een verificatiedatum.",
+    "unverified_intro": "Niet-geverifieerde gegevens voor uw tools (voorzichtig meegerekend):",
+    "last_verified": "laatst geverifieerd",
+    "disclaimer_title": "Disclaimer",
+    "disclaimer": "Dit is een indicatieve zelfevaluatie, geen juridisch advies. De uitkomst hangt af van uw antwoorden en van openbare informatie van leveranciers, die op elk moment kan veranderen. Laat de conclusies toetsen door een deskundige adviseur voordat u erop vertrouwt.",
+    "company_details": "Ingevulde organisatiegegevens",
+    "use_cases": "Toepassingen",
+    "governance_answers": "Antwoorden governance",
+    "page": "Pagina",
+    "of": "van",
+    "none": "Geen",
+    "timeline_milestone": "Mijlpaal",
+    "status": "Status",
+    "src_gpai": "GPAI-praktijkcode",
+    "src_dpf": "EU-VS Data Privacy Framework",
+    "src_sccs": "Modelcontractbepalingen (SCC's)",
+    "src_cloud_act": "Amerikaanse CLOUD Act",
+    "src_omnibus_gdpr": "Digitale Omnibus (AVG-wijzigingen)"
+  },
+  "email": {
+    "subject": "AI Sovereignty Scan – {company} – {band} ({score})",
+    "internal_intro": "Er is via de website een nieuwe AI Sovereignty Scan ingevuld. Het volledige rapport zit als pdf in de bijlage en staat hieronder.",
+    "client_intro": "Beste {name},\n\nDank u wel voor het invullen van de AI Sovereignty Scan. Uw rapport zit als pdf in de bijlage en staat hieronder. Oneview Logic neemt contact met u op om de resultaten te bespreken.\n\nMet vriendelijke groet,\nOneview Logic",
+    "client_greeting_fallback": "heer/mevrouw",
+    "field": "Veld",
+    "value": "Waarde",
+    "copy_requested": "Kopie naar invuller verstuurd",
+    "language": "Taal",
+    "attachment_name": "AI-Sovereignty-Scan"
+  },
+  "privacy": {
+    "title": "Privacyverklaring — AI Sovereignty Scan",
+    "back": "Terug naar de scan",
+    "sections": [
+      {
+        "h": "Wie wij zijn",
+        "p": "Oneview Logic B.V., Vinkenburgstraat 2A, 3512 AB Utrecht (KvK 92832601), is verwerkingsverantwoordelijke voor de gegevens die u invult. Contact: info@oneviewlogic.com."
+      },
+      {
+        "h": "Wat we verwerken en waarom",
+        "p": "Uw organisatiegegevens, contactgegevens en antwoorden in de scan. We gebruiken ze om uw rapport op te stellen, het (als u dat wilt) naar u en naar Oneview Logic te e-mailen, en om contact met u op te nemen over de resultaten. Grondslag: uw toestemming (art. 6 lid 1 onder a AVG), die u altijd kunt intrekken."
+      },
+      {
+        "h": "Wat we niet doen",
+        "p": "De scan gebruikt geen cookies, analytics of opslag in de browser. Uw antwoorden blijven in het geopende tabblad tot u ze verstuurt, en worden daarna gewist. De server bewaart het rapport niet en logt de inhoud niet."
+      },
+      {
+        "h": "Ontvangers en bewaartermijn",
+        "p": "Het rapport gaat via onze e-mailprovider naar info@oneviewlogic.com en, als u dat kiest, naar u. We bewaren de e-mail zolang nodig is om contact met u op te nemen, en maximaal 24 maanden, tenzij er een klantrelatie uit voortkomt."
+      },
+      {
+        "h": "Uw rechten",
+        "p": "U kunt vragen om inzage, correctie, verwijdering, beperking of overdracht van uw gegevens, en u kunt bezwaar maken. Mail naar info@oneviewlogic.com. U kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl)."
+      }
+    ]
+  },
+  "footer": {
+    "address": "Oneview Logic B.V. · Vinkenburgstraat 2A, 3512 AB Utrecht · KvK 92832601 · info@oneviewlogic.com",
+    "privacy": "Privacyverklaring"
+  }
+}

@@ -921,17 +921,10 @@
       "hq_country": "US",
       "parent_jurisdiction": "US",
       "gpai_code_of_practice": "signatory",
-      "known_regulatory_actions": [
-        {
-          "authority": "French Senate inquiry",
-          "date": "2025-06",
-          "action": "Microsoft France testified under oath that it cannot guarantee EU data will never be handed to US authorities",
-          "status": "Testimony (not an enforcement action)",
-          "source_url": "https://www.theregister.com/off-prem/2025/07/25/microsoft-exec-admits-it-cannot-guarantee-data-sovereignty/458553"
-        }
-      ],
+      "known_regulatory_actions": [],
       "vendor_source_urls": [
-        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai"
+        "https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-83-gpai",
+        "https://www.theregister.com/off-prem/2025/07/25/microsoft-exec-admits-it-cannot-guarantee-data-sovereignty/458553"
       ],
       "products": [
         {
@@ -1312,7 +1305,8 @@
             }
           ]
         }
-      ]
+      ],
+      "sovereignty_note": "June 2025: Microsoft France testified under oath before the French Senate that it cannot guarantee EU data will never be handed to US authorities (CLOUD Act). Source: https://www.theregister.com/off-prem/2025/07/25/microsoft-exec-admits-it-cannot-guarantee-data-sovereignty/458553"
     },
     {
       "id": "meta",

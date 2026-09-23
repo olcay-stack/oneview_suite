@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 22mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #14213d; font-size: 10.5pt; line-height: 1.5; background: #ffffff; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+  h1, h2, h3 { line-height: 1.25; margin: 0 0 8px; color: #0b1f3a; }
+  h2 { font-size: 16pt; border-bottom: 2px solid #0b1f3a; padding-bottom: 4px; margin-top: 28px; }
+  h3 { font-size: 12pt; margin-top: 18px; }
+  p { margin: 0 0 8px; }
+  a { color: #0b6e6a; word-break: break-all; }
+  .muted { color: #56647a; }
+  .small { font-size: 9pt; }
+  .cover { background: #0b1f3a; color: #ffffff; padding: 36px 32px; border-radius: 10px; margin: 16px 0 24px; }
+  .cover h1 { color: #ffffff; font-size: 24pt; margin: 18px 0 6px; }
+  .cover .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13pt; }
+  .cover .brand img { width: 40px; height: 40px; }
+  .cover .meta { color: #c9d6e8; }
+  .cover .score { margin-top: 20px; display: flex; gap: 16px; align-items: center; }
+  .cover .score .num { font-size: 36pt; font-weight: 800; line-height: 1; color: #ffffff; }
+  .badge { display: inline-block; font-weight: 700; font-size: 9.5pt; padding: 2px 10px; border-radius: 999px; border: 1px solid; color: #14213d; white-space: nowrap; }
+  .badge .ico { font-size: 7pt; }
+  .b-low .ico { color: #0ca30c; } .b-medium .ico { color: #a36f00; } .b-high .ico { color: #b4491e; } .b-critical .ico { color: #d03b3b; }
+  .b-low { background: #e6f6e6; border-color: #0ca30c; }
+  .b-medium { background: #fff4d9; border-color: #c98a00; }
+  .b-high { background: #fdebe3; border-color: #ec835a; }
+  .b-critical { background: #fbe5e5; border-color: #d03b3b; }
+  .flag { border-left: 4px solid #d03b3b; background: #fbe5e5; padding: 8px 12px; font-weight: 700; margin: 10px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 9.5pt; }
+  th, td { border-bottom: 1px solid #cfd8e3; padding: 6px 8px; text-align: left; vertical-align: top; }
+  thead th { background: #eef2f7; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.02em; color: #3c4a5e; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr { page-break-inside: avoid; }
+  ul { margin: 4px 0 10px; padding-left: 18px; }
+  li { margin-bottom: 3px; }
+  .kv th { width: 34%; background: #f7f9fc; font-weight: 600; }
+  .tl-now { color: #0a6b0a; font-weight: 700; }
+  .tl-later { color: #56647a; font-weight: 700; }
+  .rel { font-weight: 700; color: #0b6e6a; }
+  .st-ok { color: #0a6b0a; font-weight: 700; }
+  .st-partial { color: #8a5a00; font-weight: 700; }
+  .st-gap { color: #b3261e; font-weight: 700; }
+  .horizon { background: #0b1f3a; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 10pt; margin-top: 14px; display: inline-block; }
+  .action { margin: 6px 0 8px; }
+  .action strong { display: block; }
+  .intro-box { border: 1px solid #cfd8e3; background: #f7f9fc; padding: 12px 16px; border-radius: 8px; margin: 16px 0; }
+  .footer { margin-top: 28px; padding-top: 10px; border-top: 1px solid #cfd8e3; color: #56647a; font-size: 8.5pt; }
+  .sources li { font-size: 8.5pt; }
+  .page-break { page-break-before: always; }
+  @media print { .wrap { padding: 0; max-width: none; } .cover { margin-top: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+{{content}}
+<p class="footer">{{footer}}</p>
+</div>
+</body>
+</html>

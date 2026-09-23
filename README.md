@@ -26,3 +26,7 @@ butonu o ajanla konuşmaya açılan bir konsol paneli açar.
 `server.js` içindeki `AGENTS` nesnesine `"X-05": "You are the ... Agent ..."` şeklinde
 bir sistem talimatı ekleyin, `public/index.html`'de aynı `data-id`'ye sahip bir kart
 oluşturun — hepsi aynı `ANTHROPIC_API_KEY`'i paylaşır, ayrı bir anahtar gerekmez.
+
+## AI Sovereignty Scan
+
+Ayrı bir uygulama olarak [`ai-sovereignty-scan/`](ai-sovereignty-scan/README.md) klasöründe bulunur (kendi `package.json`, `.env` ve sunucusu ile).
