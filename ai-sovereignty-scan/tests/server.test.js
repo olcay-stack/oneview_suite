@@ -177,6 +177,21 @@ describe("API end-to-end (real PDF + SMTP capture)", () => {
     assert.ok(!client.html.includes("EN summary:"));
   });
 
+  test("POST /api/lead (Express) emails the company details and escapes them", async () => {
+    smtp.messages.length = 0;
+    const res = await fetch(`${base}/api/lead`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lang: "nl", company: { ...payload().company, name: 'Evil "Co" & Sons' }, consent: true, elapsedMs: 9000 }),
+    });
+    assert.equal(res.status, 200);
+    assert.equal(smtp.messages.length, 1);
+    const m = smtp.messages[0].mail;
+    assert.equal(m.to.text, "info@oneviewlogic.com");
+    assert.match(m.subject, /nieuwe lead/);
+    assert.ok(m.html.includes("Evil &quot;Co&quot; &amp; Sons"));
+  });
+
   test("score in the email is computed server-side (client-supplied scores ignored)", async () => {
     smtp.messages.length = 0;
     const res = await post({ ...payload(), overall: 1, band: "low", sendCopy: false });

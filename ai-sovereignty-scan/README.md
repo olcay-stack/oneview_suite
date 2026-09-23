@@ -1,6 +1,12 @@
 # AI Sovereignty Scan — Oneview Logic B.V.
 
-A self-assessment web app. A company enters its details and the AI tools it uses, per account tier. The app scores EU AI Act, GDPR and data-sovereignty risk per tool and overall, and shows a results dashboard. It then emails a branded report (HTML + PDF) to **info@oneviewlogic.com**, with an optional copy to the submitter. The app is available in English (`/en/`) and Dutch (`/nl/`).
+A self-assessment web app. A company enters its details and the AI tools it uses, per account tier. The app scores EU AI Act, GDPR and data-sovereignty risk per tool and overall, and shows a results dashboard. The app is available in English (`/en/`) and Dutch (`/nl/`).
+
+Emails (all to **info@oneviewlogic.com**, `MAIL_TO`):
+1. **Lead** — as soon as the visitor completes step 1, their company and contact details are emailed (`POST /api/lead`), even if they never finish the scan.
+2. **Results** — when the results page opens, the answers, scores and a branded report (HTML + PDF) are emailed automatically (`POST /api/submit`). The same answers are never sent twice.
+
+The visitor receives no copy. The results page tells them to contact info@oneviewlogic.com for more detail (with a `mailto:` button). Setting `SEND_COPY_TO_CLIENT=true` is still supported server-side but the UI no longer offers it.
 
 ```
 public/          static frontend (vanilla JS, no build step)
@@ -10,7 +16,7 @@ public/          static frontend (vanilla JS, no build step)
 data/            tools.json (57 tool tiers), regulation.json (AI Act / GDPR / NL) — with sources + dates
 server/          index.js (Express), submit.js (shared handler), validate.js, report.js + report-model.js,
                  report-template.js, pdf.js (Chromium PDF), pdf-doc.js (pdfmake PDF), mailer.js, kb.js
-netlify/         functions/submit.mjs, functions/config.mjs (Netlify Functions)
+netlify/         functions/lead.mjs, submit.mjs, health.mjs, config.mjs (Netlify Functions)
 scripts/         check-data.js (knowledge-base linter), verify-sources.md (refresh checklist)
 tests/           scoring, i18n, server/API (real PDF + SMTP), Netlify functions, browser end-to-end (Playwright)
 ```
@@ -52,7 +58,7 @@ All mail settings live in `.env` on the server and are never sent to the browser
 | `SMTP_USER`, `SMTP_PASS` | SMTP credentials (use an app password or SMTP key, not a personal password). |
 | `MAIL_FROM` | Sender, e.g. `"Oneview Logic AI Sovereignty Scan <scan@oneviewlogic.com>"`. Must be allowed by your SPF/DKIM. |
 | `MAIL_TO` | Internal recipient; default `info@oneviewlogic.com`. |
-| `SEND_COPY_TO_CLIENT` | `true` shows the "send me a copy" checkbox and allows the copy. `false` hides it. |
+| `SEND_COPY_TO_CLIENT` | Leave `false`: visitors contact info@ for details. (`true` would also email the submitter a copy if the client asks for one.) |
 | `RATE_LIMIT_MAX` | Submissions per IP per 15 minutes (default 5). |
 | `TRUST_PROXY` | Set to `1` behind one reverse proxy so rate limiting sees the real client IP. |
 | `CHROMIUM_PATH` | Optional path to a Chrome/Chromium binary. |

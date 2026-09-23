@@ -16,7 +16,7 @@ const BAND_ICON = { low: "●", medium: "▲", high: "◆", critical: "✖" };
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[A-Za-z]{2,}$/;
 const PHONE_RE = /^\+?[0-9 ()\-./]{6,24}$/;
 
-let I18N, TOOLS, REG, KB, CONFIG;
+let I18N, TOOLS, REG, KB;
 let state;
 
 function freshState() {
@@ -31,11 +31,11 @@ function freshState() {
     custom: [], // { key, name, tierType, users, residency, dataTypes, approval }
     useCases: [],
     governance: {},
-    sendCopy: false,
+    leadSentKey: null, // company details already emailed to Oneview Logic (step 1)
     errors: [],
     sort: { key: "total", dir: "desc" },
     filter: "",
-    submit: { status: "idle", message: "" },
+    submit: { status: "idle", message: "", sentKey: null },
   };
 }
 
@@ -65,16 +65,14 @@ const safeId = (s) => String(s).replace(/[^A-Za-z0-9_-]/g, "-");
 async function boot() {
   const app = document.getElementById("app");
   try {
-    const [i18n, tools, reg, config] = await Promise.all([
+    const [i18n, tools, reg] = await Promise.all([
       fetch(`/i18n/${LANG}.json`).then((r) => r.json()),
       fetch("/data/tools.json").then((r) => r.json()),
       fetch("/data/regulation.json").then((r) => r.json()),
-      fetch("/api/config").then((r) => (r.ok ? r.json() : { copyToClient: false })).catch(() => ({ copyToClient: false })),
     ]);
     I18N = i18n;
     TOOLS = tools;
     REG = reg;
-    CONFIG = config;
     KB = indexKnowledgeBase(tools);
   } catch (e) {
     app.textContent = "Could not load the scan. Please reload the page. / De scan kon niet worden geladen. Herlaad de pagina.";
@@ -140,7 +138,7 @@ function renderProgress() {
       {},
       STEPS.map((s, i) => {
         const cls = i < state.step ? "done" : i === state.step ? "current" : "";
-        const reachable = i <= state.maxStep && i !== state.step && state.submit.status !== "sent";
+        const reachable = i <= state.maxStep && i !== state.step;
         return h(
           "li",
           { class: cls },
@@ -778,7 +776,6 @@ function toolTable(tools) {
 
 let lastResult = null;
 function renderResults() {
-  if (state.submit.status === "sent") return renderSent();
   const r = assess(answers(), { tools: TOOLS, regulation: REG, index: KB });
   lastResult = r;
   const alts = r.tools.filter((x) => x.alternativesScored.length);
@@ -846,77 +843,65 @@ function renderResults() {
     ),
     renderSendBox(),
     h("p", { class: "disclaimer", text: tr("results.disclaimer") }),
-    h("div", { class: "step-nav" }, h("button", { type: "button", class: "btn secondary", id: "btn-back", text: `← ${tr("nav.edit")}`, onClick: () => goTo(3) })),
+    h(
+      "div",
+      { class: "step-nav" },
+      h("button", { type: "button", class: "btn secondary", id: "btn-back", text: `← ${tr("nav.edit")}`, onClick: () => goTo(3) }),
+      h("button", { type: "button", class: "btn secondary", id: "btn-restart", text: tr("nav.restart"), onClick: () => { state = freshState(); render({ focus: "heading" }); } }),
+    ),
   );
 }
 
+const CONTACT = "info@oneviewlogic.com";
+
+// Results are emailed to Oneview Logic automatically; the visitor gets no copy
+// but a clear way to ask for more detail.
 function renderSendBox() {
   const s = state.submit;
-  const sending = s.status === "sending";
+  const mailto = `mailto:${CONTACT}?subject=${encodeURIComponent(tr("results.send.contact_subject", { company: state.company.name }))}`;
+  const contact = h("p", { class: "mt" }, h("a", { class: "btn", id: "btn-contact", href: mailto, text: `✉ ${tr("results.send.contact_cta")}` }));
+  let status = null;
+  if (s.status === "sending" || s.status === "idle") {
+    status = h("p", { class: "status-box", role: "status", "aria-live": "polite", text: tr("results.send.sending") });
+  } else if (s.status === "sent") {
+    status = h("div", { class: "status-box ok", role: "status", id: "send-status" }, h("h3", { text: tr("results.send.success_title") }), h("p", { text: tr("results.send.success") }));
+  } else if (s.status === "error") {
+    status = h(
+      "div",
+      { class: "status-box err", role: "alert", id: "send-status", tabindex: "-1" },
+      h("h3", { text: tr("results.send.error_title") }),
+      h("p", { text: s.message }),
+      h("button", { type: "button", class: "btn secondary", id: "btn-retry", text: tr("results.send.retry"), onClick: () => submit({ force: true }) }),
+    );
+  }
   return h(
     "section",
     { class: "panel send-box", "aria-labelledby": "h-send" },
     h("h2", { id: "h-send", text: tr("results.send.title") }),
     h("p", { text: tr("results.send.intro") }),
-    CONFIG.copyToClient
-      ? h(
-          "div",
-          { class: "check" },
-          h("input", { type: "checkbox", id: "f-copy", checked: state.sendCopy, onChange: (e) => (state.sendCopy = e.target.checked) }),
-          h("label", { for: "f-copy", text: tr("results.send.copy", { email: state.company.email }) }),
-        )
-      : null,
-    h("p", { class: "mt" }, h("button", { type: "button", class: "btn", id: "btn-send", disabled: sending || undefined, "aria-busy": sending ? "true" : undefined, text: sending ? tr("results.send.sending") : tr("results.send.button"), onClick: submit })),
-    s.status === "error"
-      ? h("div", { class: "status-box err", role: "alert", id: "send-status", tabindex: "-1" }, h("h3", { text: tr("results.send.error_title") }), h("p", { text: s.message }))
-      : null,
+    status,
+    s.status === "sent" ? contact : null,
   );
 }
 
-function renderSent() {
-  return h(
-    "section",
-    { class: "panel", "aria-labelledby": "step-title" },
-    h("h2", { id: "step-title", class: "step-title", tabindex: "-1", text: tr("results.send.success_title") }),
-    h("div", { class: "status-box ok", role: "status" }, h("p", { text: state.submit.message })),
-    h("p", { class: "disclaimer", text: tr("results.disclaimer") }),
-    h("div", { class: "step-nav" }, h("button", { type: "button", class: "btn", id: "btn-restart", text: tr("nav.restart"), onClick: () => { state = freshState(); render({ focus: "heading" }); } })),
-  );
-}
-
-async function submit() {
-  if (state.submit.status === "sending") return;
-  state.submit = { status: "sending", message: "" };
-  render({ focus: "btn-send" });
-  const payload = {
+function submissionPayload() {
+  return {
     lang: LANG,
     company: { ...state.company },
     consent: state.consent,
     fax: state.hp,
     elapsedMs: Date.now() - state.startedAt,
-    sendCopy: Boolean(CONFIG.copyToClient && state.sendCopy),
+    sendCopy: false,
     tools: buildEntries(),
     useCases: [...state.useCases],
     governance: { ...state.governance },
   };
-  let res;
-  try {
-    res = await fetch("/api/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-  } catch {
-    res = null;
-  }
-  if (res && res.ok) {
-    const email = state.company.email;
-    const copied = payload.sendCopy;
-    // Wipe every answer from memory; only the confirmation remains.
-    state = freshState();
-    state.step = STEPS.length - 1;
-    state.maxStep = state.step;
-    state.submit = { status: "sent", message: tr("results.send.success", { copy: copied ? tr("results.send.success_copy", { email }) : "" }) };
-    lastResult = null;
-    render({ focus: "heading" });
-    return;
-  }
+}
+
+// Key of what was sent (without the timing field) — the same answers are never emailed twice.
+const keyOf = (payload) => JSON.stringify({ ...payload, elapsedMs: 0 });
+
+async function errorMessage(res) {
   const status = res ? res.status : 0;
   // The server reports which step failed (e.g. "smtp · EAUTH:535") — shown so it can be passed on to support.
   let detail = status ? `HTTP ${status}` : "network";
@@ -924,10 +909,46 @@ async function submit() {
     const info = await res.json().catch(() => null);
     if (info && info.stage) detail += ` · ${info.stage}${info.code ? ` · ${info.code}` : ""}`;
   }
-  const message =
-    status === 429 ? tr("results.send.error_rate") : status === 400 ? tr("results.send.error_validation") : tr("results.send.error", { detail });
-  state.submit = { status: "error", message };
-  render({ focus: "send-status" });
+  return status === 429 ? tr("results.send.error_rate") : status === 400 ? tr("results.send.error_validation") : tr("results.send.error", { detail });
+}
+
+/** Emails the results to Oneview Logic. Called automatically when the results are shown. */
+async function submit({ force = false } = {}) {
+  if (state.submit.status === "sending") return;
+  const payload = submissionPayload();
+  const key = keyOf(payload);
+  if (!force && state.submit.status === "sent" && state.submit.sentKey === key) return;
+  const current = state;
+  state.submit = { status: "sending", message: "", sentKey: state.submit.sentKey };
+  render();
+  let res;
+  try {
+    res = await fetch("/api/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+  } catch {
+    res = null;
+  }
+  if (state !== current) return; // user restarted meanwhile
+  if (res && res.ok) {
+    state.submit = { status: "sent", message: "", sentKey: key };
+    render();
+    return;
+  }
+  state.submit = { status: "error", message: await errorMessage(res), sentKey: null };
+  render();
+}
+
+/** Emails the step-1 company/contact details to Oneview Logic (once per distinct set of details). */
+async function sendLead() {
+  const payload = { lang: LANG, company: { ...state.company }, consent: state.consent, fax: state.hp, elapsedMs: Date.now() - state.startedAt };
+  const key = JSON.stringify(payload.company);
+  if (state.leadSentKey === key) return;
+  state.leadSentKey = key;
+  try {
+    const res = await fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    if (!res.ok) state.leadSentKey = null; // retried next time step 1 is completed; the results email also contains these details
+  } catch {
+    state.leadSentKey = null;
+  }
 }
 
 // ── Navigation ──────────────────────────────────────────────────────────────
@@ -942,6 +963,7 @@ function next() {
     render({ focus: "errors" });
     return;
   }
+  if (state.step === 0) sendLead(); // non-blocking: the visitor continues immediately
   goTo(state.step + 1);
 }
 
@@ -959,9 +981,9 @@ function goTo(i) {
   state.errors = [];
   state.step = i;
   state.maxStep = Math.max(state.maxStep, i);
-  if (i === STEPS.length - 1 && state.submit.status !== "sent") state.submit = { status: "idle", message: "" };
   render({ focus: "heading" });
   window.scrollTo({ top: document.getElementById("main").offsetTop - 8, behavior: "smooth" });
+  if (i === STEPS.length - 1) submit(); // results are emailed to Oneview Logic automatically
 }
 
 boot();

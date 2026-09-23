@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import submit, { config as submitConfig } from "../netlify/functions/submit.mjs";
 import configFn, { config as configConfig } from "../netlify/functions/config.mjs";
 import health from "../netlify/functions/health.mjs";
+import leadFn, { config as leadConfig } from "../netlify/functions/lead.mjs";
 import { buildDocDefinition, renderPdfDoc } from "../server/pdf-doc.js";
 import { LOGO_SVG } from "../server/report-template.js";
 import { loadKnowledgeBase } from "../server/kb.js";
@@ -82,6 +83,28 @@ describe("Netlify functions", () => {
       assert.ok(pdf.content.length > 30_000, `pdf size ${pdf.content.length}`);
     }
     assert.ok(internal.html.includes("EN summary:") && internal.html.includes("Pieter Jansen"));
+  });
+
+  test("POST /api/lead emails the step-1 company details to info@ only", async () => {
+    smtp.messages.length = 0;
+    assert.equal(leadConfig.path, "/api/lead");
+    const lead = { lang: "en", company: payload().company, consent: true, fax: "", elapsedMs: 8000 };
+    const res = await leadFn(new Request("https://scan.example/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(lead) }));
+    assert.equal(res.status, 200, await res.clone().text());
+    assert.equal(smtp.messages.length, 1);
+    const m = smtp.messages[0].mail;
+    assert.equal(m.to.text, "info@oneviewlogic.com");
+    assert.equal(m.replyTo.text, "klant@example.nl");
+    assert.equal(m.subject, "AI Sovereignty Scan – new lead – Netlify Test B.V.");
+    for (const v of ["Netlify Test B.V.", "Pieter Jansen", "klant@example.nl", "Retail / E-commerce", "10–49"]) assert.ok(m.html.includes(v), v);
+    assert.equal(m.attachments.length, 0);
+    // consent is required; honeypot is silently dropped
+    const noConsent = await leadFn(new Request("https://scan.example/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...lead, consent: false }) }));
+    assert.equal(noConsent.status, 400);
+    smtp.messages.length = 0;
+    const bot = await leadFn(new Request("https://scan.example/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...lead, fax: "x" }) }));
+    assert.equal(bot.status, 200);
+    assert.equal(smtp.messages.length, 0);
   });
 
   test("rejects wrong method, content type, bad JSON, oversized and invalid bodies", async () => {
