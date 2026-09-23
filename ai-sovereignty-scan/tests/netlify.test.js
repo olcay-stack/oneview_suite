@@ -135,6 +135,35 @@ describe("Netlify functions", () => {
     assert.deepEqual(await res.json(), { error: "delivery_failed", stage: "config", code: "SMTP_USER_MISSING" });
   });
 
+  test("variables only exposed via Netlify.env are found; health lists names, context and typos", async () => {
+    const host = process.env.SMTP_HOST;
+    delete process.env.SMTP_HOST;
+    process.env.SMTP_USERNAME = "typo@example.com"; // a common typo
+    globalThis.Netlify = { env: { toObject: () => ({ SMTP_HOST: host }) } };
+    try {
+      const res = await health(new Request("https://scan.example/api/health"), { deploy: { context: "branch-deploy" }, site: { name: "oneview-scan", url: "https://oneview-scan.netlify.app" } });
+      const body = await res.json();
+      assert.equal(body.smtp.hostSet, true, "SMTP_HOST read from Netlify.env");
+      assert.deepEqual(body.deploy, { context: "branch-deploy", site: "oneview-scan", url: "https://oneview-scan.netlify.app" });
+      assert.ok(body.mailVariablesSeen.includes("SMTP_USERNAME"));
+      assert.ok(!JSON.stringify(body).includes("typo@example.com"), "names only, never values");
+      const sent = await submit(request(payload()));
+      assert.equal(sent.status, 200, "submit also reads Netlify.env");
+    } finally {
+      delete globalThis.Netlify;
+      delete process.env.SMTP_USERNAME;
+      process.env.SMTP_HOST = host;
+    }
+  });
+
+  test("health lists missing variables", async () => {
+    const pass = process.env.SMTP_PASS;
+    delete process.env.SMTP_PASS;
+    const body = await (await health(new Request("https://scan.example/api/health"))).json();
+    process.env.SMTP_PASS = pass;
+    assert.deepEqual(body.missing, ["SMTP_PASS"]);
+  });
+
   test("GET /api/health reports settings as booleans and verifies SMTP with the token", async () => {
     const plain = await (await health(new Request("https://scan.example/api/health"))).json();
     assert.equal(plain.smtp.hostSet, true);
