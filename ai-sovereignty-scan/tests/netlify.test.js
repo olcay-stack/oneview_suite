@@ -203,6 +203,49 @@ describe("Netlify functions", () => {
     assert.match(failed.smtpVerify, /^E[A-Z]+/);
     delete process.env.DIAG_TOKEN;
   });
+
+  test("verify trace pinpoints a rejected login without revealing the password", async () => {
+    const { SMTPServer } = await import("smtp-server");
+    const rejecting = new SMTPServer({
+      authOptional: false,
+      disabledCommands: ["STARTTLS"],
+      logger: false,
+      onAuth(_auth, _session, cb) {
+        const err = new Error("5.7.8 Username and Password not accepted. BadCredentials");
+        err.responseCode = 535;
+        cb(err);
+      },
+    });
+    await new Promise((r) => rejecting.listen(0, "127.0.0.1", r));
+    const keys = ["DIAG_TOKEN", "SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "MAIL_FROM"];
+    const saved = Object.fromEntries(keys.map((k) => [k, process.env[k]]));
+    Object.assign(process.env, {
+      DIAG_TOKEN: "s3cret-token",
+      SMTP_HOST: "127.0.0.1",
+      SMTP_PORT: String(rejecting.server.address().port),
+      SMTP_USER: "info@oneviewlogic.com",
+      SMTP_PASS: "abcd efgh ijkl mnop",
+      MAIL_FROM: "Scan <other@oneviewlogic.com>",
+    });
+    try {
+      const body = await (await health(new Request("https://scan.example/api/health?verify=s3cret-token"))).json();
+      assert.equal(body.ok, false);
+      assert.equal(body.smtpVerify, "EAUTH:535");
+      const t = body.trace;
+      assert.equal(t.user, "in***@oneviewlogic.com");
+      assert.equal(t.userIsFullAddress, true);
+      assert.deepEqual(t.pass, { length: 19, containsSpaces: true, containsQuotesOrBrackets: false, looksLikeGoogleAppPassword: true });
+      assert.equal(t.fromMatchesUser, false);
+      assert.deepEqual(t.steps.map((x) => `${x.step}:${x.status}`), ["config:ok", "dns:ok", "connect:ok", "login:failed"]);
+      assert.match(t.steps.at(-1).serverReply, /BadCredentials/);
+      assert.match(t.hint, /app password/);
+      const raw = JSON.stringify(body);
+      assert.ok(!raw.includes("abcd") && !raw.includes("mnop"), "password never echoed");
+    } finally {
+      for (const k of keys) saved[k] === undefined ? delete process.env[k] : (process.env[k] = saved[k]);
+      await new Promise((r) => rejecting.close(r));
+    }
+  });
 });
 
 describe("pdfmake report", () => {

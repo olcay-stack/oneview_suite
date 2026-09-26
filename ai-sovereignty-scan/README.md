@@ -104,7 +104,7 @@ A 502 means the report was built but could not be delivered. The error message i
 | `smtp · EENVELOPE:550/553/554` | The sender isn't allowed: `MAIL_FROM` must be the SMTP account or a verified sender/domain. |
 | `pdf · …` | PDF rendering failed. Send the log line to the developer. |
 
-`GET /api/health` shows which mail settings the function can see (true/false only, never the values). To test the SMTP login itself, set a `DIAG_TOKEN` environment variable and open `/api/health?verify=<DIAG_TOKEN>`. It returns `"smtpVerify": "ok"` or the error code.
+`GET /api/health` shows which mail settings the function can see (true/false only, never the values). To test the SMTP login itself, set a `DIAG_TOKEN` environment variable and open `/api/health?verify=<DIAG_TOKEN>`. It returns `"smtpVerify": "ok"` or the error code, plus a `trace`: each step (config → dns → connect → login) with its status, the SMTP server's reply text at the failing step, a masked `SMTP_USER` (`in***@example.com`), facts about `SMTP_PASS` (length, spaces, whether it looks like a 16-letter Google app password — never the password itself), whether `MAIL_FROM` matches `SMTP_USER`, and a `hint`.
 
 ## Deploy (EU hosting, Docker/VPS)
 
