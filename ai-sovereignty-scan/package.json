@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Oneview Logic AI Sovereignty Scan \u2014 EU AI Act, GDPR and data-sovereignty self-assessment.",
+  "description": "Oneview Logic AI Security Scan \u2014 EU AI Act, GDPR and data-sovereignty self-assessment.",
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",

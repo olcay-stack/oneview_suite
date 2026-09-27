@@ -1,4 +1,4 @@
-# AI Sovereignty Scan — production image (Playwright base ships Chromium + deps).
+# AI Security Scan — production image (Playwright base ships Chromium + deps).
 FROM mcr.microsoft.com/playwright:v1.56.1-noble
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000

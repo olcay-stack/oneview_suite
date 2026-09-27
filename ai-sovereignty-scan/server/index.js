@@ -1,4 +1,4 @@
-// AI Sovereignty Scan — Express server.
+// AI Security Scan — Express server.
 // Serves the static app + knowledge base and exposes POST /api/submit, which
 // re-validates the answers, re-computes the score server-side, renders the
 // report (HTML + PDF) and emails it. Report contents and personal data are
@@ -142,7 +142,7 @@ if (isMain) {
   const port = Number(process.env.PORT || 3000);
   const cfg = mailConfig();
   if (!cfg.host) console.warn("Warning: SMTP_HOST not set — report delivery will fail until SMTP is configured.");
-  const server = createApp().listen(port, () => console.log(`AI Sovereignty Scan listening on http://localhost:${port}`));
+  const server = createApp().listen(port, () => console.log(`AI Security Scan listening on http://localhost:${port}`));
   const shutdown = async () => {
     server.close();
     await (await import("./pdf.js")).closePdf();

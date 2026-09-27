@@ -1,4 +1,4 @@
-# AI Sovereignty Scan — Oneview Logic B.V.
+# AI Security Scan — Oneview Logic B.V.
 
 A self-assessment web app. A company enters its details and the AI tools it uses, per account tier. The app scores EU AI Act, GDPR and data-sovereignty risk per tool and overall, and shows a results dashboard. The app is available in English (`/en/`) and Dutch (`/nl/`).
 
@@ -56,7 +56,7 @@ All mail settings live in `.env` on the server and are never sent to the browser
 |---|---|
 | `SMTP_HOST`, `SMTP_PORT` | Mail server. Port 587 uses STARTTLS (required), 465 uses implicit TLS. |
 | `SMTP_USER`, `SMTP_PASS` | SMTP credentials (use an app password or SMTP key, not a personal password). |
-| `MAIL_FROM` | Sender, e.g. `"Oneview Logic AI Sovereignty Scan <scan@oneviewlogic.com>"`. Must be allowed by your SPF/DKIM. |
+| `MAIL_FROM` | Sender, e.g. `"Oneview Logic AI Security Scan <scan@oneviewlogic.com>"`. Must be allowed by your SPF/DKIM. |
 | `MAIL_TO` | Internal recipient; default `info@oneviewlogic.com`. |
 | `SEND_COPY_TO_CLIENT` | Leave `false`: visitors contact info@ for details. (`true` would also email the submitter a copy if the client asks for one.) |
 | `RATE_LIMIT_MAX` | Submissions per IP per 15 minutes (default 5). |

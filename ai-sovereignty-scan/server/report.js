@@ -1,7 +1,7 @@
 // Builds the branded report (HTML) and email bodies from the server-side
 // assessment. Every user- or data-derived string goes through esc().
 
-import { bandFor } from "../public/assets/scoring.js";
+import { bandFor, riskCategories } from "../public/assets/scoring.js";
 import { t, lookup, fmtDate, formatReason, formatAction, formatFinding, tierTypeLabel } from "../public/assets/i18n.js";
 
 import { TEMPLATE, LOGO_SVG } from "./report-template.js";
@@ -49,6 +49,23 @@ ${r.prohibitedFlag ? `<p class="flag">${esc(lookup(d, "results.prohibited_flag")
 <ul>${r.keyFindings.map((f) => `<li>${esc(formatFinding(d, f))}</li>`).join("")}</ul>
 <h3>${esc(lookup(d, "results.sub_scores"))}</h3>
 <table class="kv"><tbody>${rows}</tbody></table>`;
+}
+
+function riskSection(d, r) {
+  const rows = riskCategories(r)
+    .map(
+      (c) => `<tr class="rc rc-${esc(c.id)}${c.current ? " rc-cur" : ""}">
+  <td><span class="badge b-${esc(c.id)}"><span class="ico">${BAND_ICON[c.id]}</span> ${esc(lookup(d, `risk.labels.${c.id}`))}</span>${c.current ? `<br><strong class="rc-you">▶ ${esc(lookup(d, "risk.your_org"))}</strong>` : ""}</td>
+  <td class="num small">${esc(t(d, "risk.range", { min: c.min, max: c.max }))}</td>
+  <td class="small">${esc(lookup(d, `risk.meaning.${c.id}`))}</td>
+  <td class="small">${c.tools.length ? c.tools.map((x) => `${esc(x.name)} (${esc(x.total)})`).join("<br>") : `<span class="muted">${esc(lookup(d, "risk.no_tools"))}</span>`}</td>
+</tr>`,
+    )
+    .join("");
+  return `<h2>${esc(lookup(d, "risk.title"))}</h2>
+<p class="level b-${esc(r.band)}"><span class="muted small">${esc(lookup(d, "risk.your_level"))}</span><br><strong>${BAND_ICON[r.band]} ${esc(lookup(d, `risk.labels.${r.band}`))}</strong> — ${esc(lookup(d, `risk.meaning.${r.band}`))}</p>
+<p class="muted">${esc(lookup(d, "risk.intro"))}</p>
+<table class="risk"><tbody>${rows}</tbody></table>`;
 }
 
 function regulatoryContext(d, v, reg, lang, today) {
@@ -185,6 +202,7 @@ export function buildReportHtml({ value, result, i18n, regulation, kbIndex, now 
     intro,
     cover(i18n, value, result, lang, today),
     execSummary(i18n, result),
+    riskSection(i18n, result),
     regulatoryContext(i18n, value, regulation, lang, today),
     perTool(i18n, result),
     alternatives(i18n, result),
