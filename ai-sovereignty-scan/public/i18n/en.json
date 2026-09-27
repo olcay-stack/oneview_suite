@@ -14,7 +14,7 @@
   },
   "hero": {
     "eyebrow": "EU AI Act · GDPR · Data sovereignty",
-    "title": "How sovereign is your AI use?",
+    "title": "How secure is your AI use?",
     "subtitle": "In about 10 minutes, map the AI tools your organisation uses and get an indicative risk score per tool and account tier. You also get a branded report with a prioritised action plan.",
     "points": [
       "Covers {tools} AI products and account tiers",
@@ -449,7 +449,7 @@
       "detail": "Record each tool, tier, owner, purpose, data categories, DPA and risk category. This also supports your GDPR records of processing."
     },
     "sovereign_alternative": {
-      "title": "Use a sovereign alternative for sensitive workloads",
+      "title": "Use a secure alternative for sensitive workloads",
       "detail": "Consider an EU provider, or open-weight models on EU infrastructure, for sensitive data now handled by {tools}."
     },
     "assess_dpo": {

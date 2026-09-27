@@ -14,7 +14,7 @@
   },
   "hero": {
     "eyebrow": "AI-verordening · AVG · Datasoevereiniteit",
-    "title": "Hoe soeverein is uw AI-gebruik?",
+    "title": "Hoe veilig is uw AI-gebruik?",
     "subtitle": "Breng in ongeveer tien minuten in kaart welke AI-tools uw organisatie gebruikt. U krijgt per tool en accounttype een indicatieve risicoscore, plus een rapport met een actieplan op volgorde van prioriteit.",
     "points": [
       "Omvat {tools} AI-producten en accounttypes",
@@ -449,7 +449,7 @@
       "detail": "Leg per tool vast: accounttype, eigenaar, doel, categorieën gegevens, verwerkersovereenkomst en risicocategorie. Dat helpt ook bij uw verwerkingsregister onder de AVG."
     },
     "sovereign_alternative": {
-      "title": "Kies een soeverein alternatief voor gevoelige toepassingen",
+      "title": "Kies een veilig alternatief voor gevoelige toepassingen",
       "detail": "Overweeg een Europese aanbieder of open-weight-modellen op EU-infrastructuur voor de gevoelige gegevens die nu via {tools} gaan."
     },
     "assess_dpo": {
