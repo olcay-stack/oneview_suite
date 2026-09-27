@@ -15,7 +15,7 @@ export function mailConfig(env = process.env) {
     port: Number(clean(env.SMTP_PORT) || 587),
     user: clean(env.SMTP_USER),
     pass: clean(env.SMTP_PASS),
-    from: clean(env.MAIL_FROM) || "AI Sovereignty Scan <no-reply@oneviewlogic.com>",
+    from: clean(env.MAIL_FROM) || "AI Security Scan <no-reply@oneviewlogic.com>",
     to: clean(env.MAIL_TO) || "info@oneviewlogic.com",
     copyToClient: String(clean(env.SEND_COPY_TO_CLIENT)).toLowerCase() === "true",
   };

@@ -2,7 +2,7 @@ import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  assess, bandFor, indexKnowledgeBase, scoreTool, scoreGovernance, useCaseTiers, scoreSovereignty,
+  assess, bandFor, riskCategories, indexKnowledgeBase, scoreTool, scoreGovernance, useCaseTiers, scoreSovereignty,
   WEIGHTS, MOD, JURISDICTION_BASE, WORST_TOOL_FACTOR,
 } from "../public/assets/scoring.js";
 
@@ -288,5 +288,28 @@ describe("aggregate", () => {
 
   test("unknown tier id throws", () => {
     assert.throws(() => assess(answers([entry("nope.nope")]), kb), /Unknown tier/);
+  });
+});
+
+describe("riskCategories", () => {
+  test("lists all four categories most severe first, marks the organisation's own and places every tool once", () => {
+    const r = assess(
+      {
+        tools: [
+          { tierId: "google.gemini.free", users: 12, residency: "dk", dataTypes: ["customer_personal"], approval: "shadow" },
+          { tierId: "mistral.lechat.enterprise", users: 30, residency: "yes", dataTypes: ["internal_docs"], approval: "approved" },
+        ],
+        useCases: ["translation"],
+        governance: { ai_policy: "yes", ai_literacy: "yes", ai_register: "yes", dpia: "yes", dpo: "yes", vendor_dpas: "yes", human_oversight: "yes" },
+        company: { employees: "10-49" },
+      },
+      kb,
+    );
+    const cats = riskCategories(r);
+    assert.deepEqual(cats.map((c) => c.id), ["critical", "high", "medium", "low"]);
+    assert.deepEqual(cats.map((c) => [c.min, c.max]), [[75, 100], [50, 74], [25, 49], [0, 24]]);
+    assert.deepEqual(cats.filter((c) => c.current).map((c) => c.id), [r.band]);
+    assert.equal(cats.reduce((n, c) => n + c.tools.length, 0), r.tools.length);
+    for (const c of cats) for (const x of c.tools) assert.equal(bandFor(x.total), c.id);
   });
 });

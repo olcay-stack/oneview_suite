@@ -111,6 +111,7 @@ describe("report", () => {
         assert.ok(html.includes(esc(d.report[key])), `${lang}: missing ${key}`);
       }
       assert.ok(html.includes(esc(d.results.disclaimer)), `${lang}: disclaimer`);
+      assert.ok(html.includes(esc(d.risk.title)) && html.includes("rc-cur") && html.includes(esc(d.risk.labels[result.band])), `${lang}: risk categories`);
       assert.ok(html.includes("KvK 92832601"), `${lang}: footer`);
       assert.ok(html.includes(`lang="${lang}"`));
       // As of 23 Sep 2026, Art. 50 applies now and Annex III high-risk applies later.
@@ -118,11 +119,11 @@ describe("report", () => {
     }
   });
 
-  test("subject follows 'AI Sovereignty Scan – [Company] – [Band] ([score])'", () => {
+  test("subject follows 'AI Security Scan – [Company] – [Band] ([score])'", () => {
     const r = validateSubmission(payload(), { kbIndex: kb.index, regulation: kb.regulation });
     const result = assess(r.value, kb);
     const s = buildSubject(kb.i18n.en, r.value, result);
-    assert.match(s, /^AI Sovereignty Scan – Acme B\.V\. – (Low|Medium|High|Critical) \(\d{1,3}\)$/);
+    assert.match(s, /^AI Security Scan – Acme B\.V\. – (Low|Medium|High|Critical) \(\d{1,3}\)$/);
   });
 });
 
@@ -158,14 +159,14 @@ describe("API end-to-end (real PDF + SMTP capture)", () => {
     assert.equal(internal.to.text, "info@oneviewlogic.com");
     assert.equal(client.to.text, "jane@acme.example");
     assert.equal(internal.replyTo.text, "jane@acme.example");
-    assert.match(internal.subject, /^AI Sovereignty Scan – Acme B\.V\. – (Laag|Gemiddeld|Hoog|Kritiek) \(\d+\)$/);
+    assert.match(internal.subject, /^AI Security Scan – Acme B\.V\. – (Laag|Gemiddeld|Hoog|Kritiek) \(\d+\)$/);
     assert.equal(internal.subject, client.subject);
 
     for (const m of [internal, client]) {
       assert.equal(m.attachments.length, 1);
       const a = m.attachments[0];
       assert.equal(a.contentType, "application/pdf");
-      assert.match(a.filename, /^AI-Sovereignty-Scan-Acme-B-V-2026-09-23\.pdf$/);
+      assert.match(a.filename, /^AI-Security-Scan-Acme-B-V-2026-09-23\.pdf$/);
       assert.equal(a.content.subarray(0, 5).toString(), "%PDF-");
       assert.ok(a.content.length > 20_000, `pdf size ${a.content.length}`);
     }

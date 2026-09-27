@@ -13,7 +13,7 @@ export function buildLeadEmail(d, en, value, now = new Date()) {
   const rows = companyRows(d, c)
     .map(([k, v]) => `<tr><th style="text-align:left;padding:6px 12px 6px 0;vertical-align:top">${esc(k)}</th><td style="padding:6px 0">${esc(v)}</td></tr>`)
     .join("");
-  const summary = `New AI Sovereignty Scan lead: ${c.name}${c.contact ? ` (${c.contact})` : ""}, ${c.email}, ${c.sector ? lookup(en, `company.sectors.${c.sector}`) : "sector n/a"}, ${c.employees || "size n/a"} employees, form language ${value.lang.toUpperCase()}.`;
+  const summary = `New AI Security Scan lead: ${c.name}${c.contact ? ` (${c.contact})` : ""}, ${c.email}, ${c.sector ? lookup(en, `company.sectors.${c.sector}`) : "sector n/a"}, ${c.employees || "size n/a"} employees, form language ${value.lang.toUpperCase()}.`;
   const html = `<!doctype html><html lang="${esc(value.lang)}"><body style="font-family:Arial,Helvetica,sans-serif;color:#14213d;line-height:1.5">
 <p><strong>EN summary:</strong> ${esc(summary)}</p>
 <p>${esc(lookup(d, "email.lead_intro"))}</p>

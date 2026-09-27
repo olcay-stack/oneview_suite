@@ -1,9 +1,9 @@
-// AI Sovereignty Scan — frontend (vanilla JS, no build step).
+// AI Security Scan — frontend (vanilla JS, no build step).
 // All answers live in memory only (no cookies / localStorage / sessionStorage)
 // and are wiped after a successful submit. All visible strings come from
 // /i18n/<lang>.json; all vendor facts from /data/*.json.
 
-import { assess, indexKnowledgeBase, GOVERNANCE_QUESTIONS, DATA_TYPES, bandFor } from "./scoring.js";
+import { assess, indexKnowledgeBase, GOVERNANCE_QUESTIONS, DATA_TYPES, bandFor, riskCategories } from "./scoring.js";
 import { t, lookup, interpolate, fmtDate, formatReason, formatAction, formatFinding, tierTypeLabel } from "./i18n.js";
 
 const LANG = document.documentElement.dataset.lang === "nl" ? "nl" : "en";
@@ -672,6 +672,46 @@ function bandBadge(band, extraClass = "") {
   return h("span", { class: `band-badge band-${band} ${extraClass}` }, h("span", { class: "ico", "aria-hidden": "true", text: BAND_ICON[band] }), tr(`bands.${band}`));
 }
 
+// Prominent "your risk level" banner under the gauge.
+function levelBanner(band) {
+  return h(
+    "div",
+    { class: `level-banner band-${band}`, id: "risk-level" },
+    h("span", { class: "level-kicker", text: tr("risk.your_level") }),
+    h("strong", { class: "level-label" }, h("span", { class: "ico", "aria-hidden": "true", text: BAND_ICON[band] }), tr(`risk.labels.${band}`)),
+    h("span", { class: "level-meaning", text: tr(`risk.meaning.${band}`) }),
+  );
+}
+
+// Four risk categories (critical → low), the organisation's own highlighted,
+// each listing the tools that fall in it.
+function riskOverview(result) {
+  return h(
+    "section",
+    { class: "panel", "aria-labelledby": "h-risk" },
+    h("h2", { id: "h-risk", text: tr("risk.title") }),
+    h("p", { class: "intro", text: tr("risk.intro") }),
+    h(
+      "div",
+      { class: "risk-grid" },
+      riskCategories(result).map((c) =>
+        h(
+          "div",
+          { class: `risk-cat band-${c.id}${c.current ? " current" : ""}`, "data-band": c.id, "aria-current": c.current ? "true" : undefined },
+          c.current ? h("span", { class: "risk-you", text: tr("risk.your_org") }) : null,
+          h("h3", {}, h("span", { class: "ico", "aria-hidden": "true", text: BAND_ICON[c.id] }), tr(`risk.labels.${c.id}`)),
+          h("p", { class: "risk-range", text: tr("risk.range", { min: c.min, max: c.max }) }),
+          h("p", { class: "risk-meaning", text: tr(`risk.meaning.${c.id}`) }),
+          h("p", { class: "risk-count", text: tr("risk.tools_count", { count: c.tools.length }) }),
+          c.tools.length
+            ? h("ul", { class: "risk-tools" }, c.tools.map((x) => h("li", {}, h("span", { text: x.name }), h("strong", { text: String(x.total) }))))
+            : h("p", { class: "hint", text: tr("risk.no_tools") }),
+        ),
+      ),
+    ),
+  );
+}
+
 function gauge(score, band) {
   const len = Math.PI * 120;
   const filled = (len * Math.max(0, Math.min(100, score))) / 100;
@@ -751,7 +791,7 @@ function toolTable(tools) {
         rows.map((x) => [
           h(
             "tr",
-            { class: "tool-row" },
+            { class: `tool-row row-${x.band}` },
             h("th", { scope: "row" }, h("strong", { text: x.name }), h("br"), h("span", { class: "hint", text: x.vendorName })),
             h("td", { text: tierTypeLabel(I18N, x.tierType) }),
             h("td", { class: "num", text: String(x.users) }),
@@ -760,7 +800,7 @@ function toolTable(tools) {
           ),
           h(
             "tr",
-            { class: "reason-row" },
+            { class: `reason-row row-${x.band}` },
             h(
               "td",
               { colspan: String(SORT_COLS.length) },
@@ -798,7 +838,7 @@ function renderResults() {
           h("h3", { text: tr("results.overall") }),
           gauge(r.overall, r.band),
           h("div", { class: "hero-figure", "aria-hidden": "true" }, String(r.overall), h("small", { text: `/ 100` })),
-          bandBadge(r.band),
+          levelBanner(r.band),
           h("p", { class: "method-note", text: r.method === "worst_tool" && r.worstTool ? tr("results.method_worst_tool", { tool: r.worstTool.name }) : tr("results.method_blended") }),
         ),
         h(
@@ -811,6 +851,7 @@ function renderResults() {
         ),
       ),
     ),
+    riskOverview(r),
     h("section", { class: "panel", "aria-labelledby": "h-tools" }, h("h2", { id: "h-tools", text: tr("results.per_tool") }), toolTable(r.tools)),
     alts.length
       ? h(

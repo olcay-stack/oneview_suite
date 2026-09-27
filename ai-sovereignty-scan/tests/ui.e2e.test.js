@@ -76,7 +76,7 @@ test("Dutch scan: validation, tool inventory, results, send report", { timeout: 
   await waitFor(() => smtp.messages.some((m) => m.mail.subject.includes("nieuwe lead")), "lead email");
   const lead = smtp.messages.find((m) => m.mail.subject.includes("nieuwe lead")).mail;
   assert.equal(lead.to.text, "info@oneviewlogic.com");
-  assert.equal(lead.subject, "AI Sovereignty Scan – nieuwe lead – Testbedrijf Utrecht B.V.");
+  assert.equal(lead.subject, "AI Security Scan – nieuwe lead – Testbedrijf Utrecht B.V.");
   assert.ok(lead.html.includes("Sanne de Vries") && lead.html.includes("tester@example.nl") && lead.html.includes("Logistiek"));
   assert.equal(lead.replyTo.text, "tester@example.nl");
   await page.waitForFunction(() => document.querySelector("#step-title")?.textContent === "Overzicht van AI-tools");
@@ -126,11 +126,17 @@ test("Dutch scan: validation, tool inventory, results, send report", { timeout: 
 
   // Step 5: results.
   await page.waitForSelector(".gauge");
-  assert.equal(await page.textContent("#step-title"), "Uw resultaten van de AI Sovereignty Scan");
+  assert.equal(await page.textContent("#step-title"), "Uw resultaten van de AI Security Scan");
   const gaugeLabel = await page.getAttribute(".gauge", "aria-label");
   assert.match(gaugeLabel, /Totale risicoscore: \d+ van de 100 — (Laag|Gemiddeld|Hoog|Kritiek)/);
   const rows = await page.locator("table.data tbody tr.tool-row").count();
   assert.equal(rows, 3);
+  // Risk categories: four cards, exactly one highlighted, matching the overall band.
+  assert.equal(await page.locator(".risk-cat").count(), 4);
+  assert.equal(await page.locator(".risk-cat.current").count(), 1);
+  const bandId = await page.getAttribute(".risk-cat.current", "data-band");
+  assert.ok((await page.getAttribute("#risk-level", "class")).includes(`band-${bandId}`));
+  assert.equal(await page.locator(".risk-tools li").count(), 3);
   assert.equal(await page.locator(".actions-list li").count(), 5);
   // Sort by tool name (ascending) via keyboard-accessible button.
   await page.click("#sort-name");
@@ -155,13 +161,13 @@ test("Dutch scan: validation, tool inventory, results, send report", { timeout: 
   await page.click("#sort-total");
   await page.waitForTimeout(300);
 
-  const results = smtp.messages.filter((m) => /^AI Sovereignty Scan – Testbedrijf/.test(m.mail.subject));
+  const results = smtp.messages.filter((m) => /^AI Security Scan – Testbedrijf/.test(m.mail.subject));
   assert.equal(results.length, 1, "exactly one results email");
   assert.equal(smtp.messages.length, 2, "lead + results, no copy to the visitor");
   assert.ok(!smtp.messages.some((m) => m.mail.to.text === "tester@example.nl"));
   const internal = results[0].mail;
   assert.equal(internal.to.text, "info@oneviewlogic.com");
-  assert.match(internal.subject, /^AI Sovereignty Scan – Testbedrijf Utrecht B\.V\. – (Laag|Gemiddeld|Hoog|Kritiek) \(\d+\)$/);
+  assert.match(internal.subject, /^AI Security Scan – Testbedrijf Utrecht B\.V\. – (Laag|Gemiddeld|Hoog|Kritiek) \(\d+\)$/);
   assert.equal(internal.attachments[0].content.subarray(0, 5).toString(), "%PDF-");
 
   // "Start a new scan" clears every answer from memory.
@@ -197,7 +203,7 @@ test("English page on a phone: layout fits, language switch, no horizontal scrol
   await page.waitForSelector("#step-title");
   assert.equal(await page.textContent("#step-title"), "Gegevens van uw organisatie");
   await page.goto(`${base}/nl/privacy.html`);
-  assert.equal(await page.textContent("h1"), "Privacyverklaring — AI Sovereignty Scan");
+  assert.equal(await page.textContent("h1"), "Privacyverklaring — AI Security Scan");
   assert.deepEqual(problems, []);
   await context.close();
 });

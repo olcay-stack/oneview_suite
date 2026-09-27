@@ -41,6 +41,16 @@ export const TEMPLATE = `<!doctype html>
   .b-medium { background: #fff4d9; border-color: #c98a00; }
   .b-high { background: #fdebe3; border-color: #ec835a; }
   .b-critical { background: #fbe5e5; border-color: #d03b3b; }
+  .level { border: 2px solid; border-radius: 8px; padding: 10px 14px; font-size: 11.5pt; }
+  table.risk td { vertical-align: top; }
+  table.risk tr.rc td:first-child { border-left: 6px solid; }
+  table.risk tr.rc-low td:first-child { border-left-color: #0ca30c; }
+  table.risk tr.rc-medium td:first-child { border-left-color: #c98a00; }
+  table.risk tr.rc-high td:first-child { border-left-color: #ec835a; }
+  table.risk tr.rc-critical td:first-child { border-left-color: #d03b3b; }
+  table.risk tr.rc-cur td { background: #f3f6fa; font-weight: 600; }
+  table.risk tr.rc-cur td:first-child { border-left-width: 10px; }
+  .rc-you { font-size: 8.5pt; }
   .flag { border-left: 4px solid #d03b3b; background: #fbe5e5; padding: 8px 12px; font-weight: 700; margin: 10px 0; }
   table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 9.5pt; }
   th, td { border-bottom: 1px solid #cfd8e3; padding: 6px 8px; text-align: left; vertical-align: top; }

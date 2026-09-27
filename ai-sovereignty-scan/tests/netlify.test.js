@@ -75,7 +75,7 @@ describe("Netlify functions", () => {
     const internal = smtp.messages.find((m) => m.mail.to.text === "info@oneviewlogic.com").mail;
     const copy = smtp.messages.find((m) => m.mail.to.text === "klant@example.nl").mail;
     const expected = assess(validateSubmission(payload(), { kbIndex: kb.index, regulation: kb.regulation }).value, kb);
-    assert.match(internal.subject, new RegExp(`^AI Sovereignty Scan – Netlify Test B\\.V\\. – \\w+ \\(${expected.overall}\\)$`));
+    assert.match(internal.subject, new RegExp(`^AI Security Scan – Netlify Test B\\.V\\. – \\w+ \\(${expected.overall}\\)$`));
     for (const m of [internal, copy]) {
       const pdf = m.attachments[0];
       assert.equal(pdf.contentType, "application/pdf");
@@ -95,7 +95,7 @@ describe("Netlify functions", () => {
     const m = smtp.messages[0].mail;
     assert.equal(m.to.text, "info@oneviewlogic.com");
     assert.equal(m.replyTo.text, "klant@example.nl");
-    assert.equal(m.subject, "AI Sovereignty Scan – new lead – Netlify Test B.V.");
+    assert.equal(m.subject, "AI Security Scan – new lead – Netlify Test B.V.");
     for (const v of ["Netlify Test B.V.", "Pieter Jansen", "klant@example.nl", "Retail / E-commerce", "10–49"]) assert.ok(m.html.includes(v), v);
     assert.equal(m.attachments.length, 0);
     // consent is required; honeypot is silently dropped
@@ -260,6 +260,7 @@ describe("pdfmake report", () => {
         assert.ok(text.includes(JSON.stringify(d.report[key]).slice(1, -1)), `${lang}: ${key}`);
       }
       assert.ok(text.includes(JSON.stringify(d.results.disclaimer).slice(1, -1)));
+      assert.ok(text.includes(JSON.stringify(d.risk.title).slice(1, -1)) && text.includes(JSON.stringify(d.risk.your_org).slice(1, -1)), `${lang}: risk categories`);
       const pdf = await renderPdfDoc(ctx);
       const pages = (pdf.toString("latin1").match(/\/Type \/Page\b/g) || []).length;
       assert.ok(pages >= 4, `${lang}: ${pages} pages`);

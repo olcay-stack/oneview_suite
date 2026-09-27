@@ -5,7 +5,7 @@
 import PdfPrinter from "pdfmake";
 import vfsFonts from "pdfmake/build/vfs_fonts.js";
 import { t, lookup, fmtDate, formatAction, formatFinding, tierTypeLabel } from "../public/assets/i18n.js";
-import { bandFor } from "../public/assets/scoring.js";
+import { bandFor, riskCategories } from "../public/assets/scoring.js";
 import { LOGO_SVG } from "./report-template.js";
 import { isoDay, ucTiersOf, timelineRows, toolReasons, checklistRows, sourceLists, companyRows } from "./report-model.js";
 
@@ -111,6 +111,51 @@ function execSummary(d, r) {
     },
   );
   return out;
+}
+
+function riskSection(d, r) {
+  const cats = riskCategories(r);
+  // Kept on one page so the highlighted category is never split from the others.
+  return [{ unbreakable: true, stack: [
+    h2(lookup(d, "risk.title")),
+    {
+      table: {
+        widths: ["*"],
+        body: [[{
+          fillColor: BAND[r.band].fill,
+          margin: [8, 6, 8, 6],
+          stack: [
+            { text: lookup(d, "risk.your_level"), color: C.muted, fontSize: 8.5 },
+            { text: lookup(d, `risk.labels.${r.band}`), bold: true, fontSize: 14 },
+            { text: lookup(d, `risk.meaning.${r.band}`) },
+          ],
+        }]],
+      },
+      layout: { hLineWidth: () => 2, vLineWidth: () => 2, hLineColor: () => BAND[r.band].stroke, vLineColor: () => BAND[r.band].stroke },
+      margin: [0, 0, 0, 8],
+    },
+    p(lookup(d, "risk.intro"), { color: C.muted }),
+    {
+      table: {
+        widths: [95, 55, "*", 150],
+        body: cats.map((c) => {
+          const bg = c.current ? BAND[c.id].fill : undefined;
+          return [
+            { stack: [{ text: lookup(d, `risk.labels.${c.id}`), bold: true }, c.current ? { text: `» ${lookup(d, "risk.your_org")}`, bold: true, fontSize: 8 } : ""], fillColor: bg },
+            { text: t(d, "risk.range", { min: c.min, max: c.max }), fontSize: 8.5, fillColor: bg },
+            { text: lookup(d, `risk.meaning.${c.id}`), fontSize: 8.5, fillColor: bg, bold: c.current },
+            { text: c.tools.length ? c.tools.map((x) => `${x.name} (${x.total})`).join("\n") : lookup(d, "risk.no_tools"), fontSize: 8.5, color: c.tools.length ? C.ink : C.muted, fillColor: bg },
+          ];
+        }),
+      },
+      layout: {
+        ...tableLayout,
+        vLineWidth: (i) => (i === 0 ? 6 : 0),
+        vLineColor: (_i, _node, row) => BAND[cats[row]?.id]?.stroke || C.line,
+      },
+      margin: [0, 0, 0, 10],
+    },
+  ] }];
 }
 
 function regulatoryContext(d, v, reg, lang, today) {
@@ -277,6 +322,7 @@ export function buildDocDefinition({ value, result, i18n, regulation, kbIndex, n
     content: [
       cover(d, value, result, lang, today),
       ...execSummary(d, result),
+      ...riskSection(d, result),
       ...regulatoryContext(d, value, regulation, lang, today),
       ...perTool(d, result),
       ...alternatives(d, result),

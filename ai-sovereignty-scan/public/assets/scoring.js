@@ -1,4 +1,4 @@
-// AI Sovereignty Scan — scoring engine.
+// AI Security Scan — scoring engine.
 //
 // Pure ES module, shared by the browser (live results) and the server (the
 // authoritative score in the emailed report). No DOM, no I/O, no vendor facts:
@@ -93,6 +93,20 @@ const GOV_ANSWER_FACTOR = { yes: 0, partial: 0.5, no: 1, dk: 1 };
 
 const clamp = (n, lo = 0, hi = 100) => Math.min(hi, Math.max(lo, n));
 const round = (n) => Math.round(n);
+
+/**
+ * The four risk categories, most severe first, with the tools that fall in each
+ * and a flag for the organisation's own category.
+ */
+export function riskCategories(result) {
+  return [...BANDS].reverse().map((b) => ({
+    id: b.id,
+    min: b.min,
+    max: b.max,
+    current: b.id === result.band,
+    tools: result.tools.filter((x) => x.band === b.id).sort((a, c) => c.total - a.total).map((x) => ({ name: x.name, total: x.total })),
+  }));
+}
 
 export function bandFor(score) {
   const s = clamp(round(score));
